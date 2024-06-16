@@ -43,6 +43,7 @@ public class AuthController {
         if (usuario != null) {
             UsuarioDTO usuarioDTO = UsuarioConverter.entityToDTO(usuario);
             String redirectUrl = determineRedirectUrl(usuarioDTO);
+            System.out.println("LOGIN");
             return ResponseEntity.ok(Map.of("user", usuarioDTO, "redirectUrl", redirectUrl));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Credenciales inválidas"));
@@ -145,12 +146,14 @@ public class AuthController {
 
     @GetMapping("/verificarUsuario/{username}")
     public ResponseEntity<Boolean> verificarUsuarioExistente(@PathVariable String username) {
+        System.out.println("Veridicar username");
         boolean exists = usuarioService.existsByUsername(username);
         return ResponseEntity.ok(exists);
-    }
+}
 
     @GetMapping("/verificarEmail/{email}")
     public ResponseEntity<Boolean> verificarEmailExistente(@PathVariable String email) {
+        System.out.println("verificar email");
         boolean exists = usuarioService.existsByEmail(email);
         return ResponseEntity.ok(exists);
     }

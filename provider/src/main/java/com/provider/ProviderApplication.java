@@ -3,13 +3,18 @@ package com.provider;
 import com.provider.entities.*;
 import com.provider.repositories.*;
 import com.provider.services.*;
+import org.hibernate.annotations.DialectOverride;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
 
+import javax.sql.DataSource;
 import java.util.*;
 
 
@@ -36,9 +41,10 @@ public class ProviderApplication {
             EmpresaRepository empresaRepository,
             ProductoRepository productoRepository,
             ListaPrecioRepository listaPrecioRepository
-            ) {
+    ) {
         return args -> {
 
+            /*
             Permiso permisoAdmin = Permiso.builder().nombrePermiso("Administrador").build();
             Permiso permisoCliente = Permiso.builder().nombrePermiso("Cliente").build();
             Permiso permisoProveedor = Permiso.builder().nombrePermiso("Proveedor").build();
@@ -47,9 +53,12 @@ public class ProviderApplication {
             Rol rolClient = Rol.builder().roleEnum(RoleEnum.CLIENT).listaDePermisos(Set.of(permisoCliente)).build();
             Rol rolProvider = Rol.builder().roleEnum(RoleEnum.PROVIDER).listaDePermisos(Set.of(permisoProveedor)).build();
 
-            Set<Rol> listaRolAdmin = new HashSet<>();listaRolAdmin.add(rolAdmin);
-            Set<Rol> listaRolClient = new HashSet<>();listaRolClient.add(rolClient);
-            Set<Rol> listaRolProvider = new HashSet<>();listaRolProvider.add(rolProvider);
+            Set<Rol> listaRolAdmin = new HashSet<>();
+            listaRolAdmin.add(rolAdmin);
+            Set<Rol> listaRolClient = new HashSet<>();
+            listaRolClient.add(rolClient);
+            Set<Rol> listaRolProvider = new HashSet<>();
+            listaRolProvider.add(rolProvider);
 
             // Crear usuarios y establecer relaciones con perfiles
             Usuario usuarioElioAdmin = Usuario.builder()
@@ -57,17 +66,6 @@ public class ProviderApplication {
                     .password("dev123e")
                     .email("admin@provider.com")
                     .tipoUsuario(Usuario.TipoUsuario.ADMINISTRADOR)
-                    .isEnabled(true)
-                    .accountNoExpired(true)
-                    .accountNoLocked(true)
-                    .credentialNoExpidered(true)
-                    .build();
-
-            Usuario usuarioElioComerciante = Usuario.builder()
-                    .username("elioclient")
-                    .password("dev123e")
-                    .email("client@provider.com")
-                    .tipoUsuario(Usuario.TipoUsuario.COMERCIANTE)
                     .isEnabled(true)
                     .accountNoExpired(true)
                     .accountNoLocked(true)
@@ -85,6 +83,18 @@ public class ProviderApplication {
                     .credentialNoExpidered(true)
                     .build();
 
+            Usuario usuarioElioComerciante = Usuario.builder()
+                    .username("elioclient")
+                    .password("dev123e")
+                    .email("client@provider.com")
+                    .tipoUsuario(Usuario.TipoUsuario.COMERCIANTE)
+                    .isEnabled(true)
+                    .accountNoExpired(true)
+                    .accountNoLocked(true)
+                    .credentialNoExpidered(true)
+                    .build();
+
+
             //Asignamos los roles a los usuarios
             usuarioElioComerciante.setRoles(listaRolClient);
             usuarioElioAdmin.setRoles(listaRolAdmin);
@@ -92,9 +102,10 @@ public class ProviderApplication {
 
 
             // Guardar usuarios en la base de datos
-//            usuarioRepository.save(usuarioElioAdmin);
-//            usuarioRepository.save(usuarioElioComerciante);
-//            usuarioRepository.save(usuarioElioProveedor);
+            usuarioRepository.save(usuarioElioAdmin);
+            usuarioRepository.save(usuarioElioProveedor);
+            usuarioRepository.save(usuarioElioComerciante);
+
 
             // Crear perfiles
             Perfil perfilAdmin = Perfil.builder()
@@ -105,14 +116,6 @@ public class ProviderApplication {
                     .usuario(usuarioElioAdmin)
                     .build();
 
-            Perfil perfilComerciante = Perfil.builder()
-                    .nombre("Elio")
-                    .apellido("Herrera")
-                    .fotoPerfil("default.png")
-                    .descripcion("Comerciante")
-                    .usuario(usuarioElioComerciante)
-                    .build();
-
             Perfil perfilProveedor = Perfil.builder()
                     .nombre("Elio")
                     .apellido("Herrera")
@@ -121,9 +124,17 @@ public class ProviderApplication {
                     .usuario(usuarioElioProveedor)
                     .build();
 
-//            perfilRepository.save(perfilAdmin);
-//            perfilRepository.save(perfilProveedor);
-//            perfilRepository.save(perfilComerciante);
+            Perfil perfilComerciante = Perfil.builder()
+                    .nombre("Elio")
+                    .apellido("Herrera")
+                    .fotoPerfil("default.png")
+                    .descripcion("Comerciante")
+                    .usuario(usuarioElioComerciante)
+                    .build();
+
+            perfilRepository.save(perfilAdmin);
+            perfilRepository.save(perfilProveedor);
+            perfilRepository.save(perfilComerciante);
 
 
             // Crear empresa para el proveedor
@@ -136,8 +147,21 @@ public class ProviderApplication {
                     .build();
 
             // Guardar empresa en la base de datos
-//            empresaRepository.save(empresaProveedor);
+            empresaRepository.save(empresaProveedor);
 
+
+
+            Comercio comercioComerciante = Comercio.builder()
+                    .nombre("Comercio del Comerciante")
+                    .telefono("987654321")
+                    .rubro("Rubro del Comerciante")
+                    .domicilio("Dirección del Comerciante")
+                    .comerciante(perfilComerciante) // Asignar el perfil del comerciante
+                    .build();
+
+            // Guardar comercio en la base de datos
+            comercioRepository.save(comercioComerciante);
+            /*
             // Crear productos para la empresa proveedora
             Producto producto1 = Producto.builder()
                     .nombre("Producto 1")
@@ -154,8 +178,8 @@ public class ProviderApplication {
                     .build();
 
             // Guardar productos en la base de datos
-//            productoRepository.save(producto1);
-//            productoRepository.save(producto2);
+            productoRepository.save(producto1);
+            productoRepository.save(producto2);
 
             // Crear lista de precios para la empresa proveedora
             ListaPrecio listaPrecio1 = ListaPrecio.builder()
@@ -166,23 +190,13 @@ public class ProviderApplication {
                     .build();
 
 
-
             // Guardar lista de precios en la base de datos
-//            listaPrecioRepository.save(listaPrecio1);
+            listaPrecioRepository.save(listaPrecio1);
 
             // Código para crear comercio y pedidos omitido por simplicidad
             // Crear comercio para el comerciante
-            Comercio comercioComerciante = Comercio.builder()
-                    .nombre("Comercio del Comerciante")
-                    .telefono("987654321")
-                    .rubro("Rubro del Comerciante")
-                    .domicilio("Dirección del Comerciante")
-                    .comerciante(perfilComerciante) // Asignar el perfil del comerciante
-                    .build();
 
-           // Guardar comercio en la base de datos
-//            comercioRepository.save(comercioComerciante);
-
+            */
 
         };
     }
