@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://provider-426416.rj.r.appspot.com",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

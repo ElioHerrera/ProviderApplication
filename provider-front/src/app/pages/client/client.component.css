@@ -1,0 +1,27 @@
+body {
+  background-color: rgb(240, 240, 240);
+}
+
+.box-proveedor {
+  background-color: #ffffff;
+  border: 1px solid #E0E0E0; /* Borde del recuadro */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 10px; /* Espaciado interno */
+  margin: 10px; /* Margen inferior para separar elementos */
+}
+
+ul {
+  list-style-type: none; /* Elimina los marcadores de lista */
+}
+
+.proveedor-info {
+  display: flex; /* Utiliza flexbox para alinear los elementos */
+  align-items: center; /* Centra verticalmente los elementos */
+}
+
+.circle-img {
+  width: 64px; /* Ancho de la imagen */
+  height: 64px; /* Altura de la imagen */
+  border-radius: 50%; /* Bordes redondeados para crear un círculo */
+  margin-right: 10px; /* Espacio entre la imagen y la caja de detalles */
+}

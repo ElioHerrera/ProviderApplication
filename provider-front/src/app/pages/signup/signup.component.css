@@ -1,0 +1,10 @@
+
+.body{
+  background-color: rgb(240, 240, 240);    
+  }
+  
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }

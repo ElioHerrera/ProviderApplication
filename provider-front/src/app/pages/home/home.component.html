@@ -1,0 +1,108 @@
+<div *ngIf="esDealer">
+  <app-navhome></app-navhome>
+</div>
+
+<div *ngIf="esProvider">
+  <app-navprov></app-navprov>
+</div>
+
+<div class="principal-container body">
+  <div class="izquierda">
+
+    <div class="box full-width ">
+
+      <h1 class="text-center" style="font-size: 16px;">Bienvenido, {{ user?.perfil?.nombre }} {{ user?.perfil?.apellido
+        }} </h1>
+      <div class="text-center">
+        <img [src]="getProfileImageUrl(user.perfil.fotoPerfil)" alt="Profile Image" class="circle-img-profile">
+      </div>
+      <div class="datos-ususario">
+
+        <p>
+          Descripción: <span class="nombre-apellido">{{ user?.perfil?.descripcion }}</span><br>
+          Email: <span class="nombre-apellido">{{ user?.email }}</span><br>
+          Empresa: <span class="nombre-apellido">{{ user?.perfil?.empresa?.nombre }}{{ user?.perfil?.comercio?.nombre }}</span><br>
+          Rubro: <span class="nombre-apellido">{{ user?.perfil?.empresa?.rubro }}{{ user?.perfil?.comercio?.rubro }}</span><br>
+          Domicilio: <span class="nombre-apellido">{{ user?.perfil?.empresa?.domicilio }}{{ user?.perfil?.comercio?.domicilio }}</span><br>
+          Cel: <span class="nombre-apellido">{{ user?.perfil?.empresa?.telefono }}{{ user?.perfil?.comercio?.telefono }}</span>
+        </p>
+      </div>
+      <mat-accordion>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title style="font-size: 10px;">
+              <mat-icon>create</mat-icon>
+            </mat-panel-title>
+            <mat-panel-description style="font-size: 12px;">
+              Datos Personales
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="inputImagen">
+            <input type="file" (change)="onFileSelected($event)">
+            <button class="upload-button" (click)="onUpload()"> <mat-icon>save</mat-icon> Subir Archivo</button>
+          </div>
+
+          <div class="inputDatos">
+            <div>
+              <label for="newNombre">Nuevo Nombre:</label>
+              <input type="text" id="newNombre" [(ngModel)]="nuevoNombre" required>
+              <!-- Aquí pasamos el ID del usuario como argumento a la función actualizarNombreUsuario() -->
+              <button (click)="actualizarNombre(user.id, nuevoNombre)">Actualizar Nombre</button>
+            </div>
+            <div>
+              <label for="newApellido">Nuevo Apellido:</label>
+              <input type="text" id="newApellido" [(ngModel)]="nuevoApellido" required>
+              <button (click)="actualizarApellido(user.id, nuevoApellido)">Actualizar Apellido</button>
+            </div>
+            <div>
+              <label for="newDescripcion">Nueva Descripción:</label>
+              <input id="newDescripcion" [(ngModel)]="nuevaDescripcion" required>
+              <button (click)="actualizarDescripcion(user.id, nuevaDescripcion)">Actualizar Descripción</button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <div class="central full-width">
+    <div class="box text-center">
+      <p>Contenido Publicaciones</p>
+    </div>
+  </div>
+  <div class="derecha">
+    <div class="box full-width text-center">
+      <h2 class="text-center">Relaciones comerciales</h2>
+
+      <div class="container box-proveedores">
+
+        <div *ngIf="relacionesComerciales.length > 0; else noSolicitudes">
+          <div *ngFor="let perfil of relacionesComerciales" class="proveedor-item">
+            <div class="proveedor-info">
+              <!-- Detalles de la solicitud -->
+
+              <img [src]="getProfileImageRelacion(perfil?.usuario?.id, perfil?.fotoPerfil)" alt="Profile Image" class="circle-img-lateral" (error)="handleImgError($event)">
+
+              <!--img
+                [src]="perfil.usuario?.id ? getProfileImageRelacion(perfil?.usuario.id, perfil?.fotoPerfil) : 'ruta/a/imagen/por/defecto'"
+                alt="Imagen de perfil" class="circle-img-lateral" (error)="handleImgError($event)"-->
+                
+              <div class="full-width">
+
+                <div class="datos-usuarios">
+                  <p>
+                    <span class="nombre-apellido">{{ perfil?.nombre }} {{ perfil?.apellido}}</span><br>
+                    <span class="comercio-info">{{ perfil?.comercio?.nombre }} - {{ perfil?.comercio?.domicilio}}{{ perfil?.empresa?.nombre }} - {{ perfil?.empresa?.domicilio}}</span>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noSolicitudes>
+          <p>No hay relaciones Comerciales.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>

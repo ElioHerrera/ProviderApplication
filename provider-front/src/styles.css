@@ -1,0 +1,181 @@
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
+
+/* <<< GENERALES >>> */
+
+p{
+  font-size: 11px;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.full-width{
+    width: 100%;
+}
+
+.box {
+  background-color: #ffffff; /* BLANCO */
+  border: 1px solid #E0E0E0; /* Borde del recuadro */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 8px; /* Espaciado interno */
+  margin: 10px; /* Margen inferior para separar elementos */
+}
+
+/* <<< ESTRUCTURA PRINCIPAL >>> */
+
+.principal-container {
+    display: grid;
+  grid-template-columns: 10% 17% 46% 17% auto;
+  margin: auto;
+  grid-gap: 24px; 
+  }
+  
+  .izquierda {
+    grid-column: 2; /* La columna izquierda */
+  }
+  
+  .central {
+    grid-column: 3; /* La columna central */
+    
+  }
+  
+  .derecha {
+    grid-column: 4; /* La columna derecha */
+    justify-self: start;
+    margin-left: -38px;
+  }
+
+/* <<< NAV BAR >>> */
+
+.navBar {
+  height: 60px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.navBar * {
+  box-sizing: inherit; /* Esto asegura que todos los elementos dentro de .navBar también usen border-box */
+  margin: 0; /* Elimina cualquier margen que los elementos internos puedan tener por defecto */
+  padding: 0; /* Elimina cualquier padding que los elementos internos puedan tener por defecto */
+}
+  
+  .navContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 5px 30px;
+  }
+  
+  .logoContainer {
+    display: flex;
+    align-items: center;
+    padding-inline-start: 17%;
+    padding-bottom: 25px;
+  }
+  
+  .configContainer{
+  display: flex;
+  align-items: center;
+  padding-inline-end: 23%;
+  /* justify-content: flex-end;*/
+  
+  }
+
+  .seccionesContainer {
+    display: flex;
+    justify-content:space-between;
+    padding-inline-start: 8%;
+    padding-inline-end: 8%;
+    flex: 1;
+  }
+
+  .iconContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-decoration: none;
+    margin: 0 2px; /* Espacio entre los iconos */
+    width: 100px; /* Ancho fijo para cada icono */
+    justify-content: center; /* Centrar contenido verticalmente */
+  }
+
+  .iconContainer a {
+    text-decoration: none;
+    font-weight: bold; 
+    font-size: 11px;
+    color: #636363;
+  }
+ 
+  .iconContainer svg {
+   /* max-width: 100%;
+    max-height: 100%; */
+    fill: #636363; 
+  }
+
+.iconContainer span {
+  margin-top: 5px; /* Espacio entre el svg y el span */
+  text-align: center;
+  display: block;
+  margin-top: -10px;
+}
+  
+  .iconContainer a:hover svg,
+  .iconContainer a:hover span {
+    color: #8589eb; 
+    fill: #8589eb; 
+  }
+
+  .flex-container-datos-comer{
+    
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+  
+  }
+
+  .circle-img-lateral {
+    width: 38px; /* Ancho de la imagen */
+    height: 38px; /* Altura de la imagen */
+    border-radius: 50%; /* Bordes redondeados para crear un círculo */
+    margin-right: 5px; /* Espacio entre la imagen y la caja de detalles */
+  }
+  
+  
+  button {
+    font-size: 10px;
+  }
+  
+  
+  .datos-comerciante p {
+    color: rgb(106, 106, 106);
+    font-size: 14px;
+    
+  }
+  
+  
+  .datos-usuarios {
+  
+    text-align: left; 
+  }
+  
+  
+  
+  
+  .nombre-apellido {
+    color: black;
+    font-weight: bold;
+    
+  }
+  
+   .comercio-info {
+    color: rgb(106, 106, 106);
+    
+  }

@@ -1,0 +1,79 @@
+.body{
+    background-color: rgb(240, 240, 240);    
+    }
+  
+  .example-card {
+      max-width: 400px;
+    }
+  
+    
+    .example-header-image {
+      background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+      background-size: cover;
+    }
+  
+  
+  
+    .circle-img-profile {
+      height: 100px; /* Ajusta el tamaño de acuerdo a tus necesidades */
+      width: 100px; /* Ajusta el tamaño de acuerdo a tus necesidades */
+      border-radius: 50%; /* Hace que el contenedor sea un círculo */
+      object-fit: cover; /* Ajusta la imagen dentro del círculo */
+    }
+  
+    .box-proveedor {
+      background-color: #ffffff; 
+      border: 1px solid #E0E0E0; /* Borde del recuadro */
+      border-radius: 10px; /* Bordes redondeados */
+      padding: 10px; /* Espaciado interno */
+      margin: 10px; /* Margen inferior para separar elementos */
+      
+    }
+  
+  ul {
+      list-style-type: none; /* Elimina los marcadores de lista */
+     
+  }
+     
+    .proveedor-info {
+      display: flex; /* Utiliza flexbox para alinear los elementos */
+      align-items: center; /* Centra verticalmente los elementos */
+    }
+    
+    .circle-img {
+      width: 50px; /* Ancho de la imagen */
+      height: 50px; /* Altura de la imagen */
+      border-radius: 50%; /* Bordes redondeados para crear un círculo */
+      margin-right: 10px; /* Espacio entre la imagen y la caja de detalles */
+    }
+
+
+    .upload-button {
+      background-color: #165cbe; /* Fondo verde */
+      border: none; /* Sin borde */
+      color: white; /* Texto blanco */
+      padding: 5px 5px; /* Relleno interno */
+      text-align: center; /* Alinear el texto al centro */
+      text-decoration: none; /* Sin subrayado */
+      display: inline-block; /* Mostrar en línea */
+      font-size: 12px; /* Tamaño de fuente */
+      margin: 4px 2px; /* Márgenes */
+      cursor: pointer; /* Cursor de puntero */
+      border-radius: 8px; /* Esquinas redondeadas */
+      transition: background-color 0.3s ease; /* Transición para el cambio de color */
+    }
+    
+    .upload-button:hover {
+      background-color: #11458f; /* Cambio de color al pasar el mouse */
+    }
+    
+    .upload-button mat-icon {
+      vertical-align: middle; /* Alinear el ícono verticalmente en el medio */
+      margin-right: 8px; /* Espacio entre el ícono y el texto */
+    }
+    .circle-img-lateral {
+      width: 38px; /* Ancho de la imagen */
+      height: 38px; /* Altura de la imagen */
+      border-radius: 50%; /* Bordes redondeados para crear un círculo */
+      margin-right: 5px; /* Espacio entre la imagen y la caja de detalles */
+    }

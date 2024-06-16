@@ -1,0 +1,44 @@
+.body{
+    background-color: rgb(240, 240, 240);    
+    }
+  
+  .example-card {
+      max-width: 400px;
+    }
+  
+    
+    .example-header-image {
+      background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+      background-size: cover;
+    }
+  
+      .box-proveedor {
+      background-color: #ffffff; 
+      border: 1px solid #E0E0E0; /* Borde del recuadro */
+      border-radius: 10px; /* Bordes redondeados */
+      padding: 10px; /* Espaciado interno */
+      margin: 10px; /* Margen inferior para separar elementos */
+      
+    }
+  
+  ul {
+      list-style-type: none; /* Elimina los marcadores de lista */
+     
+  }
+     
+    .proveedor-info {
+      display: flex; /* Utiliza flexbox para alinear los elementos */
+      align-items: center; /* Centra verticalmente los elementos */
+    }
+    
+    .circle-img {
+      width: 64px; /* Ancho de la imagen */
+      height: 50px; /* Altura de la imagen */
+      border-radius: 50%; /* Bordes redondeados para crear un círculo */
+      margin-right: 10px; /* Espacio entre la imagen y la caja de detalles */
+    }
+  
+    button{
+      font-size: 10px;
+    }
+      

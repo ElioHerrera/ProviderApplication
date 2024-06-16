@@ -1,0 +1,75 @@
+<app-navprov></app-navprov>
+
+<div class="principal-container body">
+  <div class="izquierda">
+    <div class="box full-width text-center">
+    </div>
+  </div>
+  <div class="central full-width">
+    <div class="seccionesContainer box">
+      <div class="full-width">
+        <div class="container box-proveedores">
+          <h2 class="text-center">Solicitudes Recibidas</h2>
+          <div *ngIf="solicitudesRecibidas.length > 0; else noSolicitudes">
+            <div *ngFor="let solicitud of solicitudesRecibidas" class="proveedor-item">
+              <div class="proveedor-info">
+                <!-- Detalles de la solicitud -->
+                <img [src]="getProfileImageUrl(solicitud.solicitante?.usuario?.id, solicitud.solicitante?.fotoPerfil)" alt="Imagen de perfil" class="circle-img" >
+                <div class="box-proveedor full-width">
+                  <div class="flex-container-datos-comer">
+                    <div class="datos-comerciante">
+                      <!-- Mostrar detalles de la solicitud -->
+                      <h3>{{ solicitud.solicitante.nombre }} {{ solicitud.solicitante.apellido }}</h3>
+                      <p>| Comercio : {{ solicitud.solicitante.usuario.perfil.comercio.nombre }} - {{
+                        solicitud.solicitante.usuario.perfil.comercio.domicilio }} |</p>
+                      <p>| email : {{ solicitud.solicitante.usuario.email }} |</p>
+                    </div>
+                    <button mat-flat-button [color]="obtenerColorBoton(solicitud).color"
+                      (click)="aceptarCancelarSolicitud(solicitud)">
+                      {{ obtenerColorBoton(solicitud).texto }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noSolicitudes>
+            <p>No hay solicitudes recibidas.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="derecha">
+    <div class="box full-width text-center">
+      <h2 class="text-center">Relaciones comerciales</h2>
+
+      <div class="container box-proveedores">
+        
+        <div *ngIf="relacionesComerciales.length > 0; else noSolicitudes">
+          <div *ngFor="let perfil of relacionesComerciales" class="proveedor-item">
+            <div class="proveedor-info">
+              <!-- Detalles de la solicitud -->
+              <img
+                [src]="getProfileImageUrl(perfil?.usuario.id, perfil?.fotoPerfil)"
+                alt="Imagen de perfil" class="circle-img-lateral" (error)="handleImgError($event)">
+              <div class="full-width">
+                
+                  <div class="datos-usuarios">
+                    <p>
+                      <span class="nombre-apellido">{{ perfil?.nombre }} {{ perfil?.apellido}}</span><br>
+                      <span class="comercio-info">{{ perfil?.comercio?.nombre }} - {{ perfil?.comercio?.domicilio }}</span>
+                    </p>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noSolicitudes>
+          <p>No hay relaciones Comerciales.</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
