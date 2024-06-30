@@ -1,21 +1,12 @@
 package com.provider;
 
-import com.provider.entities.*;
 import com.provider.repositories.*;
 import com.provider.services.*;
-import org.hibernate.annotations.DialectOverride;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-
-
-import javax.sql.DataSource;
-import java.util.*;
 
 
 @SpringBootApplication
@@ -26,12 +17,16 @@ public class ProviderApplication {
     private UsuarioService usuarioService;
 
     @Autowired
+    private PerfilService perfilService;
+
+    @Autowired
     private RolService rolService;
 
     public static void main(String[] args) {
         SpringApplication.run(ProviderApplication.class, args);
 
     }
+
 
     @Bean
     CommandLineRunner init(
@@ -43,6 +38,7 @@ public class ProviderApplication {
             ListaPrecioRepository listaPrecioRepository
     ) {
         return args -> {
+
 
             /*
             Permiso permisoAdmin = Permiso.builder().nombrePermiso("Administrador").build();

@@ -12,12 +12,12 @@
               <form (ngSubmit)="login()">
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Nombre de Usuario</mat-label>
-                  <input [(ngModel)]="credentials.username" name="username" matInput placeholder="Digite su nombre de usuario" required>
+                  <input [(ngModel)]="credentials.username" name="username" matInput placeholder="Digite su nombre de usuario" id="username" autocomplete="username" required>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Contraseña</mat-label>
-                  <input [(ngModel)]="credentials.password" type="password" name="password" matInput placeholder="Digite su contraseña" required>
+                  <input [(ngModel)]="credentials.password" type="password" name="password" matInput placeholder="Digite su contraseña"  id="password" name="password" autocomplete="current-password" required>
                 </mat-form-field>
 
                 <div class="container text-center example-button-row" style="padding: 20px;">

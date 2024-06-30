@@ -18,7 +18,7 @@ public class PublicacionService {
         return publicacionRepository.findAll();
     }
 
-    public Optional<Publicacion> findById(Long id) {
+    public Optional<Publicacion> obtenerPublicacionOptionaPorId(Long id) {
         return publicacionRepository.findById(id);
     }
 
@@ -26,7 +26,9 @@ public class PublicacionService {
         return publicacionRepository.save(publicacion);
     }
 
-    public void deleteById(Long id) {
+    public void eliminar(Long id) {
         publicacionRepository.deleteById(id);
     }
+
+
 }

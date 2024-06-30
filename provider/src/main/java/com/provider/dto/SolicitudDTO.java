@@ -11,9 +11,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SolicitudDTO {
-    private Long id;
-    private PerfilSolicitudDTO solicitante;
-    private PerfilSolicitudDTO solicitado;
+    private Long idSolicitud;
+    private PerfilRelacionDTO solicitante;
+    private PerfilRelacionDTO solicitado;
     private Date fechaSolicitud;
     private boolean aceptada;
 }

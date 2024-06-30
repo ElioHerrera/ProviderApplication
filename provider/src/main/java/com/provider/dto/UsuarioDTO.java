@@ -1,10 +1,8 @@
 package com.provider.dto;
 
-import com.provider.entities.Rol;
 import com.provider.entities.Usuario;
 import lombok.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -15,8 +13,8 @@ import java.util.Set;
 @NoArgsConstructor
 public class UsuarioDTO {
     private Long id;
-    private String email;
     private String username;
+    private String email;
     private Usuario.TipoUsuario tipoUsuario;
     private PerfilDTO perfil;
     private boolean isEnabled;

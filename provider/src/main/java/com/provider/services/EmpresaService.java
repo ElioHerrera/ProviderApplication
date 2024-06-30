@@ -14,19 +14,20 @@ public class EmpresaService {
     @Autowired
     private EmpresaRepository empresaRepository;
 
-    public List<Empresa> findAll() {
+    public List<Empresa> obtenerTodasLasEmpresas() {
         return empresaRepository.findAll();
     }
 
-    public Optional<Empresa> findById(Long id) {
+    public Optional<Empresa> obtenerEmpresaOpcionalPorId(Long id) {
         return empresaRepository.findById(id);
     }
 
-    public Empresa save(Empresa empresa) {
+    public Empresa guardarEmpresa(Empresa empresa) {
         return empresaRepository.save(empresa);
     }
 
-    public void deleteById(Long id) {
+    public void guardarEmpresaPorId(Long id) {
         empresaRepository.deleteById(id);
     }
+
 }

@@ -1,3 +1,4 @@
+<!---------------------- Bloque NavBar ---------------------->
 <div *ngIf="esDealer">
   <app-navhome></app-navhome>
 </div>
@@ -6,96 +7,195 @@
   <app-navprov></app-navprov>
 </div>
 
-<div class="principal-container body">
-  <div class="izquierda">
 
+<div class="principal-container body">
+
+
+
+  <!---------------------- Bloque Datos Personales ---------------------->
+  <div class="izquierda">
     <div class="box full-width ">
 
-      <h1 class="text-center" style="font-size: 16px;">Bienvenido, {{ user?.perfil?.nombre }} {{ user?.perfil?.apellido
-        }} </h1>
+      <h1 class="text-center" style="font-size: 16px;">Bienvenido, {{ usuario.perfil.nombre }} {{
+        usuario.perfil.apellido }}
+      </h1>
       <div class="text-center">
-        <img [src]="getProfileImageUrl(user.perfil.fotoPerfil)" alt="Profile Image" class="circle-img-profile">
+        <!-- Imagen de prefil -->
+        <img [lazyLoad]="obtenerImagenPerfil(usuario.id, usuario.perfil.fotoPerfil)" alt="Profile Image" class="circle-img-profile">
       </div>
       <div class="datos-ususario">
-
         <p>
-          Descripción: <span class="nombre-apellido">{{ user?.perfil?.descripcion }}</span><br>
-          Email: <span class="nombre-apellido">{{ user?.email }}</span><br>
-          Empresa: <span class="nombre-apellido">{{ user?.perfil?.empresa?.nombre }}{{ user?.perfil?.comercio?.nombre }}</span><br>
-          Rubro: <span class="nombre-apellido">{{ user?.perfil?.empresa?.rubro }}{{ user?.perfil?.comercio?.rubro }}</span><br>
-          Domicilio: <span class="nombre-apellido">{{ user?.perfil?.empresa?.domicilio }}{{ user?.perfil?.comercio?.domicilio }}</span><br>
-          Cel: <span class="nombre-apellido">{{ user?.perfil?.empresa?.telefono }}{{ user?.perfil?.comercio?.telefono }}</span>
+          Descripción: <span class="nombre-apellido">{{ usuario.perfil.descripcion }}</span><br>
+          Email: <span class="nombre-apellido">{{ usuario.email }}</span>
         </p>
+
+        <ng-container *ngIf="usuario.perfil.empresa; else comercioDatos">
+          <p>
+            Nombre: <span class="nombre-apellido">{{ usuario.perfil.empresa.nombre }}</span><br>
+            Rubro: <span class="nombre-apellido">{{ usuario.perfil.empresa.rubro }}</span><br>
+            Domicilio: <span class="nombre-apellido">{{ usuario.perfil.empresa.domicilio }}</span><br>
+            Cel: <span class="nombre-apellido">{{ usuario.perfil.empresa.telefono }}</span>
+          </p>
+        </ng-container>
+
+        <ng-template #comercioDatos>
+          <p>
+            Nombre: <span class="nombre-apellido">{{ usuario.perfil.comercio.nombre }}</span><br>
+            Rubro: <span class="nombre-apellido">{{ usuario.perfil.comercio.rubro }}</span><br>
+            Domicilio: <span class="nombre-apellido">{{ usuario.perfil.comercio.domicilio }}</span><br>
+            Cel: <span class="nombre-apellido">{{ usuario.perfil.comercio.telefono }} </span>
+          </p>
+        </ng-template>
+
+
+
+
       </div>
+
+
       <mat-accordion>
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header>
             <mat-panel-title style="font-size: 10px;">
               <mat-icon>create</mat-icon>
             </mat-panel-title>
+
+
             <mat-panel-description style="font-size: 12px;">
               Datos Personales
             </mat-panel-description>
           </mat-expansion-panel-header>
 
-          <div class="inputImagen">
-            <input type="file" (change)="onFileSelected($event)">
-            <button class="upload-button" (click)="onUpload()"> <mat-icon>save</mat-icon> Subir Archivo</button>
-          </div>
 
+          <div class="inputImagen">
+            <input type="file" (change)="archivoSeleccionado($event)">
+            <button class="upload-button" (click)="actializarImagenPerfil()"> <mat-icon>save</mat-icon> Subir Archivo</button>
+          </div>
           <div class="inputDatos">
             <div>
               <label for="newNombre">Nuevo Nombre:</label>
               <input type="text" id="newNombre" [(ngModel)]="nuevoNombre" required>
-              <!-- Aquí pasamos el ID del usuario como argumento a la función actualizarNombreUsuario() -->
-              <button (click)="actualizarNombre(user.id, nuevoNombre)">Actualizar Nombre</button>
+
+              <button (click)="actualizarNombre(usuario.id, nuevoNombre)">Actualizar Nombre</button>
             </div>
             <div>
               <label for="newApellido">Nuevo Apellido:</label>
               <input type="text" id="newApellido" [(ngModel)]="nuevoApellido" required>
-              <button (click)="actualizarApellido(user.id, nuevoApellido)">Actualizar Apellido</button>
+              <button (click)="actualizarApellido(usuario.id, nuevoApellido)">Actualizar Apellido</button>
             </div>
             <div>
               <label for="newDescripcion">Nueva Descripción:</label>
               <input id="newDescripcion" [(ngModel)]="nuevaDescripcion" required>
-              <button (click)="actualizarDescripcion(user.id, nuevaDescripcion)">Actualizar Descripción</button>
+              <button (click)="actualizarDescripcionPerfil(usuario.id, nuevaDescripcion)">Actualizar
+                Descripción</button>
             </div>
           </div>
         </mat-expansion-panel>
       </mat-accordion>
+
+
+
+
+
     </div>
   </div>
+
+
+
+  <!---------------------- Bloque Publicaciones ---------------------->
   <div class="central full-width">
-    <div class="box text-center">
-      <p>Contenido Publicaciones</p>
+    <div class="box" style="padding: 10px;">
+      
+      <h1 class="text-center" style="font-size: 16px;">Nueva Publicación</h1>
+      <form (ngSubmit)="crearPublicacion()">
+        
+        <div class="image-preview full-with" *ngIf="imagePreview">
+          <img [lazyLoad]="imagePreview" alt="Image Preview">
+        </div>
+        <mat-form-field class="full-width">
+          <textarea matInput [(ngModel)]="descripcionPublicacion" placeholder="Descripción de la Publicación"
+            name="descripcionPublicacion" class="full-width"></textarea>
+        </mat-form-field>
+        <input type="file"  class="full-width" (change)="onFileSelectedPublicacion($event)">
+        <button mat-flat-button type="submit">Crear Publicación</button>
+      </form>
+ 
     </div>
-  </div>
+
+
+    <!-- Publicaciones -->
+    <div>
+    
+        <div *ngIf="publicaciones.length > 0; else noPublicaciones">
+          <div *ngFor="let publicacion of publicaciones" >
+
+            <div class="box">
+            <mat-card appearance="outlined">
+              <mat-card-header>
+                <div class="proveedor-info">
+                  <img [lazyLoad]="obtenerImagenPerfil(publicacion.autor.id, publicacion.autor.fotoPerfil)"
+                    class="circle-img-lateral" (error)="handleImgError($event)">
+                  <div class="full-width">
+                    <mat-card-title>{{ publicacion.autor.nombre }} {{ publicacion.autor.apellido }}</mat-card-title>
+                    <mat-card-subtitle>{{publicacion.fecha | date:'longDate'}}</mat-card-subtitle>
+                  </div>
+                </div>
+              </mat-card-header>
+              <img [lazyLoad]="obtenerImagenPerfil(publicacion.autor.id, publicacion.fotoPublicacion)" class="imagenPublicacion">
+              <mat-card-content>
+                <p style="font-size:medium;">{{ publicacion.contenido }}</p>
+              </mat-card-content>
+              <mat-card-actions>
+                <div class="example-label">
+                  <div class="example-button-row">
+                    <div class="example-button-group-left">
+                      <button mat-flat-button color="primary">LIKE</button>
+                      <button mat-flat-button>SHARE</button>
+                    </div>
+                    <button mat-flat-button *ngIf="publicacion.autor.id === usuario.id"
+                      (click)="eliminarPublicacion(publicacion.idPublicacion)" color="warn">ELIMINAR</button>
+                  </div>
+                </div>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+
+          </div>
+        </div>
+        <!-- Caso sin publicaciones -->
+        <ng-template #noPublicaciones>
+          <p>No hay publicaciones disponibles.</p>
+        </ng-template>
+      </div>
+    </div>
+  
+    
+  <!---------------------- Bloque Relaciones Comerciales ---------------------->
   <div class="derecha">
     <div class="box full-width text-center">
       <h2 class="text-center">Relaciones comerciales</h2>
-
       <div class="container box-proveedores">
-
         <div *ngIf="relacionesComerciales.length > 0; else noSolicitudes">
-          <div *ngFor="let perfil of relacionesComerciales" class="proveedor-item">
+          <div *ngFor="let perfilRelacion of relacionesComerciales" class="proveedor-item">
             <div class="proveedor-info">
-              <!-- Detalles de la solicitud -->
 
-              <img [src]="getProfileImageRelacion(perfil?.usuario?.id, perfil?.fotoPerfil)" alt="Profile Image" class="circle-img-lateral" (error)="handleImgError($event)">
-
-              <!--img
-                [src]="perfil.usuario?.id ? getProfileImageRelacion(perfil?.usuario.id, perfil?.fotoPerfil) : 'ruta/a/imagen/por/defecto'"
-                alt="Imagen de perfil" class="circle-img-lateral" (error)="handleImgError($event)"-->
-                
+              <!-- Relaciones Comerciales -->
+              <img [lazyLoad]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)" alt="Profile Image"
+                class="circle-img-lateral" (error)="handleImgError($event)">
               <div class="full-width">
-
                 <div class="datos-usuarios">
                   <p>
-                    <span class="nombre-apellido">{{ perfil?.nombre }} {{ perfil?.apellido}}</span><br>
-                    <span class="comercio-info">{{ perfil?.comercio?.nombre }} - {{ perfil?.comercio?.domicilio}}{{ perfil?.empresa?.nombre }} - {{ perfil?.empresa?.domicilio}}</span>
+                    <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{ perfilRelacion.apellido}}</span><br>
+                    <ng-container *ngIf="perfilRelacion.empresa">
+                      <span class="comercio-info">{{ perfilRelacion.empresa.nombre }} - {{
+                        perfilRelacion.empresa.domicilio }}</span>
+                    </ng-container>
+                    <ng-container *ngIf="perfilRelacion.comercio">
+                      <span class="comercio-info">{{ perfilRelacion.comercio.nombre }} - {{
+                        perfilRelacion.comercio.domicilio }}</span>
+                    </ng-container>
                   </p>
                 </div>
-
               </div>
             </div>
           </div>
@@ -106,3 +206,28 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<footer
+  style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: Arial, sans-serif; color: #333;">
+  <div style="max-width: 1200px; margin: auto;">
+    <div
+      style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid #ddd;">
+
+      <!-- Redes sociales -->
+      <div style="flex: 1; min-width: 250px; margin-bottom: 20px;">
+        <h4 style="margin-bottom: 10px;">Síguenos</h4>
+        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/facebook-new.png"
+            alt="Facebook"></a>
+        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/twitter.png"
+            alt="Twitter"></a>
+        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/instagram-new.png"
+            alt="Instagram"></a>
+        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/linkedin.png"
+            alt="LinkedIn"></a>
+      </div>
+    </div>
+    <p style="margin: 20px 0;">&copy; 2024 Provider Pedidos &reg;. Todos los derechos reservados.</p>
+  </div>
+</footer>

@@ -3,55 +3,105 @@ export interface Usuario {
     email: string;
     username: string;
     tipoUsuario: string;
-    perfil: Perfil; // Actualizamos el tipo de perfil a la nueva entidad Perfil
+    perfil: Perfil;
     roles: Rol[];
     enabled: boolean;
 }
 
 export interface Perfil {
-    id: number;
+    idPerfil: number;
     nombre: string;
     apellido: string;
-    fotoPerfil: string; // Cambiamos el tipo a string para almacenar el nombre del archivo de la foto
+    fotoPerfil: string;
     descripcion: string;
-    relacionesComerciales: Perfil[];
     empresa: Empresa;
     comercio: Comercio;
-    // Otros campos del perfil según la estructura actual
 }
 
 export interface Rol {
-    id: number;
+    idRol: number;
     roleEnum: string;
     listaDePermisos: string[];
 }
 
 export interface Empresa {
-    id: number;
+    idEmpresa: number;
     nombre: string;
     rubro: string;
     telefono: string;
     domicilio: string;
-    //productos: Producto[];
-    //listasPrecios: ListaPrecio[];
-    proveedor: Perfil;
+   
+
 }
 
+export interface Producto {
+    idProducto: number;
+    idUsuario: number;
+    fotoProducto: string;
+    codigo: number;
+    nombre: string;
+    descripcion: string;
+    lista1: number;
+    lista2: number;
+    lista3: number;
+    editable: boolean; // Para la edición de nombre, descripción, etc.
+    enabled: boolean;
+    editableImagen: boolean; // Para la edición de la imagen del producto
+  }
+
 export interface Comercio {
-    id: number;
+    idComercio: number;
     nombre: string;
     telefono: string;
     rubro: string;
     domicilio: string;
-    comerciante: Perfil;
-    proveedores: Perfil[];
-    //pedidos: Pedido[];
 }
 
 export interface Solicitud {
-    id: number;
-    solicitante: Perfil;
-    solicitado: Perfil;
+    idSolicitud: number;
+    solicitante: PerfilRelacion;
+    solicitado: PerfilRelacion;
     fechaSolicitud: Date;
     aceptada: boolean;
 }
+
+export interface PerfilRelacion {
+    id: number;
+    idPerfil: number;
+    username: string;
+    email: string;
+    nombre: string;
+    apellido: string;
+    fotoPerfil: string;
+    comercio: ComercioRelacion;
+    empresa: EmpresaRelacion;
+}
+
+export interface EmpresaRelacion {
+    idEmpresa: number;
+    nombre: string;
+    rubro: string;
+    telefono: string;
+    domicilio: string;
+}
+
+export interface ComercioRelacion {
+    idComercio: number;
+    nombre: string;
+    telefono: string;
+    rubro: string;
+    domicilio: string;
+}
+
+export interface Publicacion {
+    idPublicacion: number;
+    autor: PerfilRelacion;
+    contenido: string;
+    fotoPublicacion: string;
+    fecha: Date;
+}
+
+
+
+
+

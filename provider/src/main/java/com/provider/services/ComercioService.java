@@ -13,20 +13,16 @@ public class ComercioService {
 
     @Autowired
     private ComercioRepository comercioRepository;
-
-    public List<Comercio> findAll() {
+    public List<Comercio> obtenerTodosLosComercio() {
         return comercioRepository.findAll();
     }
-
-    public Optional<Comercio> findById(Long id) {
+    public Optional<Comercio> obtenerComercioOpcionalPorId(Long id) {
         return comercioRepository.findById(id);
     }
-
-    public Comercio save(Comercio comercio) {
+    public Comercio guardarComercio(Comercio comercio) {
         return comercioRepository.save(comercio);
     }
-
-    public void deleteById(Long id) {
+    public void eliminarComercioPorIc(Long id) {
         comercioRepository.deleteById(id);
     }
 }

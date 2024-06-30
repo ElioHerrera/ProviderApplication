@@ -30,32 +30,37 @@ public class PerfilService {
     }
 
     public List<PerfilRelacionDTO> obtenerRelacionesComerciales(Long perfilId) {
+
+        System.out.println("METODO : List<PerfilRelacionDTO> obtenerRelacionesComerciales(Long perfilId)");
+
         Perfil perfil = perfilRepository.findById(perfilId).orElse(null);
         if (perfil != null) {
+            //System.out.println("Perfil encontado :  Username : " + perfil.getUsuario().getUsername());
             return perfil.getRelacioneComerciales().stream()
                     .map(PerfilRelacionConverter::entityToDTO)
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
+
     }
 
-    public List<Perfil> findAll() {
+    public List<Perfil> obtenerTodosLosPerfiles() {
         return perfilRepository.findAll();
     }
 
-    public Optional<Perfil> findById(Long id) {
+    public Optional<Perfil> obtenerPerfilPorId(Long id) {
         return perfilRepository.findById(id);
     }
 
-    public Perfil save(Perfil perfil) {
+    public Perfil guardarPerfil(Perfil perfil) {
         return perfilRepository.save(perfil);
     }
 
-    public void deleteById(Long id) {
+    public void eliminarPerfilPorId(Long id) {
         perfilRepository.deleteById(id);
     }
 
-    public Perfil findByNombre(String nombre) {
+    public Perfil obtenerPerfilPorNombre(String nombre) {
         return perfilRepository.findByNombre(nombre);
     }
 }

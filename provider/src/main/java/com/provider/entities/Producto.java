@@ -19,16 +19,16 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int codigo;
     private String nombre;
     private String descripcion;
-    private Double precio;
+    private String fotoProducto;
+    private boolean isEnabled;
 
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
     @ManyToMany(mappedBy = "productos")
-    private List<ListaPrecio> listasPrecios = new ArrayList<>();
-
-
+    private List<ListaPrecio> listasPrecios;
 }

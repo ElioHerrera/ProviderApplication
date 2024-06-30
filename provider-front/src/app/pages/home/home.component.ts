@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavhomeComponent } from '../../components/navhome/navhome.component'
+import { NavprovComponent } from '../../components/navprov/navprov.component';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
-//import { Usuario } from '../../usuario.model';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
@@ -17,12 +18,14 @@ import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { FormsModule } from '@angular/forms';
-import { NavprovComponent } from '../../components/navprov/navprov.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { LazyLoadImageModule } from 'ng-lazyload-image'; // Importa el módulo aquí
+
+
 //import Swal from 'sweetalert2';
 import baseUrl from '../../services/helper';
+import { PublicacionService } from '../../services/publicacion.service';
+import { Solicitud } from '../../usuario.model';
 
 
 @Component({
@@ -30,53 +33,83 @@ import baseUrl from '../../services/helper';
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [
-    NavhomeComponent, NavprovComponent,
-    CommonModule, FormsModule, RouterLink,
+    NavhomeComponent, NavprovComponent, 
+    CommonModule, FormsModule, RouterLink, MatAccordion,
     MatTabsModule, MatToolbarModule, MatIconModule, MatCardModule, MatButtonModule, MatListModule,
     MatExpansionModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSnackBarModule,
+    LazyLoadImageModule
+
   ],
+
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
+
 export class HomeComponent implements OnInit {
 
-  user: any = {};
+  usuario: any;
   esDealer: boolean = false;
-  esProvider: boolean = false;
-  userId: number | undefined; // Definir userId como una propiedad de la clase
+  esProvider: boolean = false;  
+
+  //Variables para actualizar perfil
   panelOpenState = false;
-  selectedFile: string | null = null;
   nuevoNombre: string = '';
   nuevoApellido: string = '';
   nuevaDescripcion: string = '';
-  relacionesComerciales: any[] = [];
+  selectedFileProfile: File | null = null;
 
-  constructor(private http: HttpClient, private usuarioService: UserService, private router: Router, private snack: MatSnackBar) { }
+  //Variables de nueva publicacion
+  descripcionPublicacion: string ='';
+  selectedFilePublicacion: File | null = null;
+  imagePreview: string | null = null;
+
+  // Datos
+  relacionesComerciales: any[] = [];
+  publicaciones: any[] = [];
+
+  constructor(
+    private http: HttpClient,
+    private usuarioService: UserService,
+    private publicacionService: PublicacionService,
+    private router: Router,
+    private snack: MatSnackBar) { }
 
   ngOnInit(): void {
 
-    const storedUser = localStorage.getItem('currentUser');
+    // Recuperar los datos del usuario del almacenamiento local
+    const storedUser: string | null = localStorage.getItem('currentUser');
     if (storedUser) {
-      this.user = JSON.parse(storedUser);
-      console.log('Datos del usuario:', this.user);
-      const roles = this.user.roles.map((role: any) => role.roleEnum);
-      this.esDealer = roles.includes('CLIENT');
-      this.esProvider = roles.includes('PROVIDER');
-      this.obtenerRelacionesComerciales(this.user.perfil.id);
-    }
-  }
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-  }
-  //Cargar Imagen de perfil
-  onUpload() {
-    if (!this.selectedFile) {
-      return;
+      this.usuario = JSON.parse(storedUser);
+      console.log('Datos del usuario:', this.usuario);
+      
+    } else {
+      console.error('No se encontraron datos del usuario en localStorage.');
     }
 
+    //Verificar si es Comerciante o Proveedor
+    if (this.usuario) {
+      const roles = this.usuario.roles.map((role: any) => role.roleEnum);
+      this.esDealer = roles.includes('CLIENT');
+      this.esProvider = roles.includes('PROVIDER');
+
+      //Obtener Datos        
+      this.obtenerRelacionesComerciales(this.usuario.perfil.idPerfil); //Pasar idPerfil
+      this.obtenerPublicaciones(this.usuario.id); //Pasar idUsuario
+    }
+  }
+
+  // Actualizar datos usuario
+  archivoSeleccionado(event: any): void {
+    this.selectedFileProfile = event.target.files[0];
+  }
+  actializarImagenPerfil() {
+    if (!this.selectedFileProfile) {
+      console.error('Archivo no seleccionado');
+      return; // Salir de la función si no hay archivo seleccionado
+    }
     const formData = new FormData();
-    formData.append('file', this.selectedFile);
-    formData.append('userId', this.user.id.toString()); // Asegurémonos de convertir el ID a string
+    formData.append('file', this.selectedFileProfile);
+    formData.append('userId', this.usuario.id.toString()); // Asegurémonos de convertir el ID a string
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');
 
@@ -84,32 +117,23 @@ export class HomeComponent implements OnInit {
       .subscribe(
         response => {
           console.log('Archivo subido exitosamente:', response);
-          this.user.perfil.fotoPerfil = response.fileName; // Actualizamos el nombre de la foto de perfil
-          localStorage.setItem('currentUser', JSON.stringify(this.user)); // Actualiza el almacenamiento local
+          this.usuario.perfil.fotoPerfil = response.fileName; // Actualizamos el nombre de la foto de perfil
+          localStorage.setItem('currentUser', JSON.stringify(this.usuario)); // Actualiza el almacenamiento local
+          this.obtenerPublicaciones(this.usuario.id); //Actualizar publicaciones      
         },
         (error: HttpErrorResponse) => {
           console.error('Error al subir el archivo:', error);
         }
       );
   }
-  getProfileImageUrl(fileName: string): string {
-    this.userId = this.user ? this.user.id : '';
-    const url = `${baseUrl}/api/img/uploads/${this.userId}/${fileName}`;
-    return url;
-  }
-
-  getProfileImageRelacion(proveedorId: number, fileName: string): string {
-    const url = `${baseUrl}/api/img/uploads/${proveedorId}/${encodeURIComponent(fileName)}`;
-    console.log('Generated URL:', url); // Añade este log
-    return url;
-  }
- 
-  handleImgError(event: any): void {
-    event.target.src = `${baseUrl}/api/img/uploads/default/default.png`;
-  }
-  
-  // Actualizar Datos
   actualizarNombre(id: number, nuevoNombre: string) {
+
+    if (!nuevoNombre || nuevoNombre.trim() === '') {
+      console.error('El nombre no puede estar vacío');
+      this.snack.open('El nombre no puede estar vacío', 'Cerrar', { duration: 3000 });
+      return; // Salir del método si el nombre está vacío
+    }
+
     this.usuarioService.actualizarNombre(id, nuevoNombre).subscribe(
       response => {
         console.log('Nombre actualizado:', response);
@@ -117,7 +141,7 @@ export class HomeComponent implements OnInit {
         this.usuarioService.actualizarDatosUsuario(id).subscribe(
           usuarioActualizado => {
             console.log('Usuario actualizado:', usuarioActualizado);
-            this.user = usuarioActualizado; // Actualizar el objeto user con los datos actualizados
+            this.usuario = usuarioActualizado; // Actualizar el objeto user con los datos actualizados
           },
           error => {
             console.error('Error al obtener el usuario actualizado:', error);
@@ -132,6 +156,11 @@ export class HomeComponent implements OnInit {
     );
   }
   actualizarApellido(id: number, nuevoApellido: string) {
+    if (!nuevoApellido || nuevoApellido.trim() === '') {
+      console.error('El apellido no puede estar vacío');
+      this.snack.open('El apellido no puede estar vacío', 'Cerrar', { duration: 3000 });
+      return; // Salir del método si el nombre está vacío
+    }
     this.usuarioService.actualizarApellido(id, nuevoApellido).subscribe(
       response => {
         console.log('Nombre actualizado:', response);
@@ -139,7 +168,7 @@ export class HomeComponent implements OnInit {
         this.usuarioService.actualizarDatosUsuario(id).subscribe(
           usuarioActualizado => {
             console.log('Usuario actualizado:', usuarioActualizado);
-            this.user = usuarioActualizado; // Actualizar el objeto user con los datos actualizados
+            this.usuario = usuarioActualizado; // Actualizar el objeto user con los datos actualizados
           },
           error => {
             console.error('Error al obtener el usuario actualizado:', error);
@@ -153,30 +182,90 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-  actualizarDescripcion(id: number, nuevaDescripcion: string) {
-    this.usuarioService.actualizarDescripcion(id, nuevaDescripcion).subscribe(
+  actualizarDescripcionPerfil(id: number, nuevaDescripcionPerfil: string): void {
+    if (nuevaDescripcionPerfil || nuevaDescripcionPerfil.trim() === '') {
+      console.error('La descripción no puede estar vacía');
+      this.snack.open('La descripción no puede estar vacía', 'Cerrar', { duration: 3000 });
+      return; // Salir del método si el nombre está vacío
+    }
+
+    this.usuarioService.actualizarDescripcion(id, nuevaDescripcionPerfil).subscribe(
       response => {
-        console.log('Nombre actualizado:', response);
-        // Realizar una solicitud GET para obtener todos los datos actualizados del usuario
+        console.log('Descripción actualizada:', response);
         this.usuarioService.actualizarDatosUsuario(id).subscribe(
           usuarioActualizado => {
             console.log('Usuario actualizado:', usuarioActualizado);
-            this.user = usuarioActualizado; // Actualizar el objeto user con los datos actualizados
+            this.usuario = usuarioActualizado;
           },
           error => {
             console.error('Error al obtener el usuario actualizado:', error);
-            // Manejar el error si es necesario
           }
         );
       },
       error => {
-        console.error('Error al actualizar nombre:', error);
-        // Manejar el error si es necesario
+        console.error('Error al actualizar descripción:', error);
       }
     );
   }
-  obtenerRelacionesComerciales(userId: number): void { // Recibir el ID del usuario como argumento
-    this.usuarioService.obtenerRelacionesComerciales(userId).subscribe(
+  // Obtener Imagen de Perfil
+  obtenerImagenPerfil(userId: number, fileName: string): string {
+    const url = `${baseUrl}/api/img/uploads/${userId}/${encodeURIComponent(fileName)}`;
+
+    return url;
+  }
+  handleImgError(event: any): void {
+    event.target.src = `${baseUrl}/api/img/uploads/default/default.png`;
+  }
+  // Crear nueva publicación
+  onFileSelectedPublicacion(event: any): void {
+    this.selectedFilePublicacion = event.target.files[0];
+    if (this.selectedFilePublicacion) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(this.selectedFilePublicacion);
+    }
+  }
+  crearPublicacion(): void {
+    if (!this.selectedFilePublicacion || !this.descripcionPublicacion) {
+      console.error('Debe seleccionar una imagen y escribir una descripción.');
+      return;
+    }
+
+    this.publicacionService.crearPublicacion(this.selectedFilePublicacion, this.usuario.id, this.descripcionPublicacion)
+      .subscribe(
+        response => {
+          console.log('Publicación creada exitosamente:', response);
+          this.imagePreview = null;
+          this.descripcionPublicacion = '';
+          this.snack.open('Publicación creada exitosamente', 'Cerrar', { duration: 3000 });
+          this.obtenerPublicaciones(this.usuario.id);
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error al crear la publicación:', error);
+        }
+      );
+  }
+  eliminarPublicacion(publicacionId: number): void {
+    this.publicacionService.eliminarPublicacion(publicacionId)
+      .subscribe(
+        response => {
+          console.log('Publicación eliminada exitosamente:', response);
+          // Actualizar la lista de publicaciones después de eliminar
+          this.obtenerPublicaciones(this.usuario.id);
+          // Mostrar mensaje de éxito opcional
+          this.snack.open('Publicación eliminada exitosamente', 'Cerrar', { duration: 3000 });
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error al eliminar la publicación:', error);
+          // Manejar el error si es necesario
+        }
+      );
+  }
+    //Obtener datos
+  obtenerRelacionesComerciales(perfilId: number): void { // Recibir el ID del usuario como argumento
+    this.usuarioService.obtenerRelacionesComerciales(perfilId).subscribe(
       (relaciones) => {
         console.log('Relaciones comerciales:', relaciones);
         this.relacionesComerciales = relaciones;
@@ -186,27 +275,18 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-/*
-obtenerRelacionesComerciales(userId: number): void {
-  this.http.get<any[]>(`${baseUrl}/api/perfiles/${userId}/relaciones-comerciales`).subscribe(
-    (relaciones) => {
-      console.log('Relaciones comerciales recibidas:', relaciones);
-      this.relacionesComerciales = relaciones;
-    },
-    (error: HttpErrorResponse) => {
-      if (error.error instanceof ErrorEvent) {
-        // Error del lado del cliente
-        console.error('Error del lado del cliente:', error.error.message);
-      } else {
-        // Error del lado del servidor
-        console.error(`Error del lado del servidor (status ${error.status}): ${error.error}`);
+  obtenerPublicaciones(usuarioId: number): void {
+    this.publicacionService.obtenerPublicacionesPorPerfilyAsociados(usuarioId).subscribe(
+      (response) => {
+        this.publicaciones = response;
+        console.log('Puclicaciones: ', this.publicaciones);
+      },
+      (error) => {
+        console.error('Error al obtener las publicaciones:', error);
+        this.snack.open('Error al obtener las publicaciones', 'Cerrar', { duration: 3000 });
       }
-    }
-  );
+    );
+  }
+
+
 }
-*/
-}
-
-
-
-

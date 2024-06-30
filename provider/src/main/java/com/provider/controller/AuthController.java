@@ -36,31 +36,27 @@ public class AuthController {
     @Autowired
     private ComercioService comercioService;
 
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Usuario usuario = usuarioService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
         if (usuario != null) {
+            // Asegúrate de que el perfil esté cargado
+            if (usuario.getPerfil() == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("Perfil no definido para el usuario"));
+            }
+
             UsuarioDTO usuarioDTO = UsuarioConverter.entityToDTO(usuario);
             String redirectUrl = determineRedirectUrl(usuarioDTO);
-            System.out.println("LOGIN");
+
             return ResponseEntity.ok(Map.of("user", usuarioDTO, "redirectUrl", redirectUrl));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Credenciales inválidas"));
         }
     }
 
-    private String determineRedirectUrl(UsuarioDTO usuarioDTO) {
-        if (usuarioDTO.getRoles().stream().anyMatch(role -> role.getRoleEnum().equals("ADMIN"))) {
-            return "/" + usuarioDTO.getUsername() + "/admin";
-        } else {
-            return "/" + usuarioDTO.getUsername() + "/home";
-        }
-    }
-
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> registrarUsuario(@RequestBody Usuario usuario) {
-        // Verificar si el nombre de usuario y el correo electrónico ya existen
+
         if (usuarioService.existsByUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "El nombre de usuario ya está en uso"));
         }
@@ -69,18 +65,17 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "El correo electrónico ya está en uso"));
         }
 
-        // Obtener permisos
-        Optional<Permiso> optionalPermisoCliente = permisoService.obtenerPermisoCliente();
-        Permiso permisoCliente = optionalPermisoCliente.orElse(null);
+           // Obtener permisos
+           Optional<Permiso> optionalPermisoCliente = permisoService.obtenerPermisoCliente();
+           Permiso permisoCliente = optionalPermisoCliente.orElse(null);
+           Optional<Permiso> optionalPermisoProveedor = permisoService.obtenerPermisoProveedor();
+           Permiso permisoProveedor = optionalPermisoProveedor.orElse(null);
 
-        Optional<Permiso> optionalPermisoProveedor = permisoService.obtenerPermisoProveedor();
-        Permiso permisoProveedor = optionalPermisoProveedor.orElse(null);
 
         // Buscar roles existentes
         Rol rolCliente = rolService.findByRoleEnum(RoleEnum.CLIENT);
         Rol rolProveedor = rolService.findByRoleEnum(RoleEnum.PROVIDER);
 
-        // Crear y configurar el nuevo usuario
         Usuario nuevoUsuario = Usuario.builder()
                 .username(usuario.getUsername())
                 .password(usuario.getPassword())
@@ -93,23 +88,16 @@ public class AuthController {
 
         // Verificar tipo de usuario elegido en el front
         if ("PROVEEDOR".equalsIgnoreCase(usuario.getTipoUsuario().name())) {
-            // Si eligió Proveedor, asociar el rol de proveedor
             nuevoUsuario.setTipoUsuario(Usuario.TipoUsuario.PROVEEDOR);
             nuevoUsuario.setRoles(Set.of(rolProveedor));
         } else if ("COMERCIANTE".equalsIgnoreCase(usuario.getTipoUsuario().name())) {
-            // Si eligió Comerciante, asociar el rol de cliente
-            nuevoUsuario.setTipoUsuario(Usuario.TipoUsuario.COMERCIANTE);
             nuevoUsuario.setRoles(Set.of(rolCliente));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Tipo de usuario no válido"));
         }
 
-        // Guardar el nuevo usuario en la base de datos
-        usuarioService.saveUser(nuevoUsuario);
+        usuarioService.guardarUsuario(nuevoUsuario);
 
-
-        System.out.println("Descripcion Recibida" + usuario.getPerfil().getDescripcion());
-        // Crear y guardar el perfil del nuevo usuario
         Perfil nuevoPerfil = Perfil.builder()
                 .nombre(usuario.getPerfil().getNombre())
                 .apellido(usuario.getPerfil().getApellido())
@@ -118,9 +106,8 @@ public class AuthController {
                 .usuario(nuevoUsuario)
                 .build();
 
-        perfilService.save(nuevoPerfil);
+        perfilService.guardarPerfil(nuevoPerfil);
 
-        // Crear y guardar empresa o comercio basado en el tipo de usuario
         if (nuevoUsuario.getTipoUsuario() == Usuario.TipoUsuario.PROVEEDOR) {
             Empresa nuevaEmpresa = Empresa.builder()
                     .nombre(usuario.getPerfil().getEmpresa().getNombre())
@@ -129,7 +116,7 @@ public class AuthController {
                     .domicilio(usuario.getPerfil().getEmpresa().getDomicilio())
                     .proveedor(nuevoPerfil)
                     .build();
-            empresaService.save(nuevaEmpresa);
+            empresaService.guardarEmpresa(nuevaEmpresa);
         } else if (nuevoUsuario.getTipoUsuario() == Usuario.TipoUsuario.COMERCIANTE) {
             Comercio nuevoComercio = Comercio.builder()
                     .nombre(usuario.getPerfil().getComercio().getNombre())
@@ -138,7 +125,7 @@ public class AuthController {
                     .domicilio(usuario.getPerfil().getComercio().getDomicilio())
                     .comerciante(nuevoPerfil)
                     .build();
-            comercioService.save(nuevoComercio);
+            comercioService.guardarComercio(nuevoComercio);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Usuario registrado con éxito"));
@@ -146,16 +133,22 @@ public class AuthController {
 
     @GetMapping("/verificarUsuario/{username}")
     public ResponseEntity<Boolean> verificarUsuarioExistente(@PathVariable String username) {
-        System.out.println("Veridicar username");
         boolean exists = usuarioService.existsByUsername(username);
         return ResponseEntity.ok(exists);
 }
 
     @GetMapping("/verificarEmail/{email}")
     public ResponseEntity<Boolean> verificarEmailExistente(@PathVariable String email) {
-        System.out.println("verificar email");
         boolean exists = usuarioService.existsByEmail(email);
         return ResponseEntity.ok(exists);
+    }
+
+    private String determineRedirectUrl(UsuarioDTO usuarioDTO) {
+        if (usuarioDTO.getRoles().stream().anyMatch(role -> role.getRoleEnum().equals("ADMIN"))) {
+            return "/" + usuarioDTO.getUsername() + "/admin";
+        } else {
+            return "/" + usuarioDTO.getUsername() + "/home";
+        }
     }
 }
 

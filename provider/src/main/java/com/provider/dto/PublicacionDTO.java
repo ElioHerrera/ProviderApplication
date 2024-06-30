@@ -11,8 +11,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PublicacionDTO {
-    private Long id;
+    private Long idPublicacion;
+    private PerfilRelacionDTO autor;
     private String contenido;
+    private String fotoPublicacion;
     private Date fecha;
-    private PerfilDTO autor;
 }

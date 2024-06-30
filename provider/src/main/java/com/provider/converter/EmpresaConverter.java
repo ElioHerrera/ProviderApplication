@@ -9,18 +9,16 @@ public class EmpresaConverter {
 
     public static EmpresaDTO entityToDTO(Empresa empresa) {
 
-        EmpresaDTO dto = new EmpresaDTO();
-        dto.setId(empresa.getId()); // Incluimos el ID para transferir al cliente
-        dto.setNombre(empresa.getNombre());
-        dto.setDomicilio(empresa.getDomicilio());
-        dto.setRubro(empresa.getRubro());
-        dto.setTelefono(empresa.getTelefono());
+        EmpresaDTO dto = EmpresaDTO.builder()
+                .idEmpresa(empresa.getId())
+                .nombre(empresa.getNombre())
+                .fotoEmpresa(empresa.getFotoEmpresa())
+                .domicilio(empresa.getDomicilio())
+                .rubro(empresa.getRubro())
+                .telefono(empresa.getTelefono())
+                .build();
 
         return dto;
     }
-
-    /*dto.setProveedor(PerfilConverter.entityToDTO(empresa.getProveedor()));
-    dto.setProductos(empresa.getProductos().stream().map(ProductoConverter::entityToDTO).collect(Collectors.toList()));
-    dto.setListasPrecios(empresa.getListasPrecios().stream().map(ListaPrecioConverter::entityToDTO).collect(Collectors.toList()));*/
 
 }

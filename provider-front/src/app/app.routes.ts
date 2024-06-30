@@ -40,4 +40,6 @@ export const routes: Routes = [
   { path: ':username/config', component: PedidosComponent, pathMatch: 'full' },
 
   
+
+
 ];

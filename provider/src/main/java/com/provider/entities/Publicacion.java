@@ -1,5 +1,6 @@
 package com.provider.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,10 +20,17 @@ public class Publicacion {
 
     private String contenido;
     private String fotoPublicacion;
-    private int Likes;
+    private int likes;
     private Date fecha;
 
     @ManyToOne
     @JoinColumn(name = "perfil_id")
+    @JsonIgnore
     private Perfil autor;
+
+    public void darLike(){
+        this.likes ++;
+
+    }
 }
+

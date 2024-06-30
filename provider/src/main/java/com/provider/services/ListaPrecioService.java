@@ -24,11 +24,14 @@ public class ListaPrecioService {
         return listaPrecioRepository.findById(id);
     }
 
-    public ListaPrecio save(ListaPrecio listaPrecio) {
+    public ListaPrecio guardarListaPrecio(ListaPrecio listaPrecio) {
         return listaPrecioRepository.save(listaPrecio);
     }
 
     public void deleteById(Long id) {
         listaPrecioRepository.deleteById(id);
     }
+
+
+
 }

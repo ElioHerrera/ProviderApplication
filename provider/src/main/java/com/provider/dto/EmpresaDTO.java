@@ -11,12 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmpresaDTO {
-    private Long id;
+    private Long idEmpresa;
     private String nombre;
+    private String fotoEmpresa;
     private String rubro;
     private String telefono;
     private String domicilio;
-    //private PerfilDTO proveedor;
-    private List<ProductoDTO> productos;
-    private List<ListaPrecioDTO> listasPrecios;
 }

@@ -2,7 +2,6 @@ package com.provider.dto;
 
 import lombok.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -14,7 +13,5 @@ import java.util.List;
 public class ListaPrecioDTO {
     private Long id;
     private String nombre;
-    private Date fecha;
-    private List<ProductoDTO> productos;
-    //private EmpresaDTO empresa;
+    private List<PrecioDTO> precios;
 }

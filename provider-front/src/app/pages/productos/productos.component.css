@@ -1,0 +1,138 @@
+.containerProductos{
+
+  margin-top: 15px;
+  margin-right: 50px;
+  margin-left: 50px;
+  
+}
+
+.product-table {
+  width: 100%;
+    margin-top: 20px;
+}
+
+.product-table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  font-size: 12px; 
+}
+
+.product-table {
+  width: 100%;
+   margin-top: 20px;
+}
+
+
+.product-table td input[type="text"] {
+  width: calc(100% - 16px); /* Ajusta el ancho para evitar desbordamientos */
+  box-sizing: border-box;
+}
+
+
+.product-table td img {
+  max-width: 100px;
+}
+
+.product-image-container {
+  position: relative;
+}
+
+
+/* Botones Agregar Producto - Lista*/
+.containerBotonProducto {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 20px; /* Separación de 20px del extremo derecho */
+}
+
+.botonProducto {
+  display: flex;
+  gap: 10px; /* Separación de 10px entre los botones */
+}
+
+.botonProducto button {
+  margin: 0;
+}
+
+
+/* Icono para edición de foto de Producto*/
+.edit-icon-button { 
+  position: absolute;
+  bottom: 5px; /* Ajusta la posición vertical según sea necesario */
+  right: 5px; /* Ajusta la posición horizontal según sea necesario */
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente para el botón */
+}
+
+.product-table td button {
+  display: inline-block; /* Asegura que los botones estén en línea */
+  margin-right: 5px; /* Espacio entre los botones */
+}
+
+/* Ajuste de columnas */
+
+.containerBorones{
+  display: flex;
+}
+
+
+
+.product-table td input {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.product-table td:nth-child(2){
+width: 100px;
+}
+
+.product-table td:nth-child(8){
+  width: 150px;
+}
+
+.product-table td:nth-child(3),
+.product-table td:nth-child(6),
+.product-table td:nth-child(7)
+ {
+  width: 100px;
+}
+
+.product-table td:nth-child(4) {
+  width: 20%; /* Ajuste el porcentaje según sea necesario */
+}
+
+.product-table td:nth-child(5) {
+  width: 40%; /* Ajuste el porcentaje según sea necesario */
+}
+
+/* Is Enabled*/
+.example-h2 {
+  margin: 10px;
+}
+
+.example-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+.example-margin {
+  margin: 10px;
+}
+
+.example-form mat-slide-toggle {
+  margin: 8px 0;
+  display: block;
+}
+
+.disabled-row {
+  background-color: #eee8e8; /* Fondo gris claro para productos deshabilitados */
+  opacity: 0.5; /* Opacidad reducida para la fila deshabilitada */
+  filter: grayscale(100%); /* Aplica escala de grises al 100% */
+}
+
+.enabled-row {
+  background-color: #ffffff; /* Fondo gris claro para productos deshabilitados */
+}

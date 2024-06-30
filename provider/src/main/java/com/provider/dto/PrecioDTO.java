@@ -2,15 +2,17 @@ package com.provider.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Data
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductoPedidoDTO {
+public class PrecioDTO {
     private Long id;
-    private Integer cantidad;
-    private ProductoDTO producto;
-    private PedidoDTO pedido;
+    private Long productoId;
+    private Long listaId;
+    private double precio;
 }

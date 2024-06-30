@@ -8,16 +8,15 @@ import java.util.stream.Collectors;
 public class UsuarioConverter {
 
     public static UsuarioDTO entityToDTO(Usuario usuario) {
-        UsuarioDTO dto = new UsuarioDTO();
-        dto.setId(usuario.getId());
-        dto.setEmail(usuario.getEmail());
-        dto.setUsername(usuario.getUsername());
-        dto.setTipoUsuario(usuario.getTipoUsuario());
-        dto.setEnabled(usuario.isEnabled());
-        dto.setPerfil(PerfilConverter.entityToDTO(usuario.getPerfil()));
-        dto.setRoles(usuario.getRoles().stream()
-                .map(RolConverter::entityToDTO)
-                .collect(Collectors.toSet()));
+        UsuarioDTO dto = UsuarioDTO.builder()
+                .id(usuario.getId())
+                .email(usuario.getEmail())
+                .username(usuario.getUsername())
+                .tipoUsuario(usuario.getTipoUsuario())
+                .isEnabled(usuario.isEnabled())
+                .perfil(PerfilConverter.entityToDTO(usuario.getPerfil()))
+                .roles(usuario.getRoles().stream().map(RolConverter::entityToDTO).collect(Collectors.toSet()))
+                .build();
         return dto;
     }
 

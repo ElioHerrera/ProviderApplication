@@ -3,6 +3,7 @@ package com.provider.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -18,13 +19,21 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int numeroPedido;
     private Date fecha;
-    private String estado;
-
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<ProductoPedido> productos;
+    //private String estado;
+    private double descuento;
+    private BigDecimal subTotal;
+    private BigDecimal total;
 
     @ManyToOne
     @JoinColumn(name = "comercio_id")
     private Comercio comercio;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<Item> items;
+
+
+
+
 }

@@ -18,18 +18,20 @@ public class ListaPrecio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nombre;
-    private Date fecha;
+    //private Date fecha;
+
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
+    private Empresa empresa;
 
     @ManyToMany
     @JoinTable(name = "lista_precio_producto",
             joinColumns = @JoinColumn(name = "lista_precio_id"),
             inverseJoinColumns = @JoinColumn(name = "producto_id"))
-    private List<Producto> productos = new ArrayList<>();
+    private List<Producto> productos;
 
-    @ManyToOne
-    @JoinColumn(name = "empresa_id")
-    private Empresa empresa;
+    @OneToMany(mappedBy = "lista", cascade = CascadeType.ALL)
+    private List<Precio> precios;
 
 }

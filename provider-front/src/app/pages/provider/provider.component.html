@@ -4,142 +4,96 @@
 
 <div class="principal-container body">
   <div class="izquierda">
-
     <div class="box full-width text-center">
-
-      <!--
-      <h1 style="font-size: 16px;">Bienvenido, {{ user?.nombre }} {{ user?.apellido }}</h1>
-
-      <img [src]="'assets/' + (user?.perfil ? user.perfil : 'default.png')" class="circle-img-profile"
-        alt="Imagen de perfil">
-
-      <p>Usuario: {{ user?.username }}</p>
-      <p>Empresa: {{ user?.empresa}}</p>
-      <p>Email: {{ user?.email }}</p>
-      <p>Cel: {{ user?.telefono }}</p>
-      <p>Domicilio: {{ user?.domicilio }}</p>
-      <ng-container *ngFor="let rol of user?.roles">
-        <ng-container *ngFor="let permiso of rol.listaDePermisos">
-          <p>Rol: {{ permiso.nombrePermiso }}</p>
-        </ng-container>
-      </ng-container>
-
-      -->
     </div>
-
   </div>
 
 
   <div class="central full-width">
     <div class="seccionesContainer box">
-
       <div class="full-width">
+        <mat-tab-group class="matTabGroup">
+          <mat-tab label="Mis Proveedores" class="matTabLabel">
+            <div class="box full-width text-center">
+              <h2 class="text-center">Relaciones comerciales</h2>
+              <div class="container box-proveedores">
+                <div *ngIf="relacionesComerciales.length > 0; else noSolicitudes">
+                  <div *ngFor="let perfilRelacion of relacionesComerciales" class="proveedor-item">
+                    <div class="proveedor-info">
 
-      <mat-tab-group class="matTabGroup">
-        <mat-tab label="Mis Proveedores" class="matTabLabel">
-          <!-- <div *ngFor="let proveedor of relacioneComerciales"
-            <p>{{ proveedor.nombre }}</p>
-          </div-->
-        </mat-tab>
-        <mat-tab label="Productos" class="matTabLabel">
+                      <!-- Relaciones Comerciales -->
+                      <img [src]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)" alt="Profile Image"
+                        class="circle-img-lateral" (error)="handleImgError($event)">
+                      <div class="full-width">
+                        <div class="datos-usuarios">
+                          <p>
+                            <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{
+                              perfilRelacion.apellido}}</span><br>
+                            <ng-container *ngIf="perfilRelacion.empresa">
+                              <span class="comercio-info">{{ perfilRelacion.empresa.nombre }} - {{
+                                perfilRelacion.empresa.domicilio }}</span>
+                            </ng-container>
+                            <ng-container *ngIf="perfilRelacion.comercio">
+                              <span class="comercio-info">{{ perfilRelacion.comercio.nombre }} - {{
+                                perfilRelacion.comercio.domicilio }}</span>
+                            </ng-container>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #noSolicitudes>
+                  <p>No hay relaciones Comerciales.</p>
+                </ng-template>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Productos" class="matTabLabel">
+          </mat-tab>
+          <mat-tab label="Buscar Proveedor">
+            <div class="container box-proveedores">
+              <h2>Lista de Proveedores</h2>
+              <input type="text" [(ngModel)]="filtroProveedor" placeholder="Buscar proveedores..."
+                (input)="filtrarProveedores()">
+              <div *ngIf="proveedoresFiltrados.length > 0; else noProveedores">
 
-        </mat-tab>
-
-        <mat-tab label="Buscar Proveedor">
- 
-
-          <!--div *ngFor="let proveedor of proveedoresFiltrados">
-            
-          </div-->
-
-
-          <div class="container box-proveedores">
-            <h2>Lista de Proveedores</h2>
-            <input type="text" [(ngModel)]="filtroProveedor" placeholder="Buscar proveedores..." (input)="filtrarProveedores()">
-            <div *ngIf="proveedoresFiltrados.length > 0; else noProveedores">
-              
                 <div *ngFor="let proveedor of proveedoresFiltrados" class="proveedor-item">
                   <div class="proveedor-info">
                     <!-- Imagen del proveedor a la izquierda -->
-                    <img [src]="getProfileImageUrl(proveedor.id, proveedor.perfil.fotoPerfil)" alt="Imagen de perfil" class="circle-img" (error)="handleImgError($event)">
+                    <img [src]="obtenerImagenPerfil(proveedor.id, proveedor.fotoPerfil)" alt="Imagen de perfil"
+                      class="circle-img" (error)="handleImgError($event)">
                     <!-- Detalles del proveedor -->
                     <div class="box-proveedor full-width">
                       <mat-list>
                         <mat-list-item>
-                          <span matListItemTitle>{{ proveedor.perfil.nombre }} {{ proveedor.perfil.apellido }}</span>
-                          <span matListItemLine>| Empresa: {{ proveedor.perfil.empresa.nombre }} | Rubro: {{ proveedor.perfil.empresa.rubro }}</span>
+                          <span matListItemTitle>{{ proveedor.nombre}} {{ proveedor.apellido }}</span>
+                          <span matListItemLine>| Empresa: {{ proveedor.empresa.nombre }} | Rubro: {{
+                            proveedor.empresa.rubro }}</span>
                           <!-- Aquí puedes agregar más detalles del proveedor si lo deseas -->
-                          <button mat-flat-button color="primary"  (click)="enviarSolicitud(proveedor.perfil.id)"
-                          [disabled]="solicitudesEnviadas.get(proveedor.perfil.id)">
-                          {{ solicitudesEnviadas.get(proveedor.perfil.id) ? 'Solicitud Enviada' : 'Enviar Solicitud' }}
-                        </button>  
-
-
+                          <button mat-flat-button color="primary" (click)="enviarSolicitud(proveedor.idPerfil)"
+                            [disabled]="solicitudesEnviadas.get(proveedor.idPerfil)">
+                            {{ solicitudesEnviadas.get(proveedor.idPerfil) ? 'Solicitud Enviada' : 'Enviar Solicitud' }}
+                          </button>
                         </mat-list-item>
                       </mat-list>
                     </div>
                   </div>
                 </div>
-              
+              </div>
+              <ng-template #noProveedores>
+                <p>No hay proveedores disponibles.</p>
+              </ng-template>
             </div>
-            <ng-template #noProveedores>
-              <p>No hay proveedores disponibles.</p>
-            </ng-template>
-          </div>
-
-
-          <!--div class="container box-proveedores">
-            <h2>Lista de Proveedores</h2>
-            <input type="text" [(ngModel)]="filtroProveedor" placeholder="Buscar proveedores...">
-            <div *ngIf="proveedoresFiltrados.length > 0; else noProveedores">
-              <ul>
-                <li *ngFor="let proveedores of proveedoresFiltrados" class="proveedor-item">
-                  <div class="proveedor-info">
-                  
-                    <-- Imagen del proveedor a la izquierda -->
-                   
-                    <!-- img [src]="'assets/' + (proveedores.perfil ? proveedores.perfil : 'default.png')"
-                      alt="Imagen de perfil" class="circle-img" --
-
-                      <img [src]="getProfileImageUrl(proveedores.id, proveedores.perfil.fotoPerfil)" alt="Imagen de perfil" class="circle-img"  (error)="handleImgError($event)">
-
-                    <-- Detalles del proveedor --
-                    
-                    <div class="box-proveedor full-width">
-
-                      <mat-list>
-                        <mat-list-item>
-                          <span matListItemTitle>{{ proveedores.perfil.nombre }} {{ proveedores.perfil.apellido }}</span>
-                          <span matListItemLine>| Empresa: {{ proveedores.perfil.empresa.nombre }} | Rubro: {{ proveedores.perfil.empresa.rubro }}</span>
-                          <-- button mat-flat-button color="primary" (click)="enviarSolicitud(proveedores.id)"
-                            [disabled]="solicitudesEnviadas.get(proveedores.id)">
-                            {{ solicitudesEnviadas.get(proveedores.id) ? 'Solicitud Enviada' : 'Enviar Solicitud' }}
-                          </button-->
-                        
-                                                                
-                 <!--/mat-list-item>
-                      </mat-list>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <ng-template #noProveedores>
-              <p>No hay proveedores disponibles.</p>
-            </ng-template>
-          </div-->
-        </mat-tab>
-      
-      </mat-tab-group>
-    </div>
-     </div>
-    </div>
-
-    <div class="derecha">
-      <div class="box full-width text-center">
-
-        <p>Contenido</p>
+          </mat-tab>
+        </mat-tab-group>
       </div>
-
     </div>
   </div>
+
+  <div class="derecha">
+    <div class="box full-width text-center">
+      <p>Contenido</p>
+    </div>
+  </div>
+</div>

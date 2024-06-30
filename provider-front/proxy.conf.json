@@ -1,7 +1,16 @@
 {
-  "/api": {
-    "target": "https://provider-426416.rj.r.appspot.com",
-    "secure": false,
-    "changeOrigin": true
+  "development": {
+    "/api": {
+      "target": "http://localhost:4200",
+      "secure": false,
+      "changeOrigin": true
+    }
+  },
+  "production": {
+    "/api": {
+      "target": "https://provider-426416.rj.r.appspot.com",
+      "secure": false,
+      "changeOrigin": true
+    }
   }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Getter
@@ -27,13 +28,31 @@ public class Comercio {
     @JsonIgnore // Evita la serialización de la relación
     private Perfil comerciante;
 
+//    @ManyToMany
+//    @JoinTable(
+//            name = "comercio_proveedor",
+//            joinColumns = @JoinColumn(name = "comercio_id"),
+//            inverseJoinColumns = @JoinColumn(name = "proveedor_id")
+//    )
+//    private Set<Perfil> proveedores;
+
     @ManyToMany
     @JoinTable(
-            name = "comercio_proveedor",
+            name = "empresa_comercio",
             joinColumns = @JoinColumn(name = "comercio_id"),
-            inverseJoinColumns = @JoinColumn(name = "proveedor_id")
+            inverseJoinColumns = @JoinColumn(name = "empresa_id")
     )
-    private List<Perfil> proveedores;
+    private List<Empresa> proveedores;
+
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "comercio_lista_precios",
+            joinColumns = @JoinColumn(name = "comercio_id"),
+            inverseJoinColumns = @JoinColumn(name = "lista_id")
+    )
+    private List<ListaPrecio> listasAsignadas;
 
     @OneToMany(mappedBy = "comercio", cascade = CascadeType.ALL)
     private List<Pedido> pedidos;

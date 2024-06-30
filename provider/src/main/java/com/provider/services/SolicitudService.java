@@ -17,10 +17,13 @@ public class SolicitudService {
     @Autowired
     private PerfilService perfilService;
     public boolean existeSolicitud(Long solicitanteId, Long solicitadoId) {
+
         Solicitud solicitud = solicitudRepository.findBySolicitanteIdAndSolicitadoId(solicitanteId, solicitadoId);
         return solicitud != null;  // Verificar si se encontró una solicitud
     }
     public boolean aceptarSolicitud(Long solicitudId) {
+
+        System.out.print("     METODO : CLASS SolicitudController : aceptarSolicitud()");
         Optional<Solicitud> optionalSolicitud = solicitudRepository.findById(solicitudId);
         if (optionalSolicitud.isPresent()) {
             Solicitud solicitud = optionalSolicitud.get();
@@ -31,13 +34,11 @@ public class SolicitudService {
             perfilSolicitante.getRelacioneComerciales().add(perfilSolicitado);
             perfilSolicitado.getRelacioneComerciales().add(perfilSolicitante);
 
-            System.out.println("Aceptar solicitud entre Comerciante: "+ solicitud.getSolicitante().getUsuario().getEmail() + " y Proveedor: " + solicitud.getSolicitado().getUsuario().getEmail());
-
-            perfilService.save(perfilSolicitante);
-            perfilService.save(perfilSolicitado);
-
+            perfilService.guardarPerfil(perfilSolicitante);
+            perfilService.guardarPerfil(perfilSolicitado);
             solicitudRepository.save(solicitud);
-            System.out.println("Relacion establecida");
+
+            System.out.println("Relacion Comecial establecida entre " + perfilSolicitado.getUsuario().getUsername() + " y " + perfilSolicitante.getUsuario().getUsername());
 
             return true; // La solicitud se aceptó correctamente
         } else {
@@ -47,6 +48,9 @@ public class SolicitudService {
 
 
     public boolean cancelarSolicitud(Long solicitudId) {
+
+        System.out.print("     METODO : CLASS SolicitudController : cancelarSolicitud()");
+
         Optional<Solicitud> optionalSolicitud = solicitudRepository.findById(solicitudId);
         if (optionalSolicitud.isPresent()) {
             Solicitud solicitud = optionalSolicitud.get();
@@ -57,11 +61,11 @@ public class SolicitudService {
             perfilSolicitante.getRelacioneComerciales().remove(perfilSolicitado);
             perfilSolicitado.getRelacioneComerciales().remove(perfilSolicitante);
 
-            System.out.println("Cancelar solicitud entre Usuario: "+ solicitud.getSolicitante().getUsuario().getEmail() + " y Usuario: " + solicitud.getSolicitado().getUsuario().getEmail());
-            perfilService.save(perfilSolicitante);
-            perfilService.save(perfilSolicitado);
+            perfilService.guardarPerfil(perfilSolicitante);
+            perfilService.guardarPerfil(perfilSolicitado);
             solicitudRepository.save(solicitud);
-            System.out.println("Solicitud CANCELADA");
+
+            System.out.println(" Cancelacion de Relacion Comecial entre " + perfilSolicitado.getUsuario().getUsername() + " y " + perfilSolicitante.getUsuario().getUsername());
 
             return true; // La solicitud se actualizó correctamente
         } else {

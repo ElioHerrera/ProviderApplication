@@ -1,1 +1,77 @@
 
+/* <<< NAV BAR >>> */
+
+.navBar * {
+  box-sizing: inherit;
+  /* Esto asegura que todos los elementos dentro de .navBar también usen border-box */
+  margin: 0;
+  /* Elimina cualquier margen que los elementos internos puedan tener por defecto */
+  padding: 0;
+  /* Elimina cualquier padding que los elementos internos puedan tener por defecto */
+}
+
+.navContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+
+}
+
+.logo-contenedor {
+  display: flex;
+  align-items: center; /* Centra verticalmente */
+ 
+}
+
+.configContainer {
+  display: flex;
+  align-items: center;
+  padding-inline-end: 23%;
+  /* justify-content: flex-end;*/
+
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-decoration: none;
+  margin: 0 2px;
+  width: 100px;
+  justify-content: center;
+ 
+}
+
+.iconContainer a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 11px;
+  color: #636363;
+}
+
+.iconContainer svg {
+  fill: #636363;
+}
+
+.iconContainer span {
+  margin-top: 5px;
+  /* Espacio entre el svg y el span */
+  text-align: center;
+  display: block;
+  margin-top: -10px;
+}
+
+.iconContainer a:hover svg,
+.iconContainer a:hover span {
+  color: #8589eb;
+  fill: #8589eb;
+}
+
+.active-icon svg{
+  fill: #8589eb;
+}
+
+.active-icon span {
+  color: #8589eb;
+}

@@ -1,53 +1,43 @@
 package com.provider.controller;
 
-import com.google.cloud.storage.*;
 import com.provider.entities.Perfil;
 import com.provider.entities.Usuario;
 import com.provider.image.ImageResizer;
 import com.provider.repositories.PerfilRepository;
 import com.provider.repositories.UsuarioRepository;
-
-
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-
-
 import javax.imageio.ImageIO;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-
-
 @RestController
 @RequestMapping("/api/img")
 public class ImagenPerfilController {
 
+    /*
     @Value("${gcp.bucket.name}")
     private String bucketName;
-
     private final Storage storage = StorageOptions.getDefaultInstance().getService();
+    */
     private static final String RUTA_DE_IMAGENES = "provider/src/main/resources/static/uploads/";//ANTERIOR
 
     @Autowired
@@ -56,6 +46,8 @@ public class ImagenPerfilController {
     @Autowired
     private PerfilRepository perfilRepository;
 
+    //Configuración para "https://provider-pedidos-app.web.app"
+    /*
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> subirArchivo(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) {
         Map<String, String> response = new HashMap<>();
@@ -147,16 +139,12 @@ public class ImagenPerfilController {
         System.out.println("No se ha encontrado el archivo: " + fileName);
         return ResponseEntity.notFound().build();
     }
+    */
 
+    // Configuración para "http://localhost:4200"
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, String>> guardarImagenproducto(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) {
 
-
-
-
-
-
-
-    @PostMapping("/uploadAnt")
-    public ResponseEntity<Map<String, String>> subirArchivoAnt(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) {
         Map<String, String> response = new HashMap<>();
         try {
             Optional<Usuario> optionalUsuario = usuarioRepository.findById(userId);
@@ -174,11 +162,8 @@ public class ImagenPerfilController {
                 String fileName = formattedTime.substring(formattedTime.length() - 5) + "_" + file.getOriginalFilename();
                 Path path = rutaDeUsuario.resolve(fileName);
 
-                // Lee el archivo como un BufferedImage
-                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
-
-                // Redimensiona y recorta la imagen
-                BufferedImage resizedAndCroppedImage = ImageResizer.resizeAndCropImage(originalImage, 320);
+                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes())); // Lee el archivo como un BufferedImage
+                BufferedImage resizedAndCroppedImage = ImageResizer.resizeAndCropImage(originalImage, 320); // Redimensiona y recorta la imagen
 
                 // Guarda la imagen redimensionada y recortada
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -202,36 +187,24 @@ public class ImagenPerfilController {
         }
     }
 
-    @GetMapping("/uploadsAnt/{userId}/{fileName:.+}")
-    public ResponseEntity<Resource> serveFileAnt(@PathVariable Long userId, @PathVariable String fileName) {
-        System.out.println("Se ha recibido una solicitud para servir el archivo: " + fileName + " del usuario: " + userId);
+    @GetMapping("/uploads/{userId}/{fileName:.+}")
+    public ResponseEntity<Resource> obtenerProductoLocal(@PathVariable Long userId, @PathVariable String fileName) {
 
-        // Primero intentar cargar el archivo desde el directorio del usuario
         Path userFilePath = Paths.get(RUTA_DE_IMAGENES, String.valueOf(userId)).resolve(fileName).normalize();
-
-        System.out.println(userFilePath);
         try {
             Resource userResource = new UrlResource(userFilePath.toUri());
             if (userResource.exists() || userResource.isReadable()) {
-                System.out.println("Se ha encontrado y se puede leer el archivo: " + fileName + " para el usuario: " + userId);
-                return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG)
-                        .body(userResource);
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(userResource);
             }
         } catch (MalformedURLException e) {
             System.out.println("Error al construir la URL del archivo: " + e.getMessage());
         }
 
         // Si el archivo no se encuentra en el directorio del usuario, intentar cargarlo desde el directorio genérico
-
-        System.out.println("buscar imagen generica");
         Path defaultFilePath = Paths.get(RUTA_DE_IMAGENES, "default.png").normalize();
-
-        System.out.println(defaultFilePath);
         try {
             Resource defaultResource = new UrlResource(defaultFilePath.toUri());
             if (defaultResource.exists() || defaultResource.isReadable()) {
-                System.out.println("Se ha encontrado y se puede leer el archivo: " + fileName + " en el directorio genérico");
                 return ResponseEntity.ok()
                         .contentType(MediaType.IMAGE_PNG)
                         .body(defaultResource);
@@ -239,13 +212,8 @@ public class ImagenPerfilController {
         } catch (MalformedURLException e) {
             System.out.println("Error al construir la URL del archivo: " + e.getMessage());
         }
-
-        // Si no se encuentra el archivo ni en el directorio del usuario ni en el genérico, devolver una respuesta de error
         System.out.println("No se ha encontrado el archivo: " + fileName);
         return ResponseEntity.notFound().build();
     }
-
-
-
 
 }

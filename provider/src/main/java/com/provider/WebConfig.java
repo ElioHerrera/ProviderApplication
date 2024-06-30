@@ -14,11 +14,12 @@ public class WebConfig  implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://provider-pedidos-app.web.app")
+//                .allowedOrigins("https://provider-pedidos-app.web.app")
+                .allowedOrigins("http://localhost:4200")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .exposedHeaders("Authorization")  // Si necesitas exponer otros encabezados personalizados
-                .allowCredentials(true)
+//                .exposedHeaders("Authorization")  // Si necesitas exponer otros encabezados personalizados
+//                .allowCredentials(true)
                 .maxAge(3600);
     }
 

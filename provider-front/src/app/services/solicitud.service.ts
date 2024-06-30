@@ -4,16 +4,14 @@ import { Observable, throwError } from 'rxjs';
 import  baseUrl from './helper';
 
 
-import { catchError } from 'rxjs/operators';
-import { Usuario } from '../usuario.model';
-
-
 @Injectable({
   providedIn: 'root'
 })
 export class SolicitudService {
 
   constructor(private httpClient: HttpClient) { }
+
+  private iconActivo: number = 0;
 
   enviarSolicitudAProveedor(perfilUsuarioId: number, perfilProveedorId: number): Observable<any> {
     return this.httpClient.post<any>(`${baseUrl}/api/solicitudes/enviar/${perfilUsuarioId}/${perfilProveedorId}`, { perfilUsuarioId, perfilProveedorId });
@@ -33,4 +31,14 @@ export class SolicitudService {
   cancelarSolicitud(solicitudId: number): Observable<any> {
     return this.httpClient.put<any>(`${baseUrl}/api/solicitudes/cancelar/${solicitudId}`, null);
   }
+
+  getIconActivo(): number {
+    return this.iconActivo;
+  }
+
+  setIconActivo(indice: number): void {
+    this.iconActivo = indice;
+  }
+
+  
 }

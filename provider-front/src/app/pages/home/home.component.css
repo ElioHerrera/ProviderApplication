@@ -2,18 +2,8 @@
     background-color: rgb(240, 240, 240);    
     }
   
-  .example-card {
-      max-width: 400px;
-    }
-  
     
-    .example-header-image {
-      background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-      background-size: cover;
-    }
-  
-  
-  
+   
     .circle-img-profile {
       height: 100px; /* Ajusta el tamaño de acuerdo a tus necesidades */
       width: 100px; /* Ajusta el tamaño de acuerdo a tus necesidades */
@@ -76,4 +66,39 @@
       height: 38px; /* Altura de la imagen */
       border-radius: 50%; /* Bordes redondeados para crear un círculo */
       margin-right: 5px; /* Espacio entre la imagen y la caja de detalles */
+    }
+
+    .imagenPublicacion {
+      width: 100%;
+      height: auto;
+      object-fit: cover; /* Esta propiedad asegurará que la imagen ocupe el contenedor sin deformarse */
+    }
+
+    .example-button-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .example-button-row button:first-of-type {
+      margin-right: auto;
+    }
+    .example-button-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .example-button-group-left {
+      display: flex;
+    }
+    
+    .example-button-group-left button {
+      margin-right: 10px;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
     }

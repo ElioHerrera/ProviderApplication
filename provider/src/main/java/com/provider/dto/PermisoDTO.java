@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PermisoDTO {
-    private Long id;
+    private Long idPermiso;
     private String nombrePermiso;
 }

@@ -1,0 +1,129 @@
+
+.___________________________________> page-
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+.url/ console firebase: [ https://console.firebase.google.com/project/provider-pedidos-app/overview ]
+.url/          angular: [ https://provider-pedidos-app.web.app                                      ]
+.url/           server: [ https://provider-426416.rj.r.appspot.com                                  ]
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+*********************************************************************************
+.___________________________________>  basic-
+.command/ cd C:\Users\Elio Herrera\Desktop\Proyectos\ProviderApplication\provider        /* Ubicación del BACKEND */
+.command/ cd C:\Users\Elio Herrera\Desktop\Proyectos\ProviderApplication\provider-front  /* Ubicación del FRONTEND */
+.command/ ls src/torneoapp/img/efectos/musica.m4a                                        /* Verificar existencia del archivo */
+.command/ mkdir "Nombre_Directorio"                                                      /* Crear un nuevo directorio */
+.command/ rm -rf "Nombre_Directorio"                                                     /* Eliminar un directorio y su contenido */
+.command/ cp ruta_origen ruta_destino                                                    /* Copiar archivos o directorios */
+.command/ mv ruta_origen ruta_destino                                                    /* Mover o renombrar archivos o directorios */
+.command/ touch nombre_archivo                                                           /* Crear un archivo vacío */
+.command/ chmod +x nombre_archivo                                                        /* Hacer un archivo ejecutable */
+
+*********************************************************************************
+.___________________________________>  git-
+.command/ git rm --cached src/torneoapp/img/efectos/musica.m4a /* Eliminar un archivo del área de preparación */
+.command/ git branch -m master principal                       /* Renombrar la rama local de master a principal */
+.command/ git checkout -b nombre-rama                          /* Crear y cambiar a una nueva rama */
+.command/ git merge nombre-rama                                /* Combinar una rama específica con la rama actual */
+.command/ git stash                                            /* Guardar los cambios sin confirmarlos (stashing) */
+.command/ git stash apply                                      /* Aplicar los cambios guardados (stashing) */
+.command/ git log                                              /* Ver el historial de commits */
+.command/ git status                                           /* Ver el estado del repositorio */
+.command/ git diff                                             /* Ver las diferencias entre los archivos no confirmados */
+
+.____ (A) Crear repositorio remoto (sin un README)
+.command/ git init                                                            /* Inicializa un repositorio de Git */
+.command/ git remote add origin https://github.com/tu-usuario/repositorio.git /* Vincular el repositorio local con el remoto */
+.command/ git add .                                                           /* Añade los archivos de tu trabajo al área de preparación */ 
+.command/ git commit -m "Mensaje"                                             /* Confirmar los cambios (commit) */
+.command/ git push -u origin principal                                        /* "principal" es el branch */
+
+.____ (B) Crear repositorio remoto (con un README)
+.command/ git init                                                            /* Inicializa un repositorio de Git */
+.command/ git remote add origin https://github.com/tu-usuario/repositorio.git /* Vincular el repositorio local con el remoto */
+.command/ git pull origin principal                                           /* Descargar contenido del repositorio remoto (incluyendo el README) */
+
+*********************************************************************************
+.___________________________________>  firebase-
+.command/ ng build --configuration=production /* Construir proyecto Angular en modo producción */
+.command/ firebase deploy                     /* Desplegar el proyecto en Firebase */
+.command/ firebase login                      /* Iniciar sesión en Firebase */
+.command/ firebase init                       /* Inicializar un proyecto de Firebase */
+.command/ firebase serve                      /* Ejecutar localmente el proyecto de Firebase */
+.command/ firebase firestore:indexes          /* Administrar índices de Firestore */
+.command/ firebase functions:log              /* Ver registros de funciones de Firebase */
+.command/ firebase storage:rules              /* Administrar reglas de almacenamiento de Firebase */
+.command/ firebase hosting:disable            /* Deshabilitar el alojamiento de Firebase */
+
+*********************************************************************************
+.___________________________________>  gcloud-
+.command/ gcloud auth login                                                       /* Ver consola de la nube */                           
+.command/ gcloud config list                                                      /* Verificar la configuracuion de cloud */             
+.command/ gcloud app deploy                                                       /* Construir y desplegar el proyecto en el servidor */
+.command/ gcloud app logs tail -s default                                         /* Ver consola de la nube */       
+.command/ gcloud config set project PROYECTO_ID                                   /* Configurar el proyecto actual de Google Cloud */
+.command/ gcloud services list                                                    /* Listar los servicios habilitados en el proyecto actual */
+.command/ gcloud compute instances list                                           /* Listar las instancias de Google Compute Engine */
+.command/ gcloud sql instances describe INSTANCE_ID                               /* Describir una instancia de Cloud SQL */
+.command/ gcloud container clusters list                                          /* Listar los clústeres de Google Kubernetes Engine */
+.command/ gcloud functions deploy NOMBRE_FUNCION --runtime RUNTIME --trigger-http /* Desplegar una función en Google Cloud Functions */
+.command/ gcloud functions logs read NOMBRE_FUNCION                               /* Ver registros de una función de Google Cloud Functions */
+.command/ gcloud storage cp archivo gs://BUCKET_NAME/                             /* Copiar un archivo a un bucket de Google Cloud Storage */                    
+
+*********************************************************************************
+.___________________________________>  java-
+.command/ mvn clean install                                 /* Construir proyecto con Maven */ 
+.command/ mvn clean                                         /* Limpiar el proyecto (eliminar archivos compilados) */
+.command/ mvn test                                          /* Ejecutar pruebas unitarias */
+.command/ mvn package                                       /* Empaquetar el proyecto en un archivo JAR o WAR */
+.command/ mvn dependency:tree                               /* Mostrar el árbol de dependencias del proyecto */
+.command/ mvn spring-boot:run                               /* Ejecutar una aplicación Spring Boot */
+.command/ mvn exec:java -Dexec.mainClass="com.ejemplo.Main" /* Ejecutar una clase Java específica */
+.command/ mvn versions:display-dependency-updates           /* Mostrar actualizaciones de dependencias disponibles */
+.command/ mvn site                                          /* Generar el sitio del proyecto (documentación) */
+.command/ javac NombreArchivo.java                          /* Compilar un archivo Java */
+.command/ java NombreArchivo                                /* Ejecutar un archivo Java compilado */
+.command/ java -jar nombre-archivo.jar                      /* Ejecutar un archivo JAR */
+
+*********************************************************************************
+.___________________________________>  angular-
+.command/ ng new nombre-proyecto --style=scss --routing /* Crear un nuevo proyecto Angular con SCSS y routing */
+.command/ ng serve -o                                   /* Servir el proyecto Angular y abrirlo en el navegador */
+.command/ ng generate component nombre-componente       /* Generar un nuevo componente */
+.command/ ng generate service nombre-servicio           /* Generar un nuevo servicio */
+.command/ ng generate module nombre-modulo              /* Generar un nuevo módulo */
+.command/ ng build --prod                               /* Construir el proyecto Angular en modo producción */
+.command/ ng test                                       /* Ejecutar pruebas unitarias */
+.command/ ng lint                                       /* Analizar el código para detectar problemas de estilo */
+.command/ ng update                                     /* Actualizar las dependencias del proyecto Angular */
+.command/ ng add @angular/material                      /* Añadir Angular Material al proyecto */
+.command/ ng eject                                      /* Exportar la configuración Webpack (Angular CLI 6+ ya no soporta este comando) */
+
+*********************************************************************************
+.___________________________________>  port-
+
+.command/ netstat -aon | findstr :8080   /* Ver que servicio utiliza el puerto 8080 */
+.command/ taskkill /PID 4060 /F          /* Liberar puerto que utiliza PID 4060 (Example: LISTENING     4060) */
+.command/ netstat -aon | findstr :8080 /* Verificar si el puerto 8080 esta libre*/
+
+*********************************************************************************
+.___________________________________>  docker-
+.command/ docker build -t nombre-imagen:tag .    /* Construir una imagen de Docker */
+.command/ docker run -d -p 8080:80 nombre-imagen /* Ejecutar un contenedor Docker en segundo plano, mapeando el puerto 8080 al 80 */
+.command/ docker ps                              /* Listar contenedores Docker en ejecución */
+.command/ docker stop ID_CONTAINEDOR             /* Detener un contenedor Docker especificado por su ID */
+.command/ docker rm ID_CONTAINEDOR               /* Eliminar un contenedor Docker especificado por su ID */
+
+*********************************************************************************
+.___________________________________> npm-
+.command/ npm install   /* Instalar todas las dependencias de un proyecto Node.js */
+.command/ npm start     /* Iniciar un proyecto Node.js */
+.command/ npm run build /* Construir el proyecto Node.js */
+.command/ npm test      /* Ejecutar las pruebas definidas en el proyecto Node.js */
+
+
+*********************************************************************************
+
+
+
+
+

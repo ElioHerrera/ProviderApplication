@@ -7,13 +7,14 @@ public class SolicitudConverter {
 
     public static SolicitudDTO entityToDTO(Solicitud solicitud) {
 
+        SolicitudDTO dto = SolicitudDTO.builder()
+                .idSolicitud(solicitud.getId())
+                .solicitante(PerfilRelacionConverter.entityToDTO(solicitud.getSolicitante()))
+                .solicitado(PerfilRelacionConverter.entityToDTO(solicitud.getSolicitado()))
+                .fechaSolicitud(solicitud.getFechaSolicitud())
+                .aceptada(solicitud.isAceptada())
+                .build();
 
-        SolicitudDTO dto = new SolicitudDTO();
-        dto.setId(solicitud.getId()); // Incluimos el ID para transferir al cliente
-        //dto.setSolicitante(PerfilConverter.entityToDTO(solicitud.getSolicitante()));
-        //dto.setSolicitado(PerfilConverter.entityToDTO(solicitud.getSolicitado()));
-        dto.setFechaSolicitud(solicitud.getFechaSolicitud());
-        dto.setAceptada(solicitud.isAceptada());
         return dto;
     }
 

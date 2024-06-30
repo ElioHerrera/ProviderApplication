@@ -1,8 +1,0 @@
-[
-  {
-    "origin": ["https://provider-pedidos-app.web.app"],
-    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    "responseHeader": ["Authorization", "Content-Type"],
-    "maxAgeSeconds": 3600
-  }
-]

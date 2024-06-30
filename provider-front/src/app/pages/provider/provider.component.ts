@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
-import { Usuario } from '../../usuario.model';
+import { PerfilRelacion, Usuario } from '../../usuario.model';
 import { FormsModule } from '@angular/forms';
 import baseUrl from '../../services/helper';
 
@@ -35,13 +35,13 @@ import baseUrl from '../../services/helper';
   styleUrl: './provider.component.css'
 })
 export class ProviderComponent implements OnInit {
-  user: any;
-  proveedores: Usuario[] = []; // Definimos un array para almacenar los proveedores
-  proveedoresFiltrados: Usuario[] = []; // Lista de proveedores filtrados
-  filtroProveedor: string = ''; // Término de búsqueda
-  //solicitudesEnviadas: Map<number, boolean> = new Map(); // Mapa para las solicitudes enviadas
-  solicitudesEnviadas: Map<number, boolean> = new Map<number, boolean>();
 
+  usuario: any;
+  proveedores: PerfilRelacion[] = [];
+  proveedoresFiltrados: PerfilRelacion[] = [];
+  filtroProveedor: string = '';
+  solicitudesEnviadas: Map<number, boolean> = new Map<number, boolean>();
+  relacionesComerciales: any[] = [];
 
   constructor(
     private usuarioService: UserService,
@@ -49,26 +49,37 @@ export class ProviderComponent implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {   
 
-    this.obtenerProveedores();
-    this.proveedoresFiltrados = this.proveedores;
-    
     // Recuperar los datos del usuario del almacenamiento local
     const storedUser: string | null = localStorage.getItem('currentUser');
     if (storedUser) {
-      this.user = JSON.parse(storedUser);
-      console.log('Datos del usuario:', this.user); // Imprimimos los datos del usuario por consola
+      this.usuario = JSON.parse(storedUser);
+      console.log('Datos del usuario:', this.usuario);
+    } else {
+      console.error('No se encontraron datos del usuario en localStorage.');
     }
 
+    //Obtener Datos
+    this.obtenerRelacionesComerciales(this.usuario.perfil.idPerfil); //Pasar idPerfil
+    this.obtenerProveedores();
+    this.proveedoresFiltrados = this.proveedores;
+
+
+    // Verificar si usuario y su perfil están definidos
+    if (this.usuario && this.usuario.perfil.this.usuario.perfil.idPerfil) {
+      console.log('Perfil del usuario:', this.usuario.perfil.idPerfil);
+    } else {
+      console.error('ID del perfil del usuario no está definido:', this.usuario);
+    }
   }
-  
+
   obtenerProveedores(): void {
     this.usuarioService.obtenerProveedores().subscribe(
-      (response: Usuario[]) => {
+      (response: PerfilRelacion[]) => {
         this.proveedores = response;
         this.proveedores.forEach(proveedor => {
-       this.verificarSolicitudEnviada(proveedor.perfil.id);
+          this.verificarSolicitudEnviada(proveedor.idPerfil);
         });
         console.log('Proveedores obtenidos:', this.proveedores);
       },
@@ -79,41 +90,39 @@ export class ProviderComponent implements OnInit {
   }
 
   cargarProveedores(): void {
-    // Aquí cargarías tus proveedores y luego verificarías las solicitudes
     this.proveedoresFiltrados.forEach(proveedor => {
-      this.verificarSolicitudEnviada(proveedor.perfil.id);
+      this.verificarSolicitudEnviada(proveedor.id);
     });
   }
 
   filtrarProveedores() {
     this.proveedoresFiltrados = this.proveedores.filter(proveedor =>
-      proveedor.perfil.nombre.toLowerCase().includes(this.filtroProveedor.toLowerCase()) ||
-      proveedor.perfil.apellido.toLowerCase().includes(this.filtroProveedor.toLowerCase()) ||
-      proveedor.perfil.empresa.nombre.toLowerCase().includes(this.filtroProveedor.toLowerCase())
+      proveedor.nombre.toLowerCase().includes(this.filtroProveedor.toLowerCase()) ||
+      proveedor.apellido.toLowerCase().includes(this.filtroProveedor.toLowerCase()) ||
+      proveedor.empresa.nombre.toLowerCase().includes(this.filtroProveedor.toLowerCase())
     );
-    console.log(this.filtroProveedor); // Agregar un registro de consola para verificar qué se está filtrando
+    console.log(this.filtroProveedor);
   }
 
 
-   
 
-  getProfileImageUrl(proveedorId: number, fileName: string): string {
-    const url = `${baseUrl}/api/img/uploads/${proveedorId}/${encodeURIComponent(fileName)}`;
-    console.log('Generated URL:', url); // Añade este log
+   // Obtener Imagen de Perfil
+   obtenerImagenPerfil(userId: number, fileName: string): string {
+    const url = `${baseUrl}/api/img/uploads/${userId}/${encodeURIComponent(fileName)}`;
+
     return url;
   }
-
-  
   handleImgError(event: any): void {
     event.target.src = `${baseUrl}/api/img/uploads/default/default.png`;
   }
-  
-  
+
+
   verificarSolicitudEnviada(proveedorId: number): void {
-    if (this.user && this.user.perfil && this.user.perfil.id) {
-      this.solicitudService.verificarSolicitudEnviada(this.user.perfil.id, proveedorId).subscribe(
+
+    if (this.usuario && this.usuario.perfil && this.usuario.perfil.idPerfil && proveedorId) {
+      console.log('ID del perfil del usuario:', this.usuario.perfil.idPerfil);
+      this.solicitudService.verificarSolicitudEnviada(this.usuario.perfil.idPerfil, proveedorId).subscribe(
         (response) => {
-          // Actualiza el estado del botón en función de la respuesta
           if (response.exists) {
             this.solicitudesEnviadas.set(proveedorId, true);
           } else {
@@ -130,17 +139,17 @@ export class ProviderComponent implements OnInit {
   }
 
   enviarSolicitud(perfilProveedorId: number): void {
-    if (this.user && this.user.perfil && this.user.perfil.id) {
+    if (this.usuario && this.usuario.perfil && this.usuario.perfil.idPerfil) {
       // Imprimir la solicitud en la consola antes de enviarla
       const solicitud = {
-        solicitanteId: this.user.perfil.id,
+        solicitanteId: this.usuario.perfil.idPerfil,
         solicitadoId: perfilProveedorId,
         fechaSolicitud: new Date(),
         aceptada: false
       };
       console.log('Solicitud a enviar:', solicitud);
 
-      this.solicitudService.enviarSolicitudAProveedor(this.user.perfil.id, perfilProveedorId).subscribe(
+      this.solicitudService.enviarSolicitudAProveedor(this.usuario.perfil.idPerfil, perfilProveedorId).subscribe(
         (response) => {
           console.log('Solicitud enviada:', response.mensaje);
           this.solicitudesEnviadas.set(perfilProveedorId, true);
@@ -153,11 +162,23 @@ export class ProviderComponent implements OnInit {
       console.error('Usuario no autenticado.');
     }
   }
- 
 
 
 
-  
+  obtenerRelacionesComerciales(perfilId: number): void { // Recibir el ID del usuario como argumento
+    this.usuarioService.obtenerRelacionesComerciales(perfilId).subscribe(
+      (relaciones) => {
+        console.log('Relaciones comerciales:', relaciones);
+        this.relacionesComerciales = relaciones;
+      },
+      (error) => {
+        console.error('Error al obtener las relaciones comerciales:', error);
+      }
+    );
+  }
+
+
+
 }
 
 

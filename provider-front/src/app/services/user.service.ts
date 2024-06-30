@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import baseUrl from './helper';
 
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
-import { Usuario } from '../usuario.model'; // Importa el modelo de usuario
+import { Usuario , PerfilRelacion , Producto} from '../usuario.model'; // Importa el modelo de usuario
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +12,13 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public login(loginData: { username: string, password: string }) {
-    return this.httpClient.post<any>(`${baseUrl}/api/auth/login`, loginData);
-  }
+  //Auth Controller
   public logout() {
     localStorage.removeItem('username');
     localStorage.removeItem('user');
+  }
+  public login(loginData: { username: string, password: string }) {
+    return this.httpClient.post<any>(`${baseUrl}/api/auth/login`, loginData);
   }
   public registrarUsuario(user: any): Observable<any> {
     return this.httpClient.post(`${baseUrl}/api/auth/signup`, user);
@@ -28,6 +29,7 @@ export class UserService {
   public verificarEmailExistente(email: string): Observable<boolean> {
     return this.httpClient.get<boolean>(`${baseUrl}/api/auth/verificarEmail/${email}`);
   }
+  //Usuario Controller
   public actualizarDatosUsuario(id: number) {
     return this.httpClient.get<Usuario>(`${baseUrl}/api/usuarios/actualizar/${id}`);
   }
@@ -43,15 +45,19 @@ export class UserService {
     const body = { nuevaDescripcion: nuevaDescripcion };
     return this.httpClient.put<any>(`${baseUrl}/api/usuarios/${userId}/descripcion`, body);
   }
-  public obtenerProveedores(): Observable<Usuario[]> {
-    return this.httpClient.get<Usuario[]>(`${baseUrl}/api/proveedores`).pipe(
+  public obtenerProveedores(): Observable<PerfilRelacion[]> {
+    return this.httpClient.get<PerfilRelacion[]>(`${baseUrl}/api/usuarios/proveedores`).pipe(
       catchError(this.handleError)
     );
   }
+  //Perfil Controller
   public obtenerPerfilUsuario(username: string) {
     return this.httpClient.get<any>(`${baseUrl}/api/perfil/${username}`);
   }
-  public subirImagenPerfil(formData: FormData): Observable<any> {
+  public obtenerRelacionesComerciales(perfilId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${baseUrl}/api/perfiles/${perfilId}/relaciones-comerciales`);
+  }
+    public guardarImagenlocal(formData: FormData): Observable<any> {
     return this.httpClient.post<any>(`${baseUrl}/api/img/upload/`, formData).pipe(
       catchError(this.handleError)
     );
@@ -60,14 +66,43 @@ export class UserService {
     console.error('Error al realizar la solicitud:', error);
     return throwError('Hubo un problema con el servidor. Intente de nuevo más tarde.');
   }
-  public obtenerRelacionesComerciales(userId: number): Observable<any[]> {
-    return this.httpClient.get<any[]>(`${baseUrl}/api/perfiles/${userId}/relaciones-comerciales`);
+  //Producto Controller
+
+  obtenerProductosPorUsuarioId(userId: number): Observable<Producto[]> {
+    return this.httpClient.get<Producto[]>(`${baseUrl}/api/producto/lista/${userId}`);
   }
-      /*
-  obtenerProveedores(): Observable<Usuario[]> {
-    return this.httpClient.get<Usuario[]>(`${baseUrl}/api/proveedores`).pipe(
-      tap(response => console.log('Respuesta de proveedores:', response)), // Agrega un log aquí
-      catchError(this.handleError)
-    );
-  */
+
+
+  crearProducto(userId: number): Observable<Producto> {
+    return this.httpClient.post<Producto>(`${baseUrl}/api/producto/crear/${userId}`, {});
+  }
+
+
+
+  guardarImagenProducto(file: File, userId: number, productoId: number): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+    formData.append('userId', userId.toString());
+    formData.append('productoId', productoId.toString());
+
+    return this.httpClient.post<any>(`${baseUrl}/api/producto/upload`, formData);
+  }
+
+  obtenerImagenProducto(userId: number, fileName: string): string {
+    return `${baseUrl}/api/producto/uploads/${userId}/${encodeURIComponent(fileName)}`;
+  }
+
+  actualizarProducto(producto: Producto): Observable<any> {
+    return this.httpClient.put(`${baseUrl}/api/producto/actualizar/${producto.idProducto}`, producto);
+  }
+
+  eliminarProducto(productoId: number): Observable<any> {
+    return this.httpClient.delete(`${baseUrl}/api/producto/eliminar/${productoId}`);
+  }
+
+ 
+  alternarHabilitado(id: number, isEnabled: boolean): Observable<any> {
+    return this.httpClient.put(`${baseUrl}/api/producto/${id}/interruptor`, { isEnabled });
+  }
+
 }

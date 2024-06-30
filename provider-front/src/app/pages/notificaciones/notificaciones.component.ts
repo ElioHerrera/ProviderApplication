@@ -54,7 +54,7 @@ export class NotificacionesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.obtenerProveedores();
+   // this.obtenerProveedores();
     this.proveedoresFiltrados = this.proveedores;
 
 
@@ -71,20 +71,20 @@ export class NotificacionesComponent implements OnInit {
 
   }
 
-  obtenerProveedores(): void {
-    this.usuarioService.obtenerProveedores().subscribe(
-      (response: Usuario[]) => {
-        this.proveedores = response;
-        this.proveedores.forEach(proveedor => {
-          //this.verificarSolicitudEnviada(proveedor.id);
-        });
-        console.log('Proveedores obtenidos:', this.proveedores);
-      },
-      (error) => {
-        console.error('Error al obtener los proveedores:', error);
-      }
-    );
-  }
+  // [obtenerProveedores(): void {
+  //   this.usuarioService.obtenerProveedores().subscribe(
+  //     (response: Usuario[]) => {
+  //       this.proveedores = response;
+  //       this.proveedores.forEach(proveedor => {
+  //         //this.verificarSolicitudEnviada(proveedor.id);
+  //       });
+  //       console.log('Proveedores obtenidos:', this.proveedores);
+  //     },
+  //     (error) => {
+  //       console.error('Error al obtener los proveedores:', error);
+  //     }
+  //   );
+  // }]
 
   // verificarSolicitudEnviada(proveedorId: number): void {
   //   if (this.user && this.user.id) {
