@@ -11,11 +11,19 @@ import java.util.stream.Collectors;
 public class ListaPrecioConverter {
 
     public static ListaPrecioDTO entityToDTO(ListaPrecio listaPrecio) {
-        List<PrecioDTO> preciosDTO = listaPrecio.getPrecios().stream()
-                .map(PrecioConverter::entityToDTO)
-                .collect(Collectors.toList());
 
-        return new ListaPrecioDTO(listaPrecio.getId(), listaPrecio.getNombre(), preciosDTO);
+        ListaPrecioDTO dto = ListaPrecioDTO.builder()
+                .idLista(listaPrecio.getId())
+                .nombre(listaPrecio.getNombre())
+                .build();
+
+        if (listaPrecio != null){
+            List<PrecioDTO> preciosDTO = listaPrecio.getPrecios().stream()
+                    .map(PrecioConverter::entityToDTO)
+                    .collect(Collectors.toList());
+        }
+
+        return dto;
     }
 
 

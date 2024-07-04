@@ -1,5 +1,6 @@
 package com.provider;
 
+import com.provider.entities.*;
 import com.provider.repositories.*;
 import com.provider.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,26 +9,21 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @SpringBootApplication
 
 public class ProviderApplication {
-
-    @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private PerfilService perfilService;
-
-    @Autowired
-    private RolService rolService;
 
     public static void main(String[] args) {
         SpringApplication.run(ProviderApplication.class, args);
 
     }
 
-
+    //Creación de objetos Inicial
+/*
     @Bean
     CommandLineRunner init(
             UsuarioRepository usuarioRepository,
@@ -40,7 +36,7 @@ public class ProviderApplication {
         return args -> {
 
 
-            /*
+
             Permiso permisoAdmin = Permiso.builder().nombrePermiso("Administrador").build();
             Permiso permisoCliente = Permiso.builder().nombrePermiso("Cliente").build();
             Permiso permisoProveedor = Permiso.builder().nombrePermiso("Proveedor").build();
@@ -58,7 +54,7 @@ public class ProviderApplication {
 
             // Crear usuarios y establecer relaciones con perfiles
             Usuario usuarioElioAdmin = Usuario.builder()
-                    .username("elioadmin")
+                    .username("admin")
                     .password("dev123e")
                     .email("admin@provider.com")
                     .tipoUsuario(Usuario.TipoUsuario.ADMINISTRADOR)
@@ -80,9 +76,9 @@ public class ProviderApplication {
                     .build();
 
             Usuario usuarioElioComerciante = Usuario.builder()
-                    .username("elioclient")
+                    .username("vicky")
                     .password("dev123e")
-                    .email("client@provider.com")
+                    .email("vicky@provider.com")
                     .tipoUsuario(Usuario.TipoUsuario.COMERCIANTE)
                     .isEnabled(true)
                     .accountNoExpired(true)
@@ -105,8 +101,8 @@ public class ProviderApplication {
 
             // Crear perfiles
             Perfil perfilAdmin = Perfil.builder()
-                    .nombre("Elio")
-                    .apellido("Herrera")
+                    .nombre("Admin")
+                    .apellido("Admin")
                     .fotoPerfil("default.png")
                     .descripcion("Administrador")
                     .usuario(usuarioElioAdmin)
@@ -121,8 +117,8 @@ public class ProviderApplication {
                     .build();
 
             Perfil perfilComerciante = Perfil.builder()
-                    .nombre("Elio")
-                    .apellido("Herrera")
+                    .nombre("Victoria")
+                    .apellido("Gomez")
                     .fotoPerfil("default.png")
                     .descripcion("Comerciante")
                     .usuario(usuarioElioComerciante)
@@ -135,10 +131,10 @@ public class ProviderApplication {
 
             // Crear empresa para el proveedor
             Empresa empresaProveedor = Empresa.builder()
-                    .nombre("Empresa de Proveedor")
-                    .rubro("Rubro del Proveedor")
-                    .telefono("123456789")
-                    .domicilio("Dirección del Proveedor")
+                    .nombre("Provider")
+                    .rubro("Informática")
+                    .telefono("3413101153")
+                    .domicilio("Olive 1661")
                     .proveedor(perfilProveedor) // Asignar el perfil del proveedor
                     .build();
 
@@ -148,16 +144,17 @@ public class ProviderApplication {
 
 
             Comercio comercioComerciante = Comercio.builder()
-                    .nombre("Comercio del Comerciante")
-                    .telefono("987654321")
-                    .rubro("Rubro del Comerciante")
-                    .domicilio("Dirección del Comerciante")
+                    .nombre("Athletika")
+                    .telefono("3416251492")
+                    .rubro("Ropa deportiva")
+                    .domicilio("Genova 1566")
                     .comerciante(perfilComerciante) // Asignar el perfil del comerciante
                     .build();
 
             // Guardar comercio en la base de datos
             comercioRepository.save(comercioComerciante);
-            /*
+
+
             // Crear productos para la empresa proveedora
             Producto producto1 = Producto.builder()
                     .nombre("Producto 1")
@@ -192,8 +189,10 @@ public class ProviderApplication {
             // Código para crear comercio y pedidos omitido por simplicidad
             // Crear comercio para el comerciante
 
-            */
+
 
         };
     }
+    */
+
 }

@@ -1,5 +1,7 @@
 package com.provider.services;
 
+import com.provider.entities.Comercio;
+import com.provider.entities.Empresa;
 import com.provider.entities.Perfil;
 import com.provider.entities.Solicitud;
 import com.provider.repositories.SolicitudRepository;
@@ -16,6 +18,10 @@ public class SolicitudService {
     private SolicitudRepository solicitudRepository;
     @Autowired
     private PerfilService perfilService;
+
+    @Autowired
+    private ComercioService comercioService;
+
     public boolean existeSolicitud(Long solicitanteId, Long solicitadoId) {
 
         Solicitud solicitud = solicitudRepository.findBySolicitanteIdAndSolicitadoId(solicitanteId, solicitadoId);
@@ -47,10 +53,10 @@ public class SolicitudService {
     }
 
 
+
     public boolean cancelarSolicitud(Long solicitudId) {
 
-        System.out.print("     METODO : CLASS SolicitudController : cancelarSolicitud()");
-
+        System.out.println("     METODO : CLASS SolicitudService : cancelarSolicitud()");
         Optional<Solicitud> optionalSolicitud = solicitudRepository.findById(solicitudId);
         if (optionalSolicitud.isPresent()) {
             Solicitud solicitud = optionalSolicitud.get();
@@ -58,20 +64,40 @@ public class SolicitudService {
 
             Perfil perfilSolicitante = solicitud.getSolicitante();
             Perfil perfilSolicitado = solicitud.getSolicitado();
+
+            // El solicitante tiene comercio
+            Comercio comercio = perfilSolicitante.getComercio();
+            // El solicitado tiene empresa
+            Empresa empresa = perfilSolicitado.getEmpresa();
+
+            // Eliminar la lista de precios asignada al comercio del solicitante por la empresa del solicitado
+            if (comercio != null && empresa != null) {
+                comercio.getListasAsignadas().removeIf(lista -> lista.getEmpresa().equals(empresa));
+                comercioService.guardarComercio(comercio); // Guardar cambios en el comercio
+            }
+
+            // Eliminar la relación comercial entre los perfiles
             perfilSolicitante.getRelacioneComerciales().remove(perfilSolicitado);
             perfilSolicitado.getRelacioneComerciales().remove(perfilSolicitante);
 
+            // Guardar cambios en los perfiles
             perfilService.guardarPerfil(perfilSolicitante);
             perfilService.guardarPerfil(perfilSolicitado);
+
+            // Guardar la solicitud con el estado actualizado
             solicitudRepository.save(solicitud);
 
-            System.out.println(" Cancelacion de Relacion Comecial entre " + perfilSolicitado.getUsuario().getUsername() + " y " + perfilSolicitante.getUsuario().getUsername());
+            System.out.println("Cancelación de Relación Comercial entre " + perfilSolicitado.getUsuario().getUsername() + " y " + perfilSolicitante.getUsuario().getUsername());
 
             return true; // La solicitud se actualizó correctamente
         } else {
             return false; // No se encontró la solicitud con el ID proporcionado
         }
     }
+
+
+
+
     public Optional<Solicitud> obtenerSolicitudPorId(Long id) {
         return solicitudRepository.findById(id);
     }

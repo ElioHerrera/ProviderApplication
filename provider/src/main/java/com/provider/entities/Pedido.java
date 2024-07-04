@@ -23,8 +23,8 @@ public class Pedido {
     private Date fecha;
     //private String estado;
     private double descuento;
-    private BigDecimal subTotal;
-    private BigDecimal total;
+    private double subTotal;
+    private double total;
 
     @ManyToOne
     @JoinColumn(name = "comercio_id")

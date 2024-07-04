@@ -1,4 +1,4 @@
-package com.provider.image;
+package com.provider.other;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

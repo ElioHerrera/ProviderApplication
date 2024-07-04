@@ -17,4 +17,5 @@ public class EmpresaDTO {
     private String rubro;
     private String telefono;
     private String domicilio;
+    private List<ListaPrecioDTO> listasDePrecio;
 }

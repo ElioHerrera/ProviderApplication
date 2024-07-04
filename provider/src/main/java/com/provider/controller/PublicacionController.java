@@ -1,5 +1,6 @@
 package com.provider.controller;
 
+import com.google.cloud.storage.*;
 import com.provider.converter.PublicacionConverter;
 import com.provider.dto.PublicacionDTO;
 import com.provider.entities.Perfil;
@@ -9,16 +10,22 @@ import com.provider.services.PerfilService;
 import com.provider.services.PublicacionService;
 import com.provider.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +40,7 @@ public class PublicacionController {
 
     private static final String RUTA_DE_IMAGENES = "provider/src/main/resources/static/uploads/";
 
+    private static final String DEFAULT_PUBLICACION_IMAGE = "uploads/default/defaultPublicacion.jpg";
     @Autowired
     private PublicacionService publicacionService;
 
@@ -42,8 +50,16 @@ public class PublicacionController {
     @Autowired
     private UsuarioService usuarioService;
 
+
+    @Value("${gcp.bucket.name}")
+    private String bucketName;
+    private final Storage storage = StorageOptions.getDefaultInstance().getService();
+
+
+
+    /*
     @PostMapping("/crear")
-    public ResponseEntity<?> crearPublicacion(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId, @RequestParam("descripcion") String descripcion) {
+    public ResponseEntity<?> crearPublicacionLocal(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId, @RequestParam("descripcion") String descripcion) {
 
         Optional<Usuario> optionalUsuario = usuarioService.obtenerUsuarioOptionalPorId(userId);
         if (optionalUsuario.isPresent()) {
@@ -98,7 +114,7 @@ public class PublicacionController {
     }
 
     @PostMapping("/cargar")
-    public ResponseEntity<Map<String, String>> guardarPublicacionLocal(@RequestParam("userId") Long userId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> obtenerImagenPublicacionLocal(@RequestParam("userId") Long userId, @RequestParam("file") MultipartFile file) {
 
         Map<String, String> response = new HashMap<>();
         try {
@@ -132,6 +148,108 @@ public class PublicacionController {
             response.put("message", "Error al subir el archivo: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+    */
+
+
+
+    //CONFIGURATIÓN para "https://provider-pedidos-app.web.app"
+    @PostMapping("/crear")
+    public ResponseEntity<?> crearPublicacion(@RequestParam("file") MultipartFile file,
+                                              @RequestParam("userId") Long userId,
+                                              @RequestParam("descripcion") String descripcion) {
+
+        Map<String, String> response = new HashMap<>();
+        try {
+            Optional<Usuario> optionalUsuario = usuarioService.obtenerUsuarioOptionalPorId(userId);
+            if (optionalUsuario.isPresent()) {
+                Usuario usuario = optionalUsuario.get();
+                Perfil autor = usuario.getPerfil();
+
+                if (autor != null) {
+                    // Generar un nombre de archivo único
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("HHmmssSSS");
+                    String formattedTime = dateFormat.format(new Date());
+                    String fileName = formattedTime.substring(formattedTime.length() - 4) + "_" + file.getOriginalFilename();
+
+                    // Convertir MultipartFile a byte array
+                    byte[] imageBytes = file.getBytes();
+
+                    // Subir la imagen a Google Cloud Storage
+                    BlobId blobId = BlobId.of(bucketName, "uploads/" + userId + "/publicaciones/" + fileName);
+                    BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
+                    storage.create(blobInfo, imageBytes);
+
+                    // Hacer público el objeto subido
+                    storage.createAcl(blobId, Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)); // Dar permisos públicos
+
+                    // Crear la nueva publicación
+                    Publicacion publicacion = Publicacion.builder()
+                            .contenido(descripcion)
+                            .fotoPublicacion(fileName)
+                            .likes(0)
+                            .fecha(new Date())
+                            .autor(autor)
+                            .build();
+
+                    Publicacion nuevaPublicacion = publicacionService.save(publicacion);
+
+                    autor.getPublicaciones().add(nuevaPublicacion);
+                    perfilService.guardarPerfil(autor);
+
+                    response.put("message", "Archivo subido exitosamente");
+                    response.put("fileName", fileName);
+                    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                } else {
+                    response.put("message", "Perfil del autor no encontrado.");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                }
+            } else {
+                response.put("message", "Usuario no encontrado.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.put("message", "Error al subir el archivo: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/uploads/{userId}/{fileName:.+}")
+    public ResponseEntity<UrlResource> obtenerImagenPublicacion(@PathVariable Long userId,
+                                                                          @PathVariable String fileName) {
+        try {
+            // Obtener el objeto Blob de Google Cloud Storage
+            Blob blob = storage.get(BlobId.of(bucketName, "uploads/" + userId + "/publicaciones/" + fileName));
+
+            if (blob != null && blob.exists()) {
+                // Crear y devolver la respuesta con el recurso de la imagen JPEG
+                UrlResource recurso = new UrlResource(blob.getMediaLink());
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(recurso);
+            } else {
+                System.out.println("Imagen no encontrada en Google Cloud Storage, sirviendo imagen predeterminada.");
+
+                // Cargar imagen predeterminada desde el bucket
+                Blob blobPredeterminado = storage.get(BlobId.of(bucketName, DEFAULT_PUBLICACION_IMAGE));
+
+                if (blobPredeterminado != null && blobPredeterminado.exists()) {
+                    // Crear y devolver la respuesta con el recurso de la imagen PNG
+                    UrlResource recurso = new UrlResource(blobPredeterminado.getMediaLink());
+                    return ResponseEntity.ok()
+                            .contentType(MediaType.IMAGE_JPEG)
+                            .body(recurso);
+                } else {
+                    System.out.println("Imagen predeterminada no encontrada en Google Cloud Storage.");
+                }
+            }
+        } catch (MalformedURLException e) {
+            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
+        }
+
+        System.out.println("No se ha encontrado el archivo: " + fileName);
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{userId}")

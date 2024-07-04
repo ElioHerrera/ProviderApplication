@@ -9,7 +9,7 @@ public class PrecioConverter {
 
     public static PrecioDTO entityToDTO(Precio precio) {
         PrecioDTO dto = PrecioDTO.builder()
-                .id(precio.getId())
+                .idPrecio(precio.getId())
                 .listaId(precio.getLista().getId())
                 .productoId(precio.getProducto().getId())
                 .precio(precio.getPrecio())

@@ -2,45 +2,39 @@ package com.provider.controller;
 
 import com.provider.converter.UsuarioConverter;
 import com.provider.dto.UsuarioDTO;
-import com.provider.login.ErrorResponse;
-import org.springframework.web.bind.annotation.*;
 import com.provider.entities.*;
-import com.provider.login.LoginRequest;
+import com.provider.other.ErrorResponse;
+import com.provider.other.LoginRequest;
 import com.provider.services.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 @RestController
+@AllArgsConstructor(onConstructor = @__(@Autowired)) //Anotación para simplificar la inyeccion de dependencias.
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private RolService rolService;
-
-    @Autowired
-    private PerfilService perfilService;
-
-    @Autowired
-    private PermisoService permisoService;
-
-    @Autowired
-    private EmpresaService empresaService;
-
-    @Autowired
-    private ComercioService comercioService;
+    private final UsuarioService usuarioService;
+    private final RolService rolService;
+    private final PerfilService perfilService;
+    private final PermisoService permisoService;
+    private final EmpresaService empresaService;
+    private final ComercioService comercioService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+
         Usuario usuario = usuarioService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+
         if (usuario != null) {
-            // Asegúrate de que el perfil esté cargado
+
             if (usuario.getPerfil() == null) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("Perfil no definido para el usuario"));
             }
@@ -57,11 +51,11 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> registrarUsuario(@RequestBody Usuario usuario) {
 
-        if (usuarioService.existsByUsername(usuario.getUsername())) {
+        if (usuarioService.existePorUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "El nombre de usuario ya está en uso"));
         }
 
-        if (usuarioService.existsByEmail(usuario.getEmail())) {
+        if (usuarioService.existePorEmail(usuario.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "El correo electrónico ya está en uso"));
         }
 
@@ -86,11 +80,12 @@ public class AuthController {
                 .accountNoExpired(true)
                 .build();
 
-        // Verificar tipo de usuario elegido en el front
+        // Verificar tipo de usuario enviado desde el Cliente
         if ("PROVEEDOR".equalsIgnoreCase(usuario.getTipoUsuario().name())) {
             nuevoUsuario.setTipoUsuario(Usuario.TipoUsuario.PROVEEDOR);
             nuevoUsuario.setRoles(Set.of(rolProveedor));
         } else if ("COMERCIANTE".equalsIgnoreCase(usuario.getTipoUsuario().name())) {
+            nuevoUsuario.setTipoUsuario(Usuario.TipoUsuario.COMERCIANTE);
             nuevoUsuario.setRoles(Set.of(rolCliente));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Tipo de usuario no válido"));
@@ -116,7 +111,9 @@ public class AuthController {
                     .domicilio(usuario.getPerfil().getEmpresa().getDomicilio())
                     .proveedor(nuevoPerfil)
                     .build();
+
             empresaService.guardarEmpresa(nuevaEmpresa);
+
         } else if (nuevoUsuario.getTipoUsuario() == Usuario.TipoUsuario.COMERCIANTE) {
             Comercio nuevoComercio = Comercio.builder()
                     .nombre(usuario.getPerfil().getComercio().getNombre())
@@ -125,6 +122,7 @@ public class AuthController {
                     .domicilio(usuario.getPerfil().getComercio().getDomicilio())
                     .comerciante(nuevoPerfil)
                     .build();
+
             comercioService.guardarComercio(nuevoComercio);
         }
 
@@ -133,13 +131,13 @@ public class AuthController {
 
     @GetMapping("/verificarUsuario/{username}")
     public ResponseEntity<Boolean> verificarUsuarioExistente(@PathVariable String username) {
-        boolean exists = usuarioService.existsByUsername(username);
+        boolean exists = usuarioService.existePorUsername(username);
         return ResponseEntity.ok(exists);
 }
 
     @GetMapping("/verificarEmail/{email}")
     public ResponseEntity<Boolean> verificarEmailExistente(@PathVariable String email) {
-        boolean exists = usuarioService.existsByEmail(email);
+        boolean exists = usuarioService.existePorEmail(email);
         return ResponseEntity.ok(exists);
     }
 

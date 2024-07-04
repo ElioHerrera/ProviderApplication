@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PrecioDTO {
-    private Long id;
+    private Long idPrecio;
     private Long productoId;
     private Long listaId;
     private double precio;

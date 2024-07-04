@@ -1,18 +1,26 @@
 package com.provider.controller;
 
+import com.google.cloud.storage.*;
 import com.provider.converter.ProductoConverter;
+import com.provider.converter.ProductoProveedorConverter;
 import com.provider.dto.ProductoDTO;
+import com.provider.dto.ProductoProveedorDTO;
 import com.provider.entities.*;
-import com.provider.image.ImageResizer;
+import com.provider.other.ImageResizer;
 import com.provider.services.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -29,114 +37,20 @@ import java.util.stream.Collectors;
 
 
 @RestController
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping("/api/producto")
 public class ProductoController {
 
-    @Autowired
     private UsuarioService usuarioService;
-
-    @Autowired
     private ProductoService productoService;
-
-    @Autowired
     private ProductoConverter productoConverter;
-
-    @Autowired
     private EmpresaService empresaService;
-
-    @Autowired
     private PrecioService precioService;
-
-    @Autowired
     private ListaPrecioService listaPrecioService;
 
-    private static final String RUTA_DE_IMAGENES_PRODUCTOS = "provider/src/main/resources/static/uploads/";//ANTERIOR
-
-    @PostMapping("/upload")
-    public ResponseEntity<Map<String, String>> guardarImagenProducto(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId, @RequestParam("productoId") Long productoId) {
-
-        Map<String, String> response = new HashMap<>();
-        try {
-            Optional<Usuario> optionalUsuario = usuarioService.obtenerUsuarioOptionalPorId(userId);
-            if (optionalUsuario.isPresent()) {
-                Usuario usuario = optionalUsuario.get();
-                Producto producto = usuario.getPerfil().getEmpresa().getProductos().stream()
-                        .filter(p -> p.getId().equals(productoId))
-                        .findFirst()
-                        .orElse(null);
-
-                if (producto == null) {
-                    response.put("message", "Producto no encontrado");
-                    return ResponseEntity.badRequest().body(response);
-                }
-
-                Path rutaDeProducto = Paths.get(RUTA_DE_IMAGENES_PRODUCTOS, String.valueOf(userId));
-                if (!Files.exists(rutaDeProducto)) {
-                    Files.createDirectories(rutaDeProducto);
-                }
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HHmmssSSS");
-                String formattedTime = dateFormat.format(new Date());
-                String fileName = formattedTime.substring(formattedTime.length() - 5) + "_" + file.getOriginalFilename();
-                Path path = rutaDeProducto.resolve(fileName);
-
-                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
-                BufferedImage resizedAndCroppedImage = ImageResizer.resizeAndCropImage(originalImage, 320);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(resizedAndCroppedImage, "jpg", baos);
-                Files.write(path, baos.toByteArray(), StandardOpenOption.CREATE);
-
-                producto.setFotoProducto(fileName);
-                // Guardar cambios en la base de datos
-                usuarioService.guardarUsuario(usuario);
-
-                response.put("message", "Archivo subido exitosamente");
-                response.put("fileName", fileName);
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("message", "Usuario no encontrado");
-                return ResponseEntity.badRequest().body(response);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            response.put("message", "Error al subir el archivo: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    @GetMapping("/uploads/{userId}/{fileName:.+}")
-    public ResponseEntity<Resource> obtenerImagenProducto(@PathVariable Long userId, @PathVariable String fileName) {
-
-        Path userFilePath = Paths.get(RUTA_DE_IMAGENES_PRODUCTOS, String.valueOf(userId)).resolve(fileName).normalize();
-        try {
-            Resource userResource = new UrlResource(userFilePath.toUri());
-            if (userResource.exists() || userResource.isReadable()) {
-                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(userResource);
-            }
-        } catch (MalformedURLException e) {
-            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
-        }
-
-        // Si el archivo no se encuentra en el directorio del usuario, intentar cargarlo desde el directorio genérico
-        Path defaultFilePath = Paths.get(RUTA_DE_IMAGENES_PRODUCTOS, "defaultProduct.jpg").normalize();
-        try {
-            Resource defaultResource = new UrlResource(defaultFilePath.toUri());
-            if (defaultResource.exists() || defaultResource.isReadable()) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG)
-                        .body(defaultResource);
-            }
-        } catch (MalformedURLException e) {
-            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
-        }
-        System.out.println("No se ha encontrado el archivo: " + fileName);
-        return ResponseEntity.notFound().build();
-    }
 
     @GetMapping("lista/{userId}")
     public ResponseEntity<List<ProductoDTO>> obtenerProductosPorId(@PathVariable Long userId) {
-        System.out.println("     METODO : CLASS ProductoController :  obtenerProductosPorId");
 
         Optional<Usuario> usuarioOptional = usuarioService.obtenerUsuarioOptionalPorId(userId);
 
@@ -146,9 +60,10 @@ public class ProductoController {
         Usuario usuario = usuarioOptional.get();
 
         List<Producto> productos = usuario.getPerfil().getEmpresa().getProductos();
-        // Convertir la List<Producto> productos a List<ProductoDTO> productosDTO
+
+        // Convertir la List<Producto> productos a List<ProductoDTO> productosDTO recorriendo y convirtiendo cada producto
         List<ProductoDTO> productosDTO = productos.stream()
-                .map(productoConverter::entityToDTO)  // Aplicar el convertidor
+                .map(productoConverter::entityToDTO)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(productosDTO);
@@ -177,14 +92,12 @@ public class ProductoController {
         System.out.println("     CLASS : ProductoController     METODO : crearProducto()");
         Usuario usuario = usuarioService.obtenerUsuarioPorId(userId);
 
-        System.out.print("     ACTION : Usuario recuperado");
-
         if (usuario != null) {
             Empresa empresa = usuario.getPerfil().getEmpresa();
 
             Producto nuevoProducto = Producto.builder()
                     .codigo(9999)
-                    .fotoProducto("defaultProduct.jpg")
+                    .fotoProducto("product.jpg")
                     .nombre("Nombre producto")
                     .descripcion("Descripción producto")
                     .isEnabled(false)
@@ -192,10 +105,8 @@ public class ProductoController {
                     .build();
             productoService.guardarProducto(nuevoProducto);
 
-            System.out.print("     ACTION : Producto creado");
 
             // Verificar y crear listas de precios si no existen
-
             List<ListaPrecio> listasDePrecios = empresa.getListasPrecios();
             if (listasDePrecios.isEmpty()) {
                 for (int i = 1; i <= 3; i++) {
@@ -206,7 +117,6 @@ public class ProductoController {
                     listaPrecioService.guardarListaPrecio(nuevaLista);
                     listasDePrecios.add(nuevaLista);
 
-                    System.out.print("     ACTION : Nueva lista");
                 }
             }
 
@@ -216,10 +126,9 @@ public class ProductoController {
                 Precio nuevoPrecio = new Precio();
                 nuevoPrecio.setProducto(nuevoProducto);
                 nuevoPrecio.setLista(lista);
-                nuevoPrecio.setPrecio(0.0); // Valor inicial, puedes cambiar esto según sea necesario
+                nuevoPrecio.setPrecio(0.0);
                 precioService.guardarPrecio(nuevoPrecio);
 
-                System.out.print("     ACTION : Nuevo precio");
             }
 
 
@@ -232,8 +141,6 @@ public class ProductoController {
 
 
             ProductoDTO dto = productoConverter.entityToDTO(nuevoProducto);
-
-            System.out.print("     ACTION : Devolver productos dto");
 
             if (dto != null) {
                 return new ResponseEntity<>(dto, HttpStatus.CREATED);
@@ -290,6 +197,61 @@ public class ProductoController {
         productoService.eliminarProducto(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/tieneProductos/{userId}")
+    public ResponseEntity<Boolean> tieneProductos(@PathVariable Long userId) {
+        Optional<Usuario> usuarioOptional = usuarioService.obtenerUsuarioOptionalPorId(userId);
+
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Usuario no encontrado
+        }
+        Usuario usuario = usuarioOptional.get();
+
+        List<Producto> productos = usuario.getPerfil().getEmpresa().getProductos();
+
+        return ResponseEntity.ok(!productos.isEmpty());
+    }
+
+    @GetMapping("/productosProveedor/{userId}/{proveedorId}")
+    public ResponseEntity<List<ProductoProveedorDTO>> obtenerProductosProveedor(@PathVariable Long userId, @PathVariable Long proveedorId) {
+
+        Usuario usuario = usuarioService.obtenerUsuarioPorId(userId);
+        Usuario proveedor = usuarioService.obtenerUsuarioPorId(proveedorId);
+
+        if (usuario == null || proveedor == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        // Obtener la lista de precios asignada al comercio del usuario para la empresa del proveedor
+        Comercio comercio = usuario.getPerfil().getComercio();
+        Empresa empresa = proveedor.getPerfil().getEmpresa();
+
+        ListaPrecio listaAsignada = comercio.getListasAsignadas().stream()
+                .filter(lista -> lista.getEmpresa().equals(empresa))
+                .findFirst()
+                .orElse(null);
+
+        List<ProductoProveedorDTO> listaDto = new ArrayList<>();
+
+        if (listaAsignada != null) {
+            List<Producto> listaProveedor = empresa.getProductos();
+
+            for (Producto producto : listaProveedor) {
+                Precio precioProducto = listaAsignada.getPrecios().stream()
+                        .filter(precio -> precio.getProducto().equals(producto))
+                        .findFirst()
+                        .orElse(null);
+
+                if (precioProducto != null) {
+                    ProductoProveedorDTO dto = ProductoProveedorConverter.entityToDTO(producto);
+                    dto.setPrecio(precioProducto.getPrecio());
+                    listaDto.add(dto);
+                }
+            }
+        }
+
+        return ResponseEntity.ok(listaDto);
     }
 
 }

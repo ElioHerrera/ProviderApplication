@@ -10,8 +10,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListaPrecioDTO {
+public class ListaPrecioRelacionDTO {
     private Long idLista;
+    private Long idEmpresa;
     private String nombre;
-    private List<PrecioDTO> precios;
+
 }

@@ -1,4 +1,4 @@
-package com.provider.login;
+package com.provider.other;
 
 public class ErrorResponse {
     private String message;

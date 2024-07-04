@@ -28,13 +28,6 @@ public class Comercio {
     @JsonIgnore // Evita la serialización de la relación
     private Perfil comerciante;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "comercio_proveedor",
-//            joinColumns = @JoinColumn(name = "comercio_id"),
-//            inverseJoinColumns = @JoinColumn(name = "proveedor_id")
-//    )
-//    private Set<Perfil> proveedores;
 
     @ManyToMany
     @JoinTable(
