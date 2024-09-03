@@ -42,3 +42,156 @@
       font-size: 10px;
     }
       
+
+
+    .proveedor-item {
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .proveedor-item.hovered {
+      background-color: #f0f0f0;
+      transform: scale(1.02);
+    }
+    
+    .proveedor-item.clicked {
+      background-color: #e0e0e0;
+      border-left: 5px solid #007bff;
+    }
+
+    .containerProductos{
+
+      margin-top: 15px;
+      margin-right: 50px;
+      margin-left: 50px;
+      
+    }
+    
+
+    
+    
+    .product-table th, .product-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      font-size: 12px;
+    }
+    
+
+    .product-table td.description-cell {
+       /* Ancho máximo para la celda de descripción */
+      overflow: auto; /* Agrega una barra de desplazamiento cuando el contenido se desborda */
+      max-height: 100px; /* Altura máxima de la celda */
+    }
+
+    .product-table td {
+      max-width: 300px; /* Ancho máximo para cada celda */
+      overflow: hidden; /* Oculta el contenido que excede el ancho máximo */
+      text-overflow: ellipsis; /* Agrega puntos suspensivos (...) al final del texto */
+      white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+    }
+
+    .product-table {
+      width: 100%;
+       margin-top: 20px;
+       border-collapse: collapse; /* Para asegurar que las celdas se alineen correctamente */
+    }
+    
+    
+  
+    
+    
+    .product-table td img {
+      max-width: 100px;
+    }
+    
+    .product-image-container {
+      position: relative;
+    }
+    
+    
+    /* Botones Agregar Producto - Lista*/
+    .containerBotonProducto {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 20px; /* Separación de 20px del extremo derecho */
+    }
+    
+    .botonProducto {
+      display: flex;
+      gap: 10px; /* Separación de 10px entre los botones */
+    }
+    
+    .botonProducto button {
+      margin: 0;
+    }
+    
+    
+    /* Icono para edición de foto de Producto*/
+    .edit-icon-button { 
+      position: absolute;
+      bottom: 5px; /* Ajusta la posición vertical según sea necesario */
+      right: 5px; /* Ajusta la posición horizontal según sea necesario */
+      background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente para el botón */
+    }
+    
+    .product-table td button {
+      display: inline-block; /* Asegura que los botones estén en línea */
+      margin-right: 5px; /* Espacio entre los botones */
+    }
+    
+    /* Ajuste de columnas */
+    
+    .containerBorones{
+      display: flex;
+    }
+    
+    
+    
+    .product-table td input {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    
+   
+    
+    .product-table td:nth-child(1),
+    .product-table td:nth-child(2),
+    .product-table td:nth-child(4)
+     {
+      width: 100px;
+    }
+    
+
+    
+    /* Is Enabled*/
+    .example-h2 {
+      margin: 10px;
+    }
+    
+    .example-section {
+      display: flex;
+      align-content: center;
+      align-items: center;
+      height: 60px;
+    }
+    
+    .example-margin {
+      margin: 10px;
+    }
+    
+    .example-form mat-slide-toggle {
+      margin: 8px 0;
+      display: block;
+    }
+    
+    .disabled-row {
+      background-color: #eee8e8; /* Fondo gris claro para productos deshabilitados */
+      opacity: 0.5; /* Opacidad reducida para la fila deshabilitada */
+      filter: grayscale(100%); /* Aplica escala de grises al 100% */
+    }
+    
+    .enabled-row {
+      background-color: #ffffff; /* Fondo gris claro para productos deshabilitados */
+    }

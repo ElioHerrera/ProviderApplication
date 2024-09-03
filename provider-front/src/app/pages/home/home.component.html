@@ -141,9 +141,9 @@
                   </div>
                 </div>
               </mat-card-header>
-              <img [lazyLoad]="obtenerImagenPerfil(publicacion.autor.id, publicacion.fotoPublicacion)" class="imagenPublicacion">
+              <img [lazyLoad]="obtenerImgPublicacion(publicacion.autor.id, publicacion.fotoPublicacion)" class="imagenPublicacion">
               <mat-card-content>
-                <p style="font-size:medium;">{{ publicacion.contenido }}</p>
+                <div [style.whiteSpace]="'pre-line'" style="font-size:medium;" >{{ publicacion.contenido }}</div> 
               </mat-card-content>
               <mat-card-actions>
                 <div class="example-label">
@@ -171,7 +171,7 @@
   
     
   <!---------------------- Bloque Relaciones Comerciales ---------------------->
-  <div class="derecha">
+  <!-- <div class="derecha">
     <div class="box full-width text-center">
       <h2 class="text-center">Relaciones comerciales</h2>
       <div class="container box-proveedores">
@@ -179,7 +179,7 @@
           <div *ngFor="let perfilRelacion of relacionesComerciales" class="proveedor-item">
             <div class="proveedor-info">
 
-              <!-- Relaciones Comerciales -->
+              <-- Relaciones Comerciales -- >
               <img [lazyLoad]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)" alt="Profile Image"
                 class="circle-img-lateral" (error)="handleImgError($event)">
               <div class="full-width">
@@ -205,7 +205,7 @@
         </ng-template>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
 
 

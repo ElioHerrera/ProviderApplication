@@ -78,12 +78,11 @@ export class ProductosComponent {
       }
     );
   }
+
   obtenerImagenProducto(userId: number, fileName: string): string {
-    return `${baseUrl}/api/producto/uploads/${userId}/${encodeURIComponent(fileName)}`;
+    return `${baseUrl}/api/img/product/uploads/${userId}/${encodeURIComponent(fileName)}`;
   }
-  handleImgError(event: any): void {
-    event.target.src = `${baseUrl}/api/producto/uploads/default/defaultProduct.jpg`;
-  }
+ 
   agregarListaDePrecio() { 
 
   }

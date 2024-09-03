@@ -1,5 +1,11 @@
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
+
+body {
+  padding-top: 38px; /* Espacio para el navBar*/
+  margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+  
+}
+
 
 /* <<< GENERALES >>> */
 
@@ -23,41 +29,6 @@ p{
   margin: 10px; /* Margen inferior para separar elementos */
 }
 
-/* <<< NAV BAR >>> */
-
-.navBar {
-  height: 60px;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.navBar * {
-  box-sizing: inherit;
-  /* Esto asegura que todos los elementos dentro de .navBar también usen border-box */
-  margin: 0;
-  /* Elimina cualquier margen que los elementos internos puedan tener por defecto */
-  padding: 0;
-  /* Elimina cualquier padding que los elementos internos puedan tener por defecto */
-}
-
-.navContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #ffffff;
-  padding: 5px 30px;
-}
-
-.logoContainer {
-  display: flex;
-  align-items: center;
-  padding-inline-start: 17%;
-  padding-bottom: 25px;
-}
 
 .configContainer {
   display: flex;
@@ -99,10 +70,10 @@ p{
 /* <<< ESTRUCTURA PRINCIPAL >>> */
 
 .principal-container {
-    display: grid;
-  grid-template-columns: 10% 17% 46% 17% auto;
+    /* display: grid; */
+  /* grid-template-columns: 1% 20%  auto; */
   margin: auto;
-  grid-gap: 24px; 
+  grid-gap: 20px; 
   }
   
   .izquierda {
@@ -118,6 +89,7 @@ p{
     grid-column: 4; /* La columna derecha */
     justify-self: start;
     margin-left: -38px;
+    
   }
 
 
@@ -174,3 +146,7 @@ p{
     color: rgb(106, 106, 106);
     
   }
+
+  /*   NUEVO*/
+
+  

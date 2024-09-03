@@ -6,6 +6,13 @@
       "changeOrigin": true
     }
   },
+  "developmentmovil": {
+    "/api": {
+      "target": "http://192.168.1.0:4200",
+      "secure": false,
+      "changeOrigin": true
+    }
+  },
   "production": {
     "/api": {
       "target": "https://provider-426416.rj.r.appspot.com",

@@ -1,0 +1,13 @@
+<!-- listas.component.html -->
+<h2 mat-dialog-title>Seleccionar Lista de Precios</h2>
+<mat-dialog-content>
+  <mat-selection-list>
+    <mat-list-option *ngFor="let lista of data.listasDePrecio" [value]="lista" (click)="seleccionarLista(lista)">
+      <p>{{ lista.nombre }}</p>
+    </mat-list-option>
+  </mat-selection-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-button color="primary" (click)="confirmarSeleccion()">Confirmar</button>
+</mat-dialog-actions>

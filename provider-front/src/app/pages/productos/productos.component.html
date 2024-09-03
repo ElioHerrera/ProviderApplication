@@ -32,24 +32,12 @@
 
         <tr *ngFor="let producto of productos; let i = index"
         [ngClass]="{'disabled-row': !producto.enabled, 'enabled-row': producto.enabled}">
-
-
           <td>
           <mat-slide-toggle color="primary" [(ngModel)]="producto.enabled" (change)="alternarInterruptor(producto.idProducto, producto.enabled)"></mat-slide-toggle>
         </td>
-        
-
-
-       
-        <!-- Contenido de las celdas de la fila -->
-
-
-
-
-        
-        <td class="product-image-container">
+      <td class="product-image-container">
           <img [src]="obtenerImagenProducto(producto.idUsuario, producto.fotoProducto)" alt="Product Image"
-            class="img-product" (error)="handleImgError($event)">
+            class="img-product">
           <button mat-icon-button class="edit-icon-button" *ngIf="producto.editableImagen"
             (click)="editarImagenProducto(producto)">
             <mat-icon>edit</mat-icon>

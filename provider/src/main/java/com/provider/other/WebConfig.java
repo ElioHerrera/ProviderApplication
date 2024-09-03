@@ -20,16 +20,16 @@ public class WebConfig  implements WebMvcConfigurer {
     allowCredentials(true) >>> Permite el envío de cookies y credenciales junto con la solicitud CORS.
     maxAge(3600) >>> Tiempo en segundos. indica que las respuestas de las solicitudes preflight pueden ser almacenadas en caché por el navegador durante 1 hora.
     */
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("https://provider-pedidos-app.web.app")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .exposedHeaders("Authorization")  // Si necesitas exponer otros encabezados personalizados
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("https://provider-pedidos-app.web.app")
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//                .allowedHeaders("*")
+//                .exposedHeaders("Authorization")  // Si necesitas exponer otros encabezados personalizados
+//                .allowCredentials(true)
+//                .maxAge(3600);
+//    }
 
     //CONFIGURACIÓN CORS para localhost:4200
         /*
@@ -39,14 +39,14 @@ public class WebConfig  implements WebMvcConfigurer {
     allowedHeaders("*") >>> Permite todos los encabezados.
     maxAge(3600) >>> Tiempo en segundos. indica que las respuestas de las solicitudes preflight pueden ser almacenadas en caché por el navegador durante 1 hora.
     */
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:4200")
-//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-//                .allowedHeaders("*")
-//                .maxAge(3600);
-//    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://192.168.0.30:4200")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .maxAge(3600);
+    }
 
     //CONFIGURACIÓN de ruta para recursos estáticos
     /*

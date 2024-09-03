@@ -24,6 +24,10 @@
       list-style-type: none; /* Elimina los marcadores de lista */
      
   }
+
+  .publicacion-box {
+    white-space: pre-line;
+  }
      
     .proveedor-info {
       display: flex; /* Utiliza flexbox para alinear los elementos */

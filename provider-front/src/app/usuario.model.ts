@@ -30,6 +30,7 @@ export interface Empresa {
     rubro: string;
     telefono: string;
     domicilio: string;
+    listas: ListaPrecios[];
    
 
 }
@@ -47,6 +48,17 @@ export interface Producto {
     editable: boolean; // Para la edición de nombre, descripción, etc.
     enabled: boolean;
     editableImagen: boolean; // Para la edición de la imagen del producto
+  }
+
+  export interface ListaPreciosRelacion{
+    id: number;
+    idEmpresa: number;
+    nombre: string;
+    }
+
+  export interface ListaPrecios{
+  idLista: number;
+  nombre: string;
   }
 
 export interface Comercio {
@@ -91,7 +103,9 @@ export interface ComercioRelacion {
     telefono: string;
     rubro: string;
     domicilio: string;
+    listasAsociadas: ListaPreciosRelacion[];
 }
+
 
 export interface Publicacion {
     idPublicacion: number;

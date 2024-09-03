@@ -1,75 +1,146 @@
 <app-navbar></app-navbar>
 
 <div class="body">
-  <div class="bootstrap-wrapper container">
-    <div class="container">
-      <div class="row mt20">
-        <div class="col-md-6 offset-md-3" style="padding-block: 20px;">
-          <mat-card style="padding-right: 22px;">
-            <div class="container text-center">
-              <img src="../../../assets/singup.png" width="100px" height="px">
-              <h1 class="text-center">Inicio de sesión</h1>
-              <form (ngSubmit)="login()">
+
+
+
+  <div class="contenedor-principal">
+
+
+
+    <!-- login.component.html -->
+    <div class="loading-screen" *ngIf="loading()">
+      <img src="../../../assets/logoProviderWhite.svg" class="logoload" alt="Loading Logo">
+    </div>
+
+
+
+    <!-- SECCION BANNER -->
+    <div class="seccion-banner">
+      <img src="../../../assets/provider-white.png" alt="Logo" class="logo">
+      <img src="../../../assets/bannerPrincipal.jpg" alt="Banner" class="banner">
+      <div class="text-container">
+        <!-- SVG del texto 'PENSAMOS EN TU NEGOCIO' -->
+        <object type="image/svg+xml" data="../../../assets/pensamosEnTuNegocio.svg" class="text-svg"></object>
+      </div>
+    </div> <!-- fin SECCION BANNER -->
+
+    <!-- SECCION LOGIN -->
+    <div class="seccion-login">
+      <div class="contenedor-registro">
+
+        <mat-card>
+          <div>
+            <img src="../../../assets/singup.png">
+
+            <h1 class="text-center">Inicio de sesión</h1>
+            <form (ngSubmit)="login()">
+              
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Nombre de Usuario</mat-label>
-                  <input [(ngModel)]="credentials.username" name="username" matInput placeholder="Digite su nombre de usuario" id="username" autocomplete="username" required>
+                  <input [(ngModel)]="credentials.username" name="username" matInput
+                    placeholder="Digite su nombre de usuario" id="username" autocomplete="username" required>
                 </mat-form-field>
+             
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Contraseña</mat-label>
-                  <input [(ngModel)]="credentials.password" type="password" name="password" matInput placeholder="Digite su contraseña"  id="password" name="password" autocomplete="current-password" required>
-                </mat-form-field>
+              <!-- <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contraseña</mat-label>
+                <input [(ngModel)]="credentials.password" type="password" name="password" matInput
+                  placeholder="Digite su contraseña" id="password" name="password" autocomplete="current-password"
+                  required>
+              </mat-form-field> -->
 
-                <div class="container text-center example-button-row" style="padding: 20px;">
-                  <button mat-raised-button color="primary" type="submit">Iniciar Sesión</button>
-                </div>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Ingrese su contraseña</mat-label>
+                <input [(ngModel)]="credentials.password" matInput [type]="hide() ? 'password' : 'text'" name="password" required>
+                <button mat-icon-button matSuffix type="button" (click)="clickEvent($event)" 
+                        [attr.aria-label]="hide() ? 'Ocultar contraseña' : 'Mostrar contraseña'" 
+                        [attr.aria-pressed]="hide()">
+                  <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </mat-form-field>
 
-              </form>
-            </div>
-          </mat-card>
-          <div class="boton-registrarse" style="float: right; padding-top: 10px;">
-            <p>¿Aún no estás registrado?</p>
-            <a [routerLink]="['/signup']"><button mat-raised-button color="warn" style="float: right;">Registrarse</button></a>
+
+
+              <div>
+                <button mat-raised-button color="primary" type="submit">Iniciar Sesión</button>
+              </div>
+
+            </form>
           </div>
+        </mat-card>
+
+
+
+
+
+
+        <div>
+          <p>¿Aún no estás registrado?</p>
+          <a [routerLink]="['/signup']"><button mat-raised-button color="warn">Registrarse</button></a>
+        </div>
+      </div>
+
+
+
+    </div> <!-- fin seccion login -->
+
+
+
+  </div>
+
+
+</div>
+
+
+<!-- SECCION FOOTER -->
+
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <!-- Información de contacto -->
+      <div class="contact-info">
+        <h4>Contáctenos</h4>
+        <p>Rosario, Santa Fe, Argentina</p>
+        <p><strong>Teléfono:</strong> +54 341 310 1153</p>
+        <p><strong>Email:</strong> contacto&#64;provider.com</p>
+      </div>
+      <!-- Enlaces adicionales -->
+      <div class="links">
+        <h4>Enlaces</h4>
+        <ul>
+          <li><a href="#">Política de Privacidad</a></li>
+          <li><a href="#">Términos y Condiciones</a></li>
+          <li><a href="#">Ayuda</a></li>
+          <li><a href="#">Soporte</a></li>
+        </ul>
+      </div>
+      <!-- Redes sociales -->
+      <div class="social-media">
+        <h4>Síguenos</h4>
+        <div class="icons">
+          <a href="#"><img src="https://img.icons8.com/fluent/24/000000/facebook-new.png" alt="Facebook"></a>
+          <a href="#"><img src="https://img.icons8.com/fluent/24/000000/twitter.png" alt="Twitter"></a>
+          <a href="#"><img src="https://img.icons8.com/fluent/24/000000/instagram-new.png" alt="Instagram"></a>
+          <a href="#"><img src="https://img.icons8.com/fluent/24/000000/linkedin.png" alt="LinkedIn"></a>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<footer style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: Arial, sans-serif; color: #333;">
-  <div style="max-width: 1200px; margin: auto;">
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid #ddd;">
-          <!-- Información de contacto -->
-          <div style="flex: 1; min-width: 250px; margin-bottom: 20px;">
-              <h4 style="margin-bottom: 10px;">Contáctenos</h4>
-              <p><strong>Dirección:</strong> Calle Falsa 123, Ciudad, País</p>
-              <p><strong>Teléfono:</strong> +123 456 7890</p>
-              <p><strong>Email:</strong> contacto&#64;provider.com</p>
-              
-          </div>
-          <!-- Enlaces adicionales -->
-          <div style="flex: 1; min-width: 250px; margin-bottom: 20px;">
-              <h4 style="margin-bottom: 10px;">Enlaces</h4>
-              <ul style="list-style: none; padding: 0;">
-                  <li><a href="#" style="color: #007bff; text-decoration: none;">Política de Privacidad</a></li>
-                  <li><a href="#" style="color: #007bff; text-decoration: none;">Términos y Condiciones</a></li>
-                  <li><a href="#" style="color: #007bff; text-decoration: none;">Ayuda</a></li>
-                  <li><a href="#" style="color: #007bff; text-decoration: none;">Soporte</a></li>
-                  
-              </ul>
-          </div>
-          <!-- Redes sociales -->
-          <div style="flex: 1; min-width: 250px; margin-bottom: 20px;">
-              <h4 style="margin-bottom: 10px;">Síguenos</h4>
-              <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/facebook-new.png" alt="Facebook"></a>
-              <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/twitter.png" alt="Twitter"></a>
-              <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/instagram-new.png" alt="Instagram"></a>
-              <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/linkedin.png" alt="LinkedIn"></a>
-          </div>
-      </div>
-      <p style="margin: 20px 0;">&copy; 2024 Provider Pedidos &reg;. Todos los derechos reservados.</p>
+    <p class="footer-bottom">&copy; 2024 Provider Pedidos &reg;. Todos los derechos reservados.</p>
   </div>
 </footer>
-<router-outlet></router-outlet>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<router-outlet></router-outlet>

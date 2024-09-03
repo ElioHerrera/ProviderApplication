@@ -5,6 +5,8 @@ import { RouterLink, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
 import { SolicitudService } from '../../services/solicitud.service';
+import { LazyLoadImageModule } from 'ng-lazyload-image'; 
+import baseUrl from '../../services/helper';
 
 @Component({
   selector: 'app-navhome',
@@ -14,6 +16,7 @@ import { SolicitudService } from '../../services/solicitud.service';
     MatIconModule,
     RouterLink,
     CommonModule,
+    LazyLoadImageModule,
    ],
   templateUrl: './navhome.component.html',
   styleUrl: './navhome.component.css'
@@ -21,6 +24,10 @@ import { SolicitudService } from '../../services/solicitud.service';
 export class NavhomeComponent implements OnInit {
   usuario: any;
   iconActivo: number = 0;
+
+  menuOpen = false;
+  
+  
 
   constructor(
     private userService: UserService,
@@ -74,4 +81,14 @@ export class NavhomeComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+   // Obtener Imagenes
+   obtenerImagenPerfil(userId: number, fileName: string): string {
+    const url = `${baseUrl}/api/img/uploads/${userId}/${encodeURIComponent(fileName)}`;
+    return url;
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+  
 }

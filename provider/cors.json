@@ -4,5 +4,11 @@
     "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     "responseHeader": ["Authorization", "Content-Type"],
     "maxAgeSeconds": 3600
+  },
+  {
+    "origin": ["https://http://192.168.0.30:4200"],
+    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "responseHeader": ["Authorization", "Content-Type"],
+    "maxAgeSeconds": 3600
   }
 ]

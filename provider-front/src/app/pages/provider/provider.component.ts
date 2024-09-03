@@ -42,6 +42,13 @@ export class ProviderComponent implements OnInit {
   filtroProveedor: string = '';
   solicitudesEnviadas: Map<number, boolean> = new Map<number, boolean>();
   relacionesComerciales: any[] = [];
+  productosProveedor: any[] = [];
+
+//EFECTO
+  hoveredProveedorId: number | null = null;
+  clickedProveedorId: number | null = null;
+
+
 
   constructor(
     private usuarioService: UserService,
@@ -50,7 +57,6 @@ export class ProviderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {   
-
     // Recuperar los datos del usuario del almacenamiento local
     const storedUser: string | null = localStorage.getItem('currentUser');
     if (storedUser) {
@@ -60,19 +66,17 @@ export class ProviderComponent implements OnInit {
       console.error('No se encontraron datos del usuario en localStorage.');
     }
 
-    //Obtener Datos
-    this.obtenerRelacionesComerciales(this.usuario.perfil.idPerfil); //Pasar idPerfil
-    this.obtenerProveedores();
-    this.proveedoresFiltrados = this.proveedores;
-
-
-    // Verificar si usuario y su perfil están definidos
-    if (this.usuario && this.usuario.perfil.this.usuario.perfil.idPerfil) {
+    // Verificar si usuario y su perfil están definidos antes de proceder
+    if (this.usuario && this.usuario.perfil && this.usuario.perfil.idPerfil) {
       console.log('Perfil del usuario:', this.usuario.perfil.idPerfil);
+      this.obtenerRelacionesComerciales(this.usuario.perfil.idPerfil); //Pasar idPerfil
+      this.obtenerProveedores();
+      this.proveedoresFiltrados = this.proveedores;
     } else {
       console.error('ID del perfil del usuario no está definido:', this.usuario);
     }
   }
+  
 
   obtenerProveedores(): void {
     this.usuarioService.obtenerProveedores().subscribe(
@@ -177,6 +181,37 @@ export class ProviderComponent implements OnInit {
     );
   }
 
+  obtenerProductosProveedor(proveedorId: number): void {
+    if (this.usuario) {
+      this.usuarioService.obtenerProductosProveedor(this.usuario.id, proveedorId).subscribe(
+        (productos) => {
+          console.log('Productos del proveedor:', productos);
+
+
+          this.productosProveedor = productos;
+          this.clickedProveedorId = proveedorId;
+        },
+        (error) => {
+          console.error('Error al obtener los productos del proveedor:', error);
+        }
+      );
+    } else {
+      console.error('Usuario no autenticado.');
+    }
+  }
+
+  hoverProveedor(proveedorId: number): void {
+    this.hoveredProveedorId = proveedorId;
+  }
+
+  leaveProveedor(proveedorId: number): void {
+    this.hoveredProveedorId = null;
+  }
+
+  obtenerImagenProducto(userId: number, fileName: string): string {
+    return `${baseUrl}/api/img/product/uploads/${userId}/${encodeURIComponent(fileName)}`;
+  }
+ 
 
 
 }

@@ -1,3 +1,283 @@
 .body{
-background-color: rgb(240, 240, 240);    
+background-color: rgb(229, 230, 231); 
 }
+
+/* <<< Contenedor-principal >>> */
+
+.contenedor-principal{
+    padding: 2%;
+    margin-top: -10px; /* Ajusta esto según la altura de tu barra de navegación */ 
+}
+
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #00c4ff; /* Fondo celeste */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Asegura que esté por encima de otros elementos */
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.logoload {
+  width: 100px; /* Ajusta el tamaño del logo según sea necesario */
+  height: 100px;
+  animation: pulse 1s infinite;
+}
+
+
+/* <<< Seccion banner >>>*/
+
+.seccion-banner {
+    position: relative;
+    width: 100%;
+    max-width: 100%;                                          /* Asegura que el contenedor no se expanda más del tamaño de la pantalla */
+    overflow: hidden;                                         /* Oculta cualquier contenido que se salga del contenedor */
+}
+
+/* Imagen banner */
+
+.banner {
+    width: 100%;
+    height: auto;                                            /* Ajusta automáticamente la altura para mantener la proporción de la imagen */
+    display: block;                                          /* Elimina los espacios en blanco debajo de la imagen */
+}
+
+.text-container {
+    position: absolute;
+    width: 18%;                                              /* El contenedor de texto ocupa el 18% del ancho del contenedor del banner */
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);   
+    overflow: hidden;                                       /* Esconde cualquier contenido que se desborde del contenedor */   
+}
+  
+/* Texto banner - Pensamos en tu negocio */
+
+.text-svg {
+  width: 100%;
+  height: auto;
+  clip-path: inset(0 100% 0 0);
+  
+  animation: reveal 1.5s forwards;
+  animation-delay: 1s; /* Retrasa el inicio de la animación por 1 segundo */
+  
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Agrega una sombra alrededor del SVG */
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes reveal {
+    to {
+        clip-path: inset(0 0 0 0);                       /* Termina mostrando el SVG completamente */
+    }
+}
+
+/* Logo provider del banner */
+
+.logo {
+    position: absolute;
+    top: 50%;                                            /* Centra verticalmente el logo dentro del contenedor */
+    left: 50%;                                           /* Centra horizontalmente el logo dentro del contenedor */
+    transform: translate(-50%, -50%);                    /* Ajusta para que el logo esté centrado correctamente */
+    width: 30%;                                          /* El logo ocupa el 10% del ancho del banner */
+    height: auto;                                        /* Ajusta la altura para mantener la proporción de la imagen */
+    opacity: 0;
+    animation: fade-in 2.5s 2.5s forwards;               /* Comienza después de 3 segundos */
+    
+}
+
+@media screen and (max-width: 600px) {
+    .logo {
+        width: 15%;                                      /* Ajusta el tamaño del logo en pantallas más pequeñas */
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* <<< Sección Login >>> */
+
+.seccion-login {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    padding: 0 10%;          /* Agrega un padding horizontal del 10% */
+   
+  }
+  
+  .contenedor-registro {
+    width: 100%;
+    max-width: 500px;        /* Máximo ancho del contenedor */
+    padding: 2%;           /* Espacio interior del contenedor */ 
+    text-align: center;      /* Centra el contenido dentro del contenedor */
+    
+  }
+  
+  mat-card {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;   
+    padding: 20px;
+    width: 100%;           
+  }
+  
+  img {
+    width: 20%;             
+    height: auto;           
+    margin-bottom: 2%;    
+  }
+  
+  h1.text-center {
+    text-align: center;      
+    font-size:medium;
+    margin-bottom: 5%;    
+  }
+
+
+
+
+
+
+  
+ /* Estilo general del footer */
+footer {
+    background-color: #ffffff;    /* Fondo blanco */
+    color: #0c0c0c;               /* Color de texto */
+    padding: 20px;                  /* Espaciado interno del footer */
+    font-family: Arial, sans-serif; /* Tipografía */
+  }
+  
+  /* Contenedor principal del footer */
+  .container {
+    max-width: 1200px;         /* Ancho máximo del contenedor */
+    margin: auto;              /* Centra el contenedor horizontalmente */
+  }
+  
+  /* Contenido del footer */
+  .footer-content {
+    display: flex;             /* Utiliza flexbox para disposición */
+    text-align: center;
+    flex-wrap: wrap;           /* Permite que los elementos se ajusten en múltiples líneas */
+    justify-content: space-between; /* Espacia los módulos */
+    padding: 20px 0;          /* Espaciado vertical de los módulos */
+    border-bottom: 1px solid #ddd; /* Línea separadora entre el contenido y el pie de página */
+  }
+  
+  /* Estilo para los módulos del footer */
+  .contact-info, .links, .social-media {
+    flex: 1;                   /* Permite que esta sección ocupe el espacio disponible */
+    min-width: 250px;          /* Ancho mínimo de las secciones */
+    margin-bottom: 20px;       /* Espacio debajo de cada sección */
+  }
+  
+  /* Estilo para los encabezados */
+  footer h4 {
+    margin-bottom: 10px;       /* Espacio debajo del encabezado */
+    font-size: 1.2em;          /* Tamaño del texto del encabezado */
+  }
+  
+  /* Estilo para los párrafos */
+  footer p {
+    margin: 5px 0;             /* Espacio superior e inferior para párrafos */
+  }
+  
+  /* Estilo para los enlaces */
+  footer a {
+    color: #007bff;            /* Color del texto de los enlaces */
+    text-decoration: none;     /* Elimina el subrayado de los enlaces */
+    transition: color 0.3s;    /* Transición suave para el color */
+  }
+  
+  footer a:hover {
+    color: #0056b3;            /* Color del enlace al pasar el ratón */
+  }
+  
+  /* Estilo para la lista de enlaces */
+  footer ul {
+    list-style: none;          /* Elimina los puntos de la lista */
+    padding: 0;                /* Elimina el padding */
+  }
+  
+  footer li {
+    margin-bottom: 3px;        /* Espacio debajo de los elementos de la lista */
+  }
+  
+  /* Estilo para los íconos de redes sociales */
+
+  
+/* Estilo para la sección de redes sociales */
+footer .social-media {
+    display: flex;             /* Utiliza flexbox para disposición de íconos */
+    flex-direction: column;    /* Coloca el encabezado y los íconos en una columna */
+    align-items: center;       /* Centra horizontalmente el contenido */
+  }
+  
+  footer .social-media h4 {
+    margin-bottom: 10px;       /* Espacio debajo del encabezado */
+  }
+  
+  footer .social-media .icons {
+    display: flex;             /* Alinea los íconos en una fila horizontal */
+    gap: 10px;                 /* Espacio entre los íconos */
+  }
+  
+  footer .social-media .icons img {
+    width: 30px;               /* Ajusta el tamaño según tu preferencia */
+    height: auto;              /* Mantiene la proporción de la imagen */
+  } 
+
+  footer .social-media .icons a {
+    display: inline-block;     /* Muestra los íconos en línea */
+  }
+
+  
+  
+  /* Línea separadora y derechos reservados */
+  .footer-bottom {
+    padding-top: 10px;          /* Espacio arriba del texto de derechos reservados */
+    text-align: center;         /* Centra el texto */
+    margin-top: 20px;           /* Espacio arriba de la línea separadora */
+  }
+  
+  .footer-bottom p {
+    margin: 0;                  /* Elimina el margen */
+    font-size: 0.9em;           /* Tamaño del texto */
+  }
+
+
+
+  /**********************************************/

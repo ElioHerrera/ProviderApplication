@@ -1,20 +1,29 @@
 <div class="navBar">
-
   <div class="navContainer">
 
     <div class="logoContainer">
-      <img src="../../../assets/provider.png" class="logo-provider" style="height: 40px; padding-top: 10px;">
+      <img src="../../../assets/provider.png" class="logo-provider">
     </div>
 
-   
+    <!-- Botón de Hamburguesa -->
+    <div class="hamburger" (click)="toggleMenu()">
+      <div class="line line1" [class.active]="menuOpen"></div>
+      <div class="line line2" [class.active]="menuOpen"></div>
+      <div class="line line3" [class.active]="menuOpen"></div>
+    </div>
 
+    <!-- Menú desplegable -->
+    <div class="dropdown-menu" [class.show]="menuOpen">
+      <div class="dropdown-background"></div>
+      <div class="dropdown-content">
+        <ul>
+          <li><a [routerLink]="['/login']">Iniciar Secion</a></li>
+          <li><a [routerLink]="['/signup']">Registrarse</a></li>
+          <li><a [routerLink]="['/ruta3']">Quienes Somos</a></li>
+          <li><a [routerLink]="['/ruta3']">Contacto</a></li>
+        </ul>
 
-    <div class="configContainer">
-      <a [routerLink] = "['/login']"> 
-        <mat-icon style ="color: rgb(0, 0, 0);" aria-hidden="false" aria-label="Example user verified icon">account_circle</mat-icon> 
-      </a>
-      
+      </div>
     </div>
   </div>
 </div>
-

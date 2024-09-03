@@ -1,6 +1,198 @@
-:host {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.navBar {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: fixed;                                       /* Asegura que la barra esté fija en la ventana */
+  top: 0;                                                /* Alinea la barra al top de la ventana del navegador */
+  left: 0;                                               /* Alinea la barra al left de la ventana del navegador */
+  z-index: 998;                                          /* Asegura que esté en la capa superior */
+}
 
+.navContainer {
+  background-color: #ffffff;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 30px;
+  position: relative;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;                                   /* Alinea verticalmente el logo */
+  justify-content: flex-start;
+  flex: 1;                                               /* Permite que el contenedor crezca en función del espacio disponible */
+}
+
+.logo-provider {
+  max-height: 100%;                                     /* La altura máxima de la imagen será del 100% del contenedor */
+  height: auto;                                         /* Mantiene la proporción de aspecto de la imagen */
+  width: auto;                                          /* Permite que la imagen mantenga su tamaño proporcional */
+  display: block;                                       /* Asegura que la imagen no tenga márgenes adicionales */
+}
+
+@media (max-width: 1800px) {
+  .logo-provider {
+      max-height: 30px; /* Ajusta la altura máxima en pantallas más pequeñas */
+  }
+}
+
+@media (max-width: 1200px) {
+  .logo-provider {
+      max-height: 25px; /* Ajusta la altura máxima en pantallas más pequeñas */
+  }
+}
+@media (max-width: 768px) {
+  .logo-provider {
+      max-height: 20px; /* Ajusta la altura máxima en pantallas más pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-provider {
+      max-height: 15px; /* Ajusta la altura máxima en pantallas muy pequeñas */
+  }
+}
+
+
+/* Botón de hamburguesa */
+.hamburger {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 19px;                                           /* Asegura que esté en la capa superior */
+  z-index: 1000;
+}
+
+/* Líneas del botón de hamburguesa */
+.line {
+  width: 100%;
+  height: 3px;
+  background-color: black;
+  transition: all 0.5s ease;
+  transform-origin: center;                                /* Centra la transformación para todas las líneas */
+}
+
+/* Animaciones de las líneas al hacer clic */
+.line1.active {
+  transform: translateY(8px) rotate(405deg);                /* Mueve la línea 1 hacia abajo y la rota */
+}
+
+.line2.active {
+  opacity: 0;                                               /* Desaparece la línea 2 */
+}
+
+.line3.active {
+  transform: translateY(-8px) rotate(-405deg);              /* Mueve la línea 3 hacia arriba y la rota */
+}
+
+.hamburger.active .line1 {
+  transform: rotate(45deg);
+}
+
+.hamburger.active .line2 {
+  opacity: 0;
+}
+
+.hamburger.active .line3 {
+  transform: rotate(-45deg);
+}
+
+/* Estilo y animación del menú desplegable */
+.dropdown-menu {
+  position: fixed;                                         /* Cambiado a fixed para que se posicione respecto a la ventana */
+  top: 3px;                                                /* Ajusta según la altura de tu barra de navegación */
+  right: 20px;                                             /* Ajusta para dar un margen a la derecha */
+  width: 40%;
+  height: 50%;
+  box-shadow: 0 2px 10px rgba(117, 117, 117, 0.1);
+  opacity: 0;
+  transform: translateY(-500px);
+  transition: all 0.4s ease-in-out;                        /* Transición suave */
+  pointer-events: none;                                    /* Evita clics cuando está oculto */
+  z-index: 999;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  display: block;                                          /* Mostrar cuando se añade la clase show */
+  transform: translateY(0);                                /* Efecto de deslizamiento */
+  pointer-events: auto;                                    /* Habilita clics cuando está visible */
+}
+
+
+/* Fondo translúcido del menú */
+.dropdown-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(160, 238, 248, 0.9);            /* Fondo translúcido */
+  border-radius: 4px;
+  z-index: -1;                                             /* Fondo detrás del contenido */
+}
+
+
+/* Contenido del menú */
+.dropdown-content {
+  position: relative;
+  text-align: center;
+  padding-top: 3%;
+  z-index: 1;                                               /* Contenido sobre el fondo */
+}
+
+/* Estilo de la lista y enlaces */
+.dropdown-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  padding: 10px;                                            /*border-bottom: 1px solid #ccc;*/
+}
+
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a {
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;  /* Transiciones suaves */
+  position: relative;
+  padding: 10px;
+}
+
+.dropdown-menu a:hover {
+  background-color: #ffffff;
+  opacity: 0.8;
+  border-radius: 4px;
+  color: #4e95a7;                                          /* Cambia el color del texto */
+  transform: scale(1.05);                                    /* Agranda ligeramente el enlace */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);                /* Agrega una sombra más pronunciada */
+}
+
+.dropdown-menu a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #8dbff5;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: bottom right;
+}
+
+.dropdown-menu a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}

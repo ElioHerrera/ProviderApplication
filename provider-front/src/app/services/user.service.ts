@@ -12,7 +12,10 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) { }
 
-  //Auth Controller
+  star(): Observable<{ status: string }> {
+    return this.httpClient.get<{ status: string }>(`${baseUrl}`);
+  }
+  //Auth ControllerhttpClient
   public logout() {
     localStorage.removeItem('username');
     localStorage.removeItem('user');
@@ -57,52 +60,53 @@ export class UserService {
   public obtenerRelacionesComerciales(perfilId: number): Observable<any[]> {
     return this.httpClient.get<any[]>(`${baseUrl}/api/perfiles/${perfilId}/relaciones-comerciales`);
   }
-    public guardarImagenlocal(formData: FormData): Observable<any> {
-    return this.httpClient.post<any>(`${baseUrl}/api/img/upload/`, formData).pipe(
-      catchError(this.handleError)
-    );
-  }
-  private handleError(error: HttpErrorResponse) {
+    private handleError(error: HttpErrorResponse) {
     console.error('Error al realizar la solicitud:', error);
     return throwError('Hubo un problema con el servidor. Intente de nuevo más tarde.');
   }
-  //Producto Controller
-
+  //PrecioController
+  asignarListaPrecios(userId: number, clienteId: number, listaId: number): Observable<any> {
+    return this.httpClient.post<any>(`${baseUrl}/api/precios/${userId}/asignarLista/${clienteId}/${listaId}`, {});
+    }
+  //Producto Controller 
   obtenerProductosPorUsuarioId(userId: number): Observable<Producto[]> {
     return this.httpClient.get<Producto[]>(`${baseUrl}/api/producto/lista/${userId}`);
   }
-
-
   crearProducto(userId: number): Observable<Producto> {
     return this.httpClient.post<Producto>(`${baseUrl}/api/producto/crear/${userId}`, {});
   }
-
-
-
   guardarImagenProducto(file: File, userId: number, productoId: number): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('file', file);
     formData.append('userId', userId.toString());
     formData.append('productoId', productoId.toString());
 
-    return this.httpClient.post<any>(`${baseUrl}/api/producto/upload`, formData);
+    return this.httpClient.post<any>(`${baseUrl}/api/img/product/upload`, formData);
   }
-
+  public guardarImagenlocal(formData: FormData): Observable<any> {
+    return this.httpClient.post<any>(`${baseUrl}/api/img/upload/`, formData).pipe(
+      catchError(this.handleError)
+    );
+  }
   obtenerImagenProducto(userId: number, fileName: string): string {
-    return `${baseUrl}/api/producto/uploads/${userId}/${encodeURIComponent(fileName)}`;
+    return `${baseUrl}/api/img/uploads/product/${userId}/${encodeURIComponent(fileName)}`;
   }
-
   actualizarProducto(producto: Producto): Observable<any> {
     return this.httpClient.put(`${baseUrl}/api/producto/actualizar/${producto.idProducto}`, producto);
   }
-
   eliminarProducto(productoId: number): Observable<any> {
     return this.httpClient.delete(`${baseUrl}/api/producto/eliminar/${productoId}`);
   }
-
- 
   alternarHabilitado(id: number, isEnabled: boolean): Observable<any> {
     return this.httpClient.put(`${baseUrl}/api/producto/${id}/interruptor`, { isEnabled });
   }
-
+  obtenerProductosProveedor(userId: number, proveedorId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${baseUrl}/api/producto/productosProveedor/${userId}/${proveedorId}`);
+  }
+  // Verificar si tiene Productos
+  tieneProductos(userId: number): Observable<boolean> {
+  return this.httpClient.get<boolean>(`${baseUrl}/api/producto/tieneProductos/${userId}`);
+  }
+  
+  
 }

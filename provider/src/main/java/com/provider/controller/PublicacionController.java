@@ -51,10 +51,11 @@ public class PublicacionController {
     private UsuarioService usuarioService;
 
 
+    /*
     @Value("${gcp.bucket.name}")
     private String bucketName;
     private final Storage storage = StorageOptions.getDefaultInstance().getService();
-
+    */
 
 
     /*
@@ -154,6 +155,7 @@ public class PublicacionController {
 
 
     //CONFIGURATIÓN para "https://provider-pedidos-app.web.app"
+    /*
     @PostMapping("/crear")
     public ResponseEntity<?> crearPublicacion(@RequestParam("file") MultipartFile file,
                                               @RequestParam("userId") Long userId,
@@ -297,6 +299,8 @@ public class PublicacionController {
         }
 
     }
+
+    */
 
     @GetMapping("/id/{perfilId}")
     public ResponseEntity<?> obtenerPublicacionesDelPerfil(@PathVariable Long perfilId) {

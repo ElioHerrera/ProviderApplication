@@ -12,7 +12,14 @@ export class SolicitudService {
   constructor(private httpClient: HttpClient) { }
 
   private iconActivo: number = 0;
-
+  //Servicios para las rutas activas del Nav
+  getIconActivo(): number {
+    return this.iconActivo;
+  }
+  setIconActivo(indice: number): void {
+    this.iconActivo = indice;
+  }
+  //SolicitudController
   enviarSolicitudAProveedor(perfilUsuarioId: number, perfilProveedorId: number): Observable<any> {
     return this.httpClient.post<any>(`${baseUrl}/api/solicitudes/enviar/${perfilUsuarioId}/${perfilProveedorId}`, { perfilUsuarioId, perfilProveedorId });
   }
@@ -30,15 +37,5 @@ export class SolicitudService {
   }
   cancelarSolicitud(solicitudId: number): Observable<any> {
     return this.httpClient.put<any>(`${baseUrl}/api/solicitudes/cancelar/${solicitudId}`, null);
-  }
-
-  getIconActivo(): number {
-    return this.iconActivo;
-  }
-
-  setIconActivo(indice: number): void {
-    this.iconActivo = indice;
-  }
-
-  
+  } 
 }

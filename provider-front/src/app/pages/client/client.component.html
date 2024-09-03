@@ -14,20 +14,44 @@
             <div *ngFor="let solicitud of solicitudesRecibidas" class="proveedor-item">
               <div class="proveedor-info">
                 <!-- Detalles de la solicitud -->
-                <img [src]="getProfileImageUrl(solicitud.solicitante.id, solicitud.solicitante.fotoPerfil)" alt="Imagen de perfil" class="circle-img" >
+                <img [src]="getProfileImageUrl(solicitud.solicitante.id, solicitud.solicitante.fotoPerfil)"
+                  alt="Imagen de perfil" class="circle-img">
                 <div class="box-proveedor full-width">
                   <div class="flex-container-datos-comer">
                     <div class="datos-comerciante">
                       <!-- Mostrar detalles de la solicitud -->
-                      <h3>{{ solicitud.solicitante.nombre }} {{ solicitud.solicitante.apellido }}</h3>
+                      <h3>{{ solicitud.solicitante.nombre }} {{ solicitud.solicitante.apellido }} </h3>
+
+                      <p *ngIf="obtenerListaAsignada(solicitud)" style="font-size:smaller; color: rgb(155, 0, 0);">
+                      * Lista asignada: {{ obtenerListaAsignada(solicitud)?.nombre }}
+                    </p>
+                    
+
                       <p>| Comercio : {{ solicitud.solicitante.comercio.nombre }} - {{
                         solicitud.solicitante.comercio.domicilio }} |</p>
                       <p>| email : {{ solicitud.solicitante.email }} |</p>
                     </div>
-                    <button mat-flat-button [color]="obtenerColorBoton(solicitud).color"
-                      (click)="aceptarCancelarSolicitud(solicitud)">
-                      {{ obtenerColorBoton(solicitud).texto }}
-                    </button>
+                    <div class="botones-contenedor">
+                      <button mat-flat-button [color]="obtenerColorBoton(solicitud).color" class="boton-solicitud"
+                        (click)="aceptarCancelarSolicitud(solicitud)">
+                        {{ obtenerColorBoton(solicitud).texto }}
+                      </button>
+
+                      <button mat-flat-button color="primary" class="boton-solicitud"
+                        [disabled]="!tieneProductos || !solicitudAceptada(solicitud.aceptada)"
+                        (click)="seleccionarListaPrecios(solicitud.solicitante.id)">
+                        Asignar Lista de Precios
+                      </button>
+
+                      <!-- <button *ngIf="obtenerListaAsignada(solicitud)" mat-flat-button color="primary"
+                        class="boton-solicitud" [disabled]="true">
+                        Lista asignada: {{ obtenerListaAsignada(solicitud)?.nombre }}
+                      </button> -->
+                      <!-- <button mat-flat-button color="primary" class="boton-solicitud"
+                        [disabled]="true">
+                        Lista asignada: {{ obtenerListaAsignada(solicitud)?.nombre }}
+                      </button> -->
+                    </div>
                   </div>
                 </div>
               </div>
@@ -40,28 +64,28 @@
       </div>
     </div>
   </div>
-  <div class="derecha">
+  <!-- <div class="derecha">
     <div class="box full-width text-center">
       <h2 class="text-center">Relaciones comerciales</h2>
 
       <div class="container box-proveedores">
-        
+
         <div *ngIf="relacionesComerciales.length > 0; else noSolicitudes">
           <div *ngFor="let perfilRelacion of relacionesComerciales" class="proveedor-item">
             <div class="proveedor-info">
-              <!-- Detalles de la solicitud -->
-              <img
-                [src]="getProfileImageUrl(perfilRelacion.id, perfilRelacion.fotoPerfil)"
-                alt="Imagen de perfil" class="circle-img-lateral" (error)="handleImgError($event)">
+              Detalles de la solicitud
+              <img [src]="getProfileImageUrl(perfilRelacion.id, perfilRelacion.fotoPerfil)" alt="Imagen de perfil"
+                class="circle-img-lateral" (error)="handleImgError($event)">
               <div class="full-width">
-                
-                  <div class="datos-usuarios">
-                    <p>
-                      <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{ perfilRelacion.apellido}}</span><br>
-                      <span class="comercio-info">{{ perfilRelacion.comercio?.nombre }} - {{ perfilRelacion.comercio?.domicilio }}</span>
-                    </p>
-                  </div>
-                
+
+                <div class="datos-usuarios">
+                  <p>
+                    <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{ perfilRelacion.apellido}}</span><br>
+                    <span class="comercio-info">{{ perfilRelacion.comercio?.nombre }} - {{
+                      perfilRelacion.comercio?.domicilio }}</span>
+                  </p>
+                </div>
+
               </div>
             </div>
           </div>
@@ -71,5 +95,28 @@
         </ng-template>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
+
+<footer
+  style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: Arial, sans-serif; color: #333;">
+  <div style="max-width: 1200px; margin: auto;">
+    <div
+      style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid #ddd;">
+
+      <!-- Redes sociales -->
+      <div style="flex: 1; min-width: 250px; margin-bottom: 20px;">
+        <h4 style="margin-bottom: 10px;">Síguenos</h4>
+        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/facebook-new.png"
+            alt="Facebook"></a>
+        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/twitter.png"
+            alt="Twitter"></a>
+        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/instagram-new.png"
+            alt="Instagram"></a>
+        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/linkedin.png"
+            alt="LinkedIn"></a>
+      </div>
+    </div>
+    <p style="margin: 20px 0;">&copy; 2024 Provider Pedidos &reg;. Todos los derechos reservados.</p>
+  </div>
+</footer>

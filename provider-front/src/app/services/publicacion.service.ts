@@ -25,6 +25,10 @@ export class PublicacionService {
       );
   }
 
+  obtenerImgPublicacion(userId: number, fileName: string): string {
+    return `${baseUrl}/api/publicaciones/uploads/product/${userId}/${encodeURIComponent(fileName)}`;
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('Error al realizar la solicitud:', error);
     return throwError('Error al realizar la solicitud; por favor, inténtelo de nuevo más tarde.');

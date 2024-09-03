@@ -25,3 +25,52 @@ ul {
   border-radius: 50%; /* Bordes redondeados para crear un círculo */
   margin-right: 10px; /* Espacio entre la imagen y la caja de detalles */
 }
+
+.botones-contenedor {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-left: auto; /* Asegura que los botones se alineen a la derecha */
+}
+
+.boton-solicitud {
+  width: 180px; /* Ajusta este valor según sea necesario */
+  margin: 4px 0; /* Espacio entre botones */
+}
+
+.flex-container-datos-comer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.circle-img-lateral {
+  width: 38px; /* Ancho de la imagen */
+  height: 38px; /* Altura de la imagen */
+  border-radius: 50%; /* Bordes redondeados para crear un círculo */
+  margin-right: 5px; /* Espacio entre la imagen y la caja de detalles */
+}
+
+button {
+  font-size: 10px;
+}
+
+.datos-comerciante p {
+  color: rgb(106, 106, 106);
+  font-size: 14px;
+}
+
+.datos-usuarios {
+  text-align: left;
+}
+
+.nombre-apellido {
+  color: black;
+  font-weight: bold;
+}
+
+.comercio-info {
+  color: rgb(106, 106, 106);
+}

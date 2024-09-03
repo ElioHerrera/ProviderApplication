@@ -11,6 +11,7 @@ import com.provider.services.UsuarioService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +25,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,9 +38,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/img")
 public class ImagenController {
-
-    @Value("${gcp.bucket.name}")
-    private String bucketName;
+     /*
+        @Value("${gcp.bucket.name}")
+       private String bucketName; */
     private final Storage storage = StorageOptions.getDefaultInstance().getService();
     private static final String DEFAULT_PRODUCT_IMAGE = "uploads/default/defaultProduct.jpg";
     private static final String DEFAULT_PROFILE_IMAGE = "uploads/default/default.png";
@@ -51,7 +56,7 @@ public class ImagenController {
     private ProductoService productoService;
 
     //CONFIGURATIÓN para "https://provider-pedidos-app.web.app"
-
+    /*
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> guardarImagenPerfil(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) {
 
@@ -231,10 +236,10 @@ public class ImagenController {
         System.out.println("No se ha encontrado el archivo: " + fileName);
         return ResponseEntity.notFound().build();
     }
-
+*/
 
     // CONFIGURACION para "http://localhost:4200"
-    /*
+
     @PostMapping("/upload")
     public ResponseEntity<Map<String, String>> guardarImagenlocal(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) {
 
@@ -309,7 +314,7 @@ public class ImagenController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/upload/product")
+    @PostMapping("/product/upload")
     public ResponseEntity<Map<String, String>> guardarImagenProductoLocal(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId, @RequestParam("productoId") Long productoId) {
 
         Map<String, String> response = new HashMap<>();
@@ -362,7 +367,7 @@ public class ImagenController {
         }
     }
 
-    @GetMapping("/uploads/product/{userId}/{fileName:.+}")
+    @GetMapping("/product/uploads/{userId}/{fileName:.+}")
     public ResponseEntity<Resource> obtenerImagenProductoLocal(@PathVariable Long userId, @PathVariable String fileName) {
 
         Path userFilePath = Paths.get(RUTA_DE_IMAGENES_PRODUCTOS, String.valueOf(userId)).resolve(fileName).normalize();
@@ -391,5 +396,5 @@ public class ImagenController {
         return ResponseEntity.notFound().build();
     }
 
-    */
+
 }

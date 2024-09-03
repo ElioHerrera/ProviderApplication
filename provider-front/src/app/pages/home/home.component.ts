@@ -19,13 +19,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { LazyLoadImageModule } from 'ng-lazyload-image'; // Importa el módulo aquí
+import { LazyLoadImageModule } from 'ng-lazyload-image'; 
 
-
-//import Swal from 'sweetalert2';
 import baseUrl from '../../services/helper';
 import { PublicacionService } from '../../services/publicacion.service';
 import { Solicitud } from '../../usuario.model';
+//import Swal from 'sweetalert2';
 
 
 @Component({
@@ -33,12 +32,10 @@ import { Solicitud } from '../../usuario.model';
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [
-    NavhomeComponent, NavprovComponent, 
-    CommonModule, FormsModule, RouterLink, MatAccordion,
+    NavhomeComponent, NavprovComponent,
+    CommonModule, FormsModule, RouterLink, MatAccordion, LazyLoadImageModule,
     MatTabsModule, MatToolbarModule, MatIconModule, MatCardModule, MatButtonModule, MatListModule,
-    MatExpansionModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSnackBarModule,
-    LazyLoadImageModule
-
+    MatExpansionModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatSnackBarModule
   ],
 
   templateUrl: './home.component.html',
@@ -49,7 +46,7 @@ export class HomeComponent implements OnInit {
 
   usuario: any;
   esDealer: boolean = false;
-  esProvider: boolean = false;  
+  esProvider: boolean = false;
 
   //Variables para actualizar perfil
   panelOpenState = false;
@@ -59,7 +56,7 @@ export class HomeComponent implements OnInit {
   selectedFileProfile: File | null = null;
 
   //Variables de nueva publicacion
-  descripcionPublicacion: string ='';
+  descripcionPublicacion: string = '';
   selectedFilePublicacion: File | null = null;
   imagePreview: string | null = null;
 
@@ -67,12 +64,7 @@ export class HomeComponent implements OnInit {
   relacionesComerciales: any[] = [];
   publicaciones: any[] = [];
 
-  constructor(
-    private http: HttpClient,
-    private usuarioService: UserService,
-    private publicacionService: PublicacionService,
-    private router: Router,
-    private snack: MatSnackBar) { }
+  constructor(private http: HttpClient, private usuarioService: UserService, private publicacionService: PublicacionService, private router: Router, private snack: MatSnackBar) { }
 
   ngOnInit(): void {
 
@@ -81,7 +73,7 @@ export class HomeComponent implements OnInit {
     if (storedUser) {
       this.usuario = JSON.parse(storedUser);
       console.log('Datos del usuario:', this.usuario);
-      
+
     } else {
       console.error('No se encontraron datos del usuario en localStorage.');
     }
@@ -125,6 +117,31 @@ export class HomeComponent implements OnInit {
           console.error('Error al subir el archivo:', error);
         }
       );
+  }
+  actualizarDescripcionPerfil(id: number, nuevaDescripcionPerfil: string): void {
+    if (!nuevaDescripcionPerfil || nuevaDescripcionPerfil.trim() === '') {
+      console.error('La descripción no puede estar vacía');
+      this.snack.open('La descripción no puede estar vacía', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    this.usuarioService.actualizarDescripcion(id, nuevaDescripcionPerfil).subscribe(
+      response => {
+        console.log('Descripción actualizada:', response);
+        this.usuarioService.actualizarDatosUsuario(id).subscribe(
+          usuarioActualizado => {
+            console.log('Usuario actualizado:', usuarioActualizado);
+            this.usuario = usuarioActualizado;
+          },
+          error => {
+            console.error('Error al obtener el usuario actualizado:', error);
+          }
+        );
+      },
+      error => {
+        console.error('Error al actualizar descripción:', error);
+      }
+    );
   }
   actualizarNombre(id: number, nuevoNombre: string) {
 
@@ -182,40 +199,6 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-  actualizarDescripcionPerfil(id: number, nuevaDescripcionPerfil: string): void {
-    if (nuevaDescripcionPerfil || nuevaDescripcionPerfil.trim() === '') {
-      console.error('La descripción no puede estar vacía');
-      this.snack.open('La descripción no puede estar vacía', 'Cerrar', { duration: 3000 });
-      return; // Salir del método si el nombre está vacío
-    }
-
-    this.usuarioService.actualizarDescripcion(id, nuevaDescripcionPerfil).subscribe(
-      response => {
-        console.log('Descripción actualizada:', response);
-        this.usuarioService.actualizarDatosUsuario(id).subscribe(
-          usuarioActualizado => {
-            console.log('Usuario actualizado:', usuarioActualizado);
-            this.usuario = usuarioActualizado;
-          },
-          error => {
-            console.error('Error al obtener el usuario actualizado:', error);
-          }
-        );
-      },
-      error => {
-        console.error('Error al actualizar descripción:', error);
-      }
-    );
-  }
-  // Obtener Imagen de Perfil
-  obtenerImagenPerfil(userId: number, fileName: string): string {
-    const url = `${baseUrl}/api/img/uploads/${userId}/${encodeURIComponent(fileName)}`;
-
-    return url;
-  }
-  handleImgError(event: any): void {
-    event.target.src = `${baseUrl}/api/img/uploads/default/default.png`;
-  }
   // Crear nueva publicación
   onFileSelectedPublicacion(event: any): void {
     this.selectedFilePublicacion = event.target.files[0];
@@ -263,7 +246,7 @@ export class HomeComponent implements OnInit {
         }
       );
   }
-    //Obtener datos
+  //Obtener datos
   obtenerRelacionesComerciales(perfilId: number): void { // Recibir el ID del usuario como argumento
     this.usuarioService.obtenerRelacionesComerciales(perfilId).subscribe(
       (relaciones) => {
@@ -287,6 +270,16 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-
-
+  // Obtener Imagenes
+  obtenerImagenPerfil(userId: number, fileName: string): string {
+    const url = `${baseUrl}/api/img/uploads/${userId}/${encodeURIComponent(fileName)}`;
+    return url;
+  }
+  obtenerImgPublicacion(userId: number, fileName: string): string {
+    const url = `${baseUrl}/api/publicaciones/uploads/${userId}/${encodeURIComponent(fileName)}`;
+    return url;
+  }
+  handleImgError(event: any): void {
+    event.target.src = `${baseUrl}/api/img/uploads/default/default.png`;
+  }
 }
