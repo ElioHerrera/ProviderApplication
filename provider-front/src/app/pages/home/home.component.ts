@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { NavhomeComponent } from '../../components/navhome/navhome.component'
 import { NavprovComponent } from '../../components/navprov/navprov.component';
 import { Router } from '@angular/router';
@@ -64,6 +64,24 @@ export class HomeComponent implements OnInit {
   relacionesComerciales: any[] = [];
   publicaciones: any[] = [];
 
+
+  isPersonalDataVisible = false; // Inicialmente, la sección de datos personales está oculta
+  isButtonVisible = false; // Inicialmente, el botón está oculto
+
+    // Toggle de la visibilidad de los datos personales
+    togglePersonalData(): void {
+      this.isPersonalDataVisible = !this.isPersonalDataVisible;
+    }
+  
+    // Detecta el tamaño de la pantalla y muestra/oculta el botón en consecuencia
+    @HostListener('window:resize', ['$event'])
+    onResize(event: Event): void {
+      this.updateButtonVisibility();
+    }
+
+
+
+
   constructor(private http: HttpClient, private usuarioService: UserService, private publicacionService: PublicacionService, private router: Router, private snack: MatSnackBar) { }
 
   ngOnInit(): void {
@@ -87,8 +105,22 @@ export class HomeComponent implements OnInit {
       //Obtener Datos        
       this.obtenerRelacionesComerciales(this.usuario.perfil.idPerfil); //Pasar idPerfil
       this.obtenerPublicaciones(this.usuario.id); //Pasar idUsuario
+
+      this.updateButtonVisibility();
+
+
     }
   }
+
+
+  private updateButtonVisibility(): void {
+    const screenWidth = window.innerWidth;
+    this.isButtonVisible = screenWidth < 1040;
+    if (screenWidth >= 1040) {
+      this.isPersonalDataVisible = true; // Mostrar la sección de datos personales en pantallas grandes
+    }
+  }
+
 
   // Actualizar datos usuario
   archivoSeleccionado(event: any): void {

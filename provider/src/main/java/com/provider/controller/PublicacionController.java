@@ -58,7 +58,7 @@ public class PublicacionController {
     */
 
 
-    /*
+
     @PostMapping("/crear")
     public ResponseEntity<?> crearPublicacionLocal(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId, @RequestParam("descripcion") String descripcion) {
 
@@ -114,6 +114,37 @@ public class PublicacionController {
         }
     }
 
+    @GetMapping("/uploads/{userId}/{fileName:.+}")
+    public ResponseEntity<UrlResource> obtenerImagenPublicacionLocal(@PathVariable Long userId,
+                                                                     @PathVariable String fileName) {
+        try {
+            // Construir la ruta a la imagen en el sistema de archivos local
+            Path imagePath = Paths.get("provider/src/main/resources/static/uploads/", String.valueOf(userId), fileName);
+
+            if (Files.exists(imagePath)) {
+                // Crear el recurso de la imagen desde el archivo
+                UrlResource recurso = new UrlResource(imagePath.toUri());
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG) // Puedes ajustar esto según el tipo de imagen
+                        .body(recurso);
+            } else {
+                // Si no se encuentra la imagen, retornar una imagen por defecto
+                Path defaultImagePath = Paths.get("provider/src/main/resources/static/uploads/default/defaultPublicacion.jpg");
+                if (Files.exists(defaultImagePath)) {
+                    UrlResource defaultRecurso = new UrlResource(defaultImagePath.toUri());
+                    return ResponseEntity.ok()
+                            .contentType(MediaType.IMAGE_JPEG)
+                            .body(defaultRecurso);
+                } else {
+                    return ResponseEntity.notFound().build(); // Si ni la imagen ni la predeterminada están disponibles
+                }
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
     @PostMapping("/cargar")
     public ResponseEntity<Map<String, String>> obtenerImagenPublicacionLocal(@RequestParam("userId") Long userId, @RequestParam("file") MultipartFile file) {
 
@@ -150,7 +181,7 @@ public class PublicacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-    */
+
 
 
 
@@ -253,6 +284,7 @@ public class PublicacionController {
         System.out.println("No se ha encontrado el archivo: " + fileName);
         return ResponseEntity.notFound().build();
     }
+*/
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> obtenerPublicacionesPorPerfilyAsociados(@PathVariable Long userId) {
@@ -300,7 +332,7 @@ public class PublicacionController {
 
     }
 
-    */
+
 
     @GetMapping("/id/{perfilId}")
     public ResponseEntity<?> obtenerPublicacionesDelPerfil(@PathVariable Long perfilId) {

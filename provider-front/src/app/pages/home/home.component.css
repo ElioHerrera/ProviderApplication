@@ -1,108 +1,313 @@
-.body{
-    background-color: rgb(240, 240, 240);    
-    }
-  
-    
-   
-    .circle-img-profile {
-      height: 100px; /* Ajusta el tamaño de acuerdo a tus necesidades */
-      width: 100px; /* Ajusta el tamaño de acuerdo a tus necesidades */
-      border-radius: 50%; /* Hace que el contenedor sea un círculo */
-      object-fit: cover; /* Ajusta la imagen dentro del círculo */
-    }
-  
-    .box-proveedor {
-      background-color: #ffffff; 
-      border: 1px solid #E0E0E0; /* Borde del recuadro */
-      border-radius: 10px; /* Bordes redondeados */
-      padding: 10px; /* Espaciado interno */
-      margin: 10px; /* Margen inferior para separar elementos */
-      
-    }
-  
-  ul {
-      list-style-type: none; /* Elimina los marcadores de lista */
-     
+body {
+  background-color: rgb(240, 240, 240);
+}
+
+.home-body {
+  display: flex;
+  background-color: rgb(240, 240, 240);
+  height: 100vh;  /* Hacer que ocupe toda la altura de la ventana */
+  overflow: hidden;  /* Evitar scroll en el cuerpo */
+}
+
+
+/* Estilos para el botón de mostrar/ocultar */
+.toggle-button {
+  display: none; /* Ocultar el botón por defecto */
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  position: fixed;
+  top: 100px;
+  left: 10px;
+  z-index: 1000; /* Asegúrate de que esté encima de otros elementos */
+}
+
+.toggle-button:hover {
+  background-color: #45a049;
+}
+
+
+
+
+
+
+/* Ocultar la sección de datos personales en pantallas de menos de 800 píxeles */
+@media (max-width: 1040px) {
+
+  .toggle-button {
+    display: block;
   }
 
-  .publicacion-box {
-    white-space: pre-line;
+  .personal-data-container {
+    display: none;
   }
-     
-    .proveedor-info {
-      display: flex; /* Utiliza flexbox para alinear los elementos */
-      align-items: center; /* Centra verticalmente los elementos */
-    }
-    
-    .circle-img {
-      width: 50px; /* Ancho de la imagen */
-      height: 50px; /* Altura de la imagen */
-      border-radius: 50%; /* Bordes redondeados para crear un círculo */
-      margin-right: 10px; /* Espacio entre la imagen y la caja de detalles */
-    }
+  .publications-container {
+    margin-left: 0;  /* Eliminar el margen izquierdo cuando la columna está oculta */
+  }
+
+}
+
+/* Estilos para la sección de datos personales */
+.personal-data-container {
+  width: 300px;
+  padding: 1%;
+  padding-top: 40px;
+  padding-left: 5%;
+  position: fixed;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease;
+}
+
+.personal-data-container.hidden {
+  transform: translateX(-100%); /* Ocultar la sección cuando está en modo oculto */
+}
 
 
-    .upload-button {
-      background-color: #165cbe; /* Fondo verde */
-      border: none; /* Sin borde */
-      color: white; /* Texto blanco */
-      padding: 5px 5px; /* Relleno interno */
-      text-align: center; /* Alinear el texto al centro */
-      text-decoration: none; /* Sin subrayado */
-      display: inline-block; /* Mostrar en línea */
-      font-size: 12px; /* Tamaño de fuente */
-      margin: 4px 2px; /* Márgenes */
-      cursor: pointer; /* Cursor de puntero */
-      border-radius: 8px; /* Esquinas redondeadas */
-      transition: background-color 0.3s ease; /* Transición para el cambio de color */
-    }
-    
-    .upload-button:hover {
-      background-color: #11458f; /* Cambio de color al pasar el mouse */
-    }
-    
-    .upload-button mat-icon {
-      vertical-align: middle; /* Alinear el ícono verticalmente en el medio */
-      margin-right: 8px; /* Espacio entre el ícono y el texto */
-    }
-    .circle-img-lateral {
-      width: 38px; /* Ancho de la imagen */
-      height: 38px; /* Altura de la imagen */
-      border-radius: 50%; /* Bordes redondeados para crear un círculo */
-      margin-right: 5px; /* Espacio entre la imagen y la caja de detalles */
-    }
+.personal-date-content {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
 
-    .imagenPublicacion {
-      width: 100%;
-      height: auto;
-      object-fit: cover; /* Esta propiedad asegurará que la imagen ocupe el contenedor sin deformarse */
-    }
+.image-profile-content {
+  text-align: center;
+}
 
-    .example-button-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .example-button-row button:first-of-type {
-      margin-right: auto;
-    }
-    .example-button-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .example-button-group-left {
-      display: flex;
-    }
-    
-    .example-button-group-left button {
-      margin-right: 10px;
-    }
+.image-profile-content img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
 
-    .image-preview img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
+.personal-date-content h1 {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.personal-date {
+  padding: 5px;
+}
+
+.personal-date p {
+  color: gray;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+.personal-date span {
+  color: black;
+  font-weight: bold;
+}
+
+
+
+.publications-container {
+  flex-grow: 1;  /* Ocupar el espacio restante */
+  margin-left: 400px;  /* Dejar espacio para la columna de datos personales */
+  overflow-y: scroll;  /* Mantener el scroll funcional */
+  scrollbar-width: none;  /* Oculta la scrollbar en Firefox */
+  padding: 5%;  height: 100vh;  /* Asegurarse que ocupe toda la altura */
+  padding-top: 40px;
+}
+
+/* Ajuste adicional para el contenedor de publicaciones */
+@media (max-width: 1040px) {
+  .publications-container {
+    margin-left: 0;  /* Eliminar margen izquierdo en pantallas pequeñas */
+  }
+}
+
+/* Ocultar el scroll en navegadores WebKit */
+.publications-container::-webkit-scrollbar {
+  display: none;  /* Oculta la scrollbar */
+}
+
+
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;  /* Asegura que tome todo el ancho disponible */
+  max-width: 100%;  /* Limita el ancho máximo para evitar que sea demasiado grande */
+  box-sizing: border-box;
+}
+
+.image-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.preview-image {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.input-textarea {
+  width: 100%;  /* Se ajusta al ancho del contenedor */
+  max-width: 100%;  /* Evita que se expanda más allá del contenedor */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;  /* Permite redimensionar solo en vertical */
+  min-height: 60px;
+  box-sizing: border-box; /* Asegura que el padding y el border estén dentro del ancho total */
+}
+.input-file {
+  padding: 5px;
+  font-size: 14px;
+}
+
+.btn-submit {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-submit:hover {
+  background-color: #45a049;
+}
+
+/* Publicaciones */
+.publicacion-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  padding: 15px;
+  margin-bottom: 20px; /* Espaciado entre las cards */
+}
+
+/* Estilos del header de la publicación */
+.publicacion-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.publicacion-autor-info {
+  display: flex;
+  align-items: center;
+}
+
+.autor-imagen {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.autor-detalles {
+  display: flex;
+  flex-direction: column;
+}
+
+.autor-nombre {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.publicacion-fecha {
+  font-size: 12px;
+  color: gray;
+  margin: 0;
+}
+
+/* Estilos de la imagen de la publicación */
+.publicacion-imagen-container {
+  margin-bottom: 15px;
+}
+
+.publicacion-imagen {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* Estilos del contenido de la publicación */
+.publicacion-contenido {
+  margin-bottom: 15px;
+}
+
+.publicacion-contenido p {
+  font-size: 14px;
+  color: #333;
+  white-space: pre-line;
+}
+
+/* Estilos de los botones de acción */
+.publicacion-acciones {
+  display: flex;
+  justify-content: space-between;
+}
+
+.boton-accion {
+  padding: 8px 12px;
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.boton-accion:hover {
+  background-color: #1565c0;
+}
+
+.eliminar-button {
+  background-color: #d32f2f;
+}
+
+.eliminar-button:hover {
+  background-color: #c62828;
+}
+
+.like-button,
+.share-button {
+  background-color: #1976d2;
+}
+
+.like-button:hover,
+.share-button:hover {
+  background-color: #1565c0;
+}

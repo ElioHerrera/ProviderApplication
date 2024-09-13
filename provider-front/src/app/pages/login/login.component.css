@@ -76,11 +76,9 @@ background-color: rgb(229, 230, 231);
 .text-svg {
   width: 100%;
   height: auto;
-  clip-path: inset(0 100% 0 0);
-  
+  clip-path: inset(0 100% 0 0);  
   animation: reveal 1.5s forwards;
-  animation-delay: 1s; /* Retrasa el inicio de la animación por 1 segundo */
-  
+  animation-delay: 1s; /* Retrasa el inicio de la animación por 1 segundo */  
   position: relative;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Agrega una sombra alrededor del SVG */
 }
@@ -102,23 +100,23 @@ background-color: rgb(229, 230, 231);
 
 /* Logo provider del banner */
 
-.logo {
+.logo-banner {
     position: absolute;
     top: 50%;                                            /* Centra verticalmente el logo dentro del contenedor */
     left: 50%;                                           /* Centra horizontalmente el logo dentro del contenedor */
     transform: translate(-50%, -50%);                    /* Ajusta para que el logo esté centrado correctamente */
-    width: 30%;                                          /* El logo ocupa el 10% del ancho del banner */
+    width: 20%;                                          /* El logo ocupa el 10% del ancho del banner */
     height: auto;                                        /* Ajusta la altura para mantener la proporción de la imagen */
     opacity: 0;
     animation: fade-in 2.5s 2.5s forwards;               /* Comienza después de 3 segundos */
     
 }
 
-@media screen and (max-width: 600px) {
-    .logo {
-        width: 15%;                                      /* Ajusta el tamaño del logo en pantallas más pequeñas */
+/* @media screen and (max-width: 600px) {
+    .logo-banner {
+        width: 10%;                              
     }
-}
+} */
 
 @keyframes fade-in {
     from {

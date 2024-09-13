@@ -1,16 +1,18 @@
-<div class="navBar">
-  <div class="navContainer">
+<!-- Barra de Navegación Superior -->
+<div class="navbar">
+  <div class="navbar-container">
 
-    <div class="logoContainer">
-      <img src="../../../assets/provider.png" class="logo-provider">
-    </div>
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="../../../assets/provider.png" class="logo">
+    </div> <!--./logo-container -->
 
     <!-- Botón de Hamburguesa -->
     <div class="hamburger" (click)="toggleMenu()">
       <div class="line line1" [class.active]="menuOpen"></div>
       <div class="line line2" [class.active]="menuOpen"></div>
       <div class="line line3" [class.active]="menuOpen"></div>
-    </div>
+    </div> <!--./hamburguesa-->
 
     <!-- Menú desplegable -->
     <div class="dropdown-menu" [class.show]="menuOpen">
@@ -22,8 +24,7 @@
           <li><a [routerLink]="['/ruta3']">Quienes Somos</a></li>
           <li><a [routerLink]="['/ruta3']">Contacto</a></li>
         </ul>
-
       </div>
-    </div>
+    </div><!--./dropdown-menu-->
   </div>
-</div>
+</div><!--./navbar-->
