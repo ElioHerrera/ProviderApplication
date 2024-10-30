@@ -1,5 +1,4 @@
 <div class="full-width">
-
     <app-navbar></app-navbar>
 
     <div style="padding-left: 15%; padding-right: 20%;">
@@ -14,124 +13,124 @@
 
                     <!-- Formulario de registro -->
                     <form (submit)="registrarUsuario($event)">
-                        <!-- Campos básicos de usuario -->
+                        
                         <!-- Nombre de Usuario -->
                         <mat-form-field class="full-width" appearance="outline">
                             <mat-label>Nombre de Usuario</mat-label>
-                            <input required [(ngModel)]="user.username" name="username" matInput
+                            <input required [(ngModel)]="usuario.username" name="username" matInput
                                 placeholder="Nombre de Usuario">
                             <mat-hint>El nombre de usuario debe ser único</mat-hint>
-                            <mat-error *ngIf="!user.username">El nombre de usuario es requerido</mat-error>
+                            <mat-error *ngIf="!usuario.username">El nombre de usuario es requerido</mat-error>
                         </mat-form-field>
 
                         <!-- Contraseña -->
                         <mat-form-field class="full-width " appearance="outline">
                             <mat-label>Contraseña</mat-label>
-                            <input required [(ngModel)]="user.password" name="password" matInput
+                            <input required [(ngModel)]="usuario.password" name="password" matInput
                                 placeholder="Contraseña" type="password">
-                            <mat-error *ngIf="!user.password">La contraseña es requerida</mat-error>
+                            <mat-error *ngIf="!usuario.password">La contraseña es requerida</mat-error>
                         </mat-form-field>
 
                         <!-- Email -->
                         <mat-form-field class="full-width" appearance="outline">
                             <mat-label>Email</mat-label>
-                            <input required [(ngModel)]="user.email" name="email" matInput type="email">
-                            <mat-error *ngIf="!user.email">El e-mail es requerido</mat-error>
+                            <input required [(ngModel)]="usuario.email" name="email" matInput type="email">
+                            <mat-error *ngIf="!usuario.email">El e-mail es requerido</mat-error>
                         </mat-form-field>
 
                         <!-- Nombre -->
                         <mat-form-field class="full-width" appearance="outline">
                             <mat-label>Nombre</mat-label>
-                            <input required [(ngModel)]="user.perfil.nombre" name="nombre" matInput placeholder="Nombre">
-                            <mat-error *ngIf="!user.perfil.nombre">El nombre es requerido</mat-error>
+                            <input required [(ngModel)]="usuario.perfil.nombre" name="nombre" matInput placeholder="Nombre">
+                            <mat-error *ngIf="!usuario.perfil.nombre">El nombre es requerido</mat-error>
                         </mat-form-field>
 
                         <!-- Apellido -->
                         <mat-form-field class="full-width" appearance="outline">
                             <mat-label>Apellido</mat-label>
-                            <input required [(ngModel)]="user.perfil.apellido" name="apellido" matInput placeholder="Apellido">
-                            <mat-error *ngIf="!user.perfil.apellido">El apellido es requerido</mat-error>
+                            <input required [(ngModel)]="usuario.perfil.apellido" name="apellido" matInput placeholder="Apellido">
+                            <mat-error *ngIf="!usuario.perfil.apellido">El apellido es requerido</mat-error>
                         </mat-form-field>
 
                         <!-- Tipo de Usuario -->
                         <mat-form-field class="full-width" appearance="outline">
                             <mat-label>Seleccionar tipo de Usuario</mat-label>
-                            <mat-select required [(ngModel)]="user.tipoUsuario" name="tipoUsuario"
-                                (ngModelChange)="onTipoUsuarioChange($event)">
+                            <mat-select required [(ngModel)]="usuario.tipoUsuario" name="tipoUsuario"
+                                (ngModelChange)="desplegarTipoUsuario($event)">
                                 <mat-option value="Proveedor">Proveedor</mat-option>
                                 <mat-option value="Comerciante">Comerciante</mat-option>
                             </mat-select>
-                            <mat-error *ngIf="!user.tipoUsuario || user.tipoUsuario === ''">Por favor selecciona el tipo
+                            <mat-error *ngIf="!usuario.tipoUsuario || usuario.tipoUsuario === ''">Por favor selecciona el tipo
                                 de usuario</mat-error>
                         </mat-form-field>
 
                         <!-- Campos adicionales según el tipo de usuario -->
-                        <div *ngIf="user.tipoUsuario === 'Proveedor'">
+                        <div *ngIf="usuario.tipoUsuario === 'Proveedor'">
                             <!-- Nombre de Empresa -->
                             <mat-form-field class="full-width" appearance="outline">
                                 <mat-label>Nombre de Empresa</mat-label>
-                                <input required [(ngModel)]="user.perfil.empresa.nombre" name="empresa" matInput
+                                <input required [(ngModel)]="usuario.perfil.empresa.nombre" name="empresa" matInput
                                     placeholder="Nombre de Empresa">
-                                <mat-error *ngIf="!user.perfil.empresa.nombre">El nombre de empresa es requerido</mat-error>
+                                <mat-error *ngIf="!usuario.perfil.empresa.nombre">El nombre de empresa es requerido</mat-error>
                             </mat-form-field>
 
                             <!-- Rubro -->
                             <mat-form-field class="full-width" appearance="outline">
                                 <mat-label>Rubro</mat-label>
-                                <input required [(ngModel)]="user.perfil.empresa.rubro" name="rubro" matInput
+                                <input required [(ngModel)]="usuario.perfil.empresa.rubro" name="rubro" matInput
                                     placeholder="Rubro">
-                                <mat-error *ngIf="!user.perfil.empresa.rubro">El rubro es requerido</mat-error>
+                                <mat-error *ngIf="!usuario.perfil.empresa.rubro">El rubro es requerido</mat-error>
                             </mat-form-field>
 
                             <!-- Campo de Domicilio -->
                         <mat-form-field class="full-width" appearance="outline">
                             <mat-label>Domicilio</mat-label>
-                            <input required [(ngModel)]="user.perfil.empresa.domicilio" name="domicilio" matInput
+                            <input required [(ngModel)]="usuario.perfil.empresa.domicilio" name="domicilio" matInput
                                 placeholder="Domicilio">
-                            <mat-error *ngIf="!user.perfil.empresa.domicilio">El domicilio es requerido</mat-error>
+                            <mat-error *ngIf="!usuario.perfil.empresa.domicilio">El domicilio es requerido</mat-error>
                         </mat-form-field>
 
                         <!-- Teléfono -->
                         <mat-form-field class="full-width" appearance="outline">
                             <mat-label>Teléfono</mat-label>
-                            <input required [(ngModel)]="user.perfil.empresa.telefono" name="telefono" matInput type="text">
-                            <mat-error *ngIf="!user.perfil.empresa.telefono">El número de teléfono es requerido</mat-error>
+                            <input required [(ngModel)]="usuario.perfil.empresa.telefono" name="telefono" matInput type="text">
+                            <mat-error *ngIf="!usuario.perfil.empresa.telefono">El número de teléfono es requerido</mat-error>
                         </mat-form-field>
 
                         
                         </div>
 
                         
-                        <div *ngIf="user.tipoUsuario === 'Comerciante'">
+                        <div *ngIf="usuario.tipoUsuario === 'Comerciante'">
                             <!-- Nombre del Comercio -->
                             <mat-form-field class="full-width" appearance="outline">
                                 <mat-label>Nombre del Comercio</mat-label>
-                                <input required [(ngModel)]="user.perfil.comercio.nombre" name="comercio" matInput
+                                <input required [(ngModel)]="usuario.perfil.comercio.nombre" name="comercio" matInput
                                     placeholder="Nombre del Comercio">
-                                <mat-error *ngIf="!user.perfil.comercio.nombre">El nombre del comercio es requerido</mat-error>
+                                <mat-error *ngIf="!usuario.perfil.comercio.nombre">El nombre del comercio es requerido</mat-error>
                             </mat-form-field>
 
                             <!-- Rubro -->
                             <mat-form-field class="full-width" appearance="outline">
                                 <mat-label>Rubro</mat-label>
-                                <input required [(ngModel)]="user.perfil.comercio.rubro" name="rubro" matInput
+                                <input required [(ngModel)]="usuario.perfil.comercio.rubro" name="rubro" matInput
                                     placeholder="Rubro">
-                                <mat-error *ngIf="!user.perfil.comercio.rubro">El rubro es requerido</mat-error>
+                                <mat-error *ngIf="!usuario.perfil.comercio.rubro">El rubro es requerido</mat-error>
                             </mat-form-field>
 
                             <!-- Campo de Domicilio -->
                             <mat-form-field class="full-width" appearance="outline">
                                 <mat-label>Domicilio</mat-label>
-                                <input required [(ngModel)]="user.perfil.comercio.domicilio" name="domicilio" matInput
+                                <input required [(ngModel)]="usuario.perfil.comercio.domicilio" name="domicilio" matInput
                                     placeholder="Domicilio">
-                                <mat-error *ngIf="!user.perfil.comercio.domicilio">El domicilio es requerido</mat-error>
+                                <mat-error *ngIf="!usuario.perfil.comercio.domicilio">El domicilio es requerido</mat-error>
                             </mat-form-field>
 
                             <!-- Teléfono -->
                             <mat-form-field class="full-width" appearance="outline">
                                 <mat-label>Teléfono</mat-label>
-                                <input required [(ngModel)]="user.perfil.comercio.telefono" name="telefono" matInput type="text">
-                                <mat-error *ngIf="!user.perfil.comercio.telefono">El número de teléfono es
+                                <input required [(ngModel)]="usuario.perfil.comercio.telefono" name="telefono" matInput type="text">
+                                <mat-error *ngIf="!usuario.perfil.comercio.telefono">El número de teléfono es
                                     requerido</mat-error>
                             </mat-form-field>
                         </div>

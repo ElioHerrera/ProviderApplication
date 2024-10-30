@@ -4,10 +4,12 @@ import com.provider.converter.PerfilRelacionConverter;
 import com.provider.dto.PerfilRelacionDTO;
 import com.provider.entities.Perfil;
 import com.provider.entities.Solicitud;
+import com.provider.entities.Usuario;
 import com.provider.repositories.PerfilRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -19,30 +21,43 @@ public class PerfilService {
     @Autowired
     private PerfilRepository perfilRepository;
 
-    public List<Solicitud> obtenerSolicitudesRecibidas(Long perfilId) {
-        Perfil perfil = perfilRepository.findById(perfilId).orElse(null);
-        if (perfil != null) {
-            return perfil.getSolicitudesRecibidas();
-        } else {
-            // Manejar el caso cuando no se encuentra el perfil con el ID especificado
-            return null;
-        }
-    }
-
     public List<PerfilRelacionDTO> obtenerRelacionesComerciales(Long perfilId) {
 
-        System.out.println("METODO : List<PerfilRelacionDTO> obtenerRelacionesComerciales(Long perfilId)");
-
         Perfil perfil = perfilRepository.findById(perfilId).orElse(null);
         if (perfil != null) {
-            //System.out.println("Perfil encontado :  Username : " + perfil.getUsuario().getUsername());
+
             return perfil.getRelacioneComerciales().stream()
                     .map(PerfilRelacionConverter::entityToDTO)
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
-
     }
+
+    public List<PerfilRelacionDTO> obtenerPerfilesConSolicitudesPendientes(Long perfilId) {
+
+        Perfil perfil = perfilRepository.findById(perfilId).orElse(null);
+        if (perfil != null) {
+            List<Solicitud> solicitudesEnviadas = perfil.getSolicitudesEnviadas();
+            List<PerfilRelacionDTO> usuariosConSolicitudesPendientes = new ArrayList<>();
+
+            for (Solicitud solicitud : solicitudesEnviadas) {
+                if (solicitud.isPendiente()) {
+                    Perfil perfilsolicitado = solicitud.getSolicitado();
+                    PerfilRelacionDTO perfilDTO = PerfilRelacionConverter.entityToDTO(perfilsolicitado);
+                    usuariosConSolicitudesPendientes.add(perfilDTO);
+                }
+            }
+            return usuariosConSolicitudesPendientes;
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Perfil> obtenerProveedoresBuscados(String terminoBusqueda) {
+        Usuario.TipoUsuario tipoUsuario = Usuario.TipoUsuario.PROVEEDOR;  // Filtramos solo proveedores
+        return perfilRepository.buscarProveedores(tipoUsuario, terminoBusqueda);
+    }
+
 
     public List<Perfil> obtenerTodosLosPerfiles() {
         return perfilRepository.findAll();

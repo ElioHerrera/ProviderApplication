@@ -10,9 +10,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-import baseUrl from '../../services/helper';
-
-
 
 @Component({
   selector: 'app-signup',
@@ -33,7 +30,7 @@ import baseUrl from '../../services/helper';
 })
 export class SignupComponent implements OnInit {
 
-  public user = {
+  public usuario = {
     username: '',
     password: '',
     email: '',
@@ -56,9 +53,7 @@ export class SignupComponent implements OnInit {
     }
   };
 
-
   constructor(private userService: UserService, private snack: MatSnackBar) { }
-
 
   ngOnInit(): void { }
 
@@ -66,7 +61,7 @@ export class SignupComponent implements OnInit {
     event.preventDefault(); // Prevenir el envío predeterminado del formulario
 
     // Validar campos
-    if (!this.user.username || !this.user.password || !this.user.perfil.nombre || !this.user.perfil.apellido || !this.user.email || !this.user.tipoUsuario) {
+    if (!this.usuario.username || !this.usuario.password || !this.usuario.perfil.nombre || !this.usuario.perfil.apellido || !this.usuario.email || !this.usuario.tipoUsuario) {
       this.snack.open('Todos los campos son obligatorios', 'Aceptar', {
         duration: 3000,
         verticalPosition: 'top',
@@ -75,7 +70,7 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    if (this.user.tipoUsuario === 'PROVEEDOR' && (!this.user.perfil.empresa.nombre || !this.user.perfil.empresa.rubro || !this.user.perfil.empresa.telefono || !this.user.perfil.empresa.domicilio)) {
+    if (this.usuario.tipoUsuario === 'PROVEEDOR' && (!this.usuario.perfil.empresa.nombre || !this.usuario.perfil.empresa.rubro || !this.usuario.perfil.empresa.telefono || !this.usuario.perfil.empresa.domicilio)) {
       this.snack.open('Por favor completa los campos de la empresa', 'Aceptar', {
         duration: 3000,
         verticalPosition: 'top',
@@ -84,7 +79,7 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    if (this.user.tipoUsuario === 'COMERCIANTE' && (!this.user.perfil.comercio.nombre || !this.user.perfil.comercio.telefono || !this.user.perfil.comercio.rubro || !this.user.perfil.comercio.domicilio)) {
+    if (this.usuario.tipoUsuario === 'COMERCIANTE' && (!this.usuario.perfil.comercio.nombre || !this.usuario.perfil.comercio.telefono || !this.usuario.perfil.comercio.rubro || !this.usuario.perfil.comercio.domicilio)) {
       this.snack.open('Por favor completa los campos del comercio', 'Aceptar', {
         duration: 3000,
         verticalPosition: 'top',
@@ -94,7 +89,7 @@ export class SignupComponent implements OnInit {
     }
 
     // Verificar si el nombre de usuario ya existe
-    this.userService.verificarUsuarioExistente(this.user.username).subscribe(
+    this.userService.verifyExistingUser(this.usuario.username).subscribe(
       (usuarioExiste) => {
         if (usuarioExiste) {
           this.snack.open('El nombre de usuario ya está en uso', 'Aceptar', {
@@ -104,7 +99,7 @@ export class SignupComponent implements OnInit {
           });
         } else {
           // Verificar si el correo electrónico ya existe
-          this.userService.verificarEmailExistente(this.user.email).subscribe(
+          this.userService.verifyExistingEmail(this.usuario.email).subscribe(
             (emailExiste) => {
               if (emailExiste) {
                 this.snack.open('El correo electrónico ya está en uso', 'Aceptar', {
@@ -114,7 +109,7 @@ export class SignupComponent implements OnInit {
                 });
               } else {
                 // Llamar al servicio para registrar el usuario
-                this.userService.registrarUsuario(this.user).subscribe(
+                this.userService.signup(this.usuario).subscribe(
                   (response: any) => {
                     console.log(response);
                     Swal.fire({
@@ -159,7 +154,7 @@ export class SignupComponent implements OnInit {
   }
 
   limpiarFormulario() {
-    this.user = {
+    this.usuario = {
       username: '',
       password: '',
       email: '',
@@ -182,7 +177,8 @@ export class SignupComponent implements OnInit {
       }
     };
   }
-  onTipoUsuarioChange(event: any) {
+
+  desplegarTipoUsuario(event: any) {
     console.log('Tipo de usuario seleccionado:', event);
   }
 }

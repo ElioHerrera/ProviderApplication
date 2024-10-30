@@ -1,6 +1,6 @@
 package com.provider.entities;
 
-public enum RoleEnum {
+public enum RolUsuario {
     ADMIN,
     CLIENT,
     PROVIDER

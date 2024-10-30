@@ -20,4 +20,18 @@ public class UsuarioConverter {
         return dto;
     }
 
+//    public static Usuario dtoToEntity(UsuarioDTO usuarioDTO){
+//        Usuario usuario = Usuario.builder()
+//                .id(usuarioDTO.getId())
+//                .email(usuarioDTO.getEmail())
+//                .username(usuarioDTO.getUsername())
+//                .tipoUsuario(usuarioDTO.getTipoUsuario())
+//                .isEnabled(usuarioDTO.isEnabled())
+//                .perfil(PerfilConverter.dtoToEntity(usuarioDTO.getPerfil()))
+//                .roles(usuarioDTO.getRoles().stream().map(RolConverter::entityToDTO).collect(Collectors.toSet()))
+//                .build();
+//
+//        return usuario;
+//    }
+
 }

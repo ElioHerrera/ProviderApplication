@@ -2,14 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NavhomeComponent } from '../../components/navhome/navhome.component';
 import { NavprovComponent } from '../../components/navprov/navprov.component';
 import { CommonModule } from '@angular/common';
-
-
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { Usuario } from '../../usuario.model';
-
-
-
 
 
 @Component({
@@ -25,7 +19,7 @@ import { Usuario } from '../../usuario.model';
   styleUrl: './mensajes.component.css'
 })
 export class MensajesComponent implements OnInit {
-  user: any;
+  usuario: any;
   esDealer: boolean = false;
   esProvider: boolean = false;
 
@@ -34,18 +28,24 @@ export class MensajesComponent implements OnInit {
     private usuarioService: UserService,
     private router: Router) { } // Inyectamos el servicio UserService y Router en el constructor
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
 
-// Recuperar los datos del usuario del almacenamiento local
-const storedUser = localStorage.getItem('currentUser');
-if (storedUser) {
-  this.user = JSON.parse(storedUser);
-  console.log('Datos del usuario:', this.user); // Imprimimos los datos del usuario por consola
-  const roles = this.user.roles.map((role: any) => role.roleEnum);
-  this.esDealer = roles.includes('CLIENT');
-  this.esProvider = roles.includes('PROVIDER');
-}
+    // Recuperar los datos del usuario del almacenamiento local
+    const storedUser: string | null = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.usuario = JSON.parse(storedUser);
+      console.log('Datos del usuario:', this.usuario);
+
+    } else {
+      console.error('No se encontraron datos del usuario en localStorage.');
+    }
+
+    //Verificar si es Comerciante o Proveedor
+    if (this.usuario) {
+      const roles = this.usuario.roles.map((roles: any) => roles.rol);
+      console.log(roles.rol)
+      this.esDealer = roles.includes('CLIENT');
+      this.esProvider = roles.includes('PROVIDER');
+    }
   }
-  
 }
-

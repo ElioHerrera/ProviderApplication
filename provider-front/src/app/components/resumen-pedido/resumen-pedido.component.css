@@ -1,0 +1,77 @@
+/* Contenedor principal */
+.resumen-pedido-container {
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #fefefe;
+}
+
+/* Encabezado del pedido */
+.resumen-pedido-header {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Estilos de tabla */
+.table-container {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.table-container th, .table-container td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table-container th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.table-container td {
+  font-size: 1rem;
+  color: #555;
+}
+
+.table-container .subtotal {
+  text-align: right;
+  font-weight: bold;
+}
+
+.table-container .total {
+  font-size: 1.2rem;
+  color: #333;
+  padding-top: 10px;
+  border-top: 2px solid #ddd;
+}
+
+/* Botón grande */
+.boton-realizar-pedido {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background-color: #28a745;
+  color: white;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-realizar-pedido:hover {
+  background-color: #218838;
+}

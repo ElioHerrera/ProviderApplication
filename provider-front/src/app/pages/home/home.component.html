@@ -8,18 +8,12 @@
   </div>
 </div>
 
+
 <div class="home-body">
 
 
-  <!-- Botón para mostrar/ocultar la sección de datos personales -->
-  
-  <!-- Botón para mostrar/ocultar la sección de datos personales -->
-<!-- <button (click)="togglePersonalData()" class="toggle-button" *ngIf="isButtonVisible">
-  {{ isPersonalDataVisible ? 'Ocultar Datos Personales' : 'Mostrar Datos Personales' }}
-</button> -->
-  
   <!-- Bloque Datos Personales -->
-  <div class="personal-data-container" [ngClass]="{'hidden': !isPersonalDataVisible}">
+  <div class="personal-data-container"><br>
     <div class="personal-date-content">
       <div class="image-profile-content">
         <!-- Imagen de prefil -->
@@ -33,7 +27,7 @@
         </p>
         <ng-container *ngIf="usuario.perfil.empresa; else comercioDatos">
           <p>
-            Nombre: <span>{{ usuario.perfil.empresa.nombre }}</span><br>
+            Empresa: <span>{{ usuario.perfil.empresa.nombre }}</span><br>
             Rubro: <span>{{ usuario.perfil.empresa.rubro }}</span><br>
             Domicilio: <span>{{ usuario.perfil.empresa.domicilio }}</span><br>
             Cel: <span>{{ usuario.perfil.empresa.telefono }}</span>
@@ -41,17 +35,74 @@
         </ng-container>
         <ng-template #comercioDatos>
           <p>
-            Nombre: <span>{{ usuario.perfil.comercio.nombre }}</span><br>
+            Comercio: <span>{{ usuario.perfil.comercio.nombre }}</span><br>
             Rubro: <span>{{ usuario.perfil.comercio.rubro }}</span><br>
             Domicilio: <span>{{ usuario.perfil.comercio.domicilio }}</span><br>
             Cel: <span>{{ usuario.perfil.comercio.telefono }} </span>
           </p>
         </ng-template>
       </div>
+      <button mat-flat-button color="primary" class="boton-editar" (click)="abrirConfig()">
+        Editar Perfil
+      </button>
     </div>
   </div>
+
+  
   <!-- Bloque Publicaciones -->
   <div class="publications-container">
+
+
+    <div class="toggle-sidebar-container">
+      <!-- Botón de menú para pantallas pequeñas -->
+      <button class="menu-button" (click)="toggleSidebar()">
+        <span class="vertical-line-1"></span>
+        <span class="vertical-line-2"></span>
+      </button>
+
+      <!-- Sección de datos personales para movil-->
+      <div class="sidebar" [class.active]="isSidebarActive">
+        <h2>Mis Datos Personales</h2>
+
+
+
+        <div class="personal-date-content">
+
+          <div class="image-profile-content">
+            <!-- Imagen de prefil -->
+            <img [lazyLoad]="obtenerImagenPerfil(usuario.id, usuario.perfil.fotoPerfil)" alt="Profile Image">
+          </div>
+          <h1>{{ usuario.perfil.nombre }} {{ usuario.perfil.apellido }}</h1>
+          <div class="personal-date">
+            <p>
+              Descripción: <span>{{ usuario.perfil.descripcion }}</span><br>
+              Email: <span>{{ usuario.email }}</span>
+            </p>
+            <ng-container *ngIf="usuario.perfil.empresa; else comercioDatos">
+              <p>
+                Empresa: <span>{{ usuario.perfil.empresa.nombre }}</span><br>
+                Rubro: <span>{{ usuario.perfil.empresa.rubro }}</span><br>
+                Domicilio: <span>{{ usuario.perfil.empresa.domicilio }}</span><br>
+                Cel: <span>{{ usuario.perfil.empresa.telefono }}</span>
+              </p>
+            </ng-container>
+            <ng-template #comercioDatos>
+              <p>
+                Comercio: <span>{{ usuario.perfil.comercio.nombre }}</span><br>
+                Rubro: <span>{{ usuario.perfil.comercio.rubro }}</span><br>
+                Domicilio: <span>{{ usuario.perfil.comercio.domicilio }}</span><br>
+                Cel: <span>{{ usuario.perfil.comercio.telefono }} </span>
+              </p>
+            </ng-template>
+          </div>
+          <button mat-flat-button color="primary" class="boton-editar" (click)="abrirConfig()">
+            Editar Perfil
+          </button>
+        </div>
+
+
+      </div>
+    </div>
 
     <div class="box-new-publication publicacion-card">
       <h1 class="text-center">Nueva Publicación</h1>
@@ -79,7 +130,6 @@
         <button type="submit" class="btn-submit">Crear Publicación</button>
       </form>
     </div>
-
 
     <!-- Publicaciones -->
     <div *ngIf="publicaciones.length > 0; else noPublicaciones">
@@ -122,6 +172,7 @@
       <p>No hay publicaciones disponibles.</p>
     </ng-template>
 
+
     <footer>
       <div class="footer-space">
         <div class="footer-container">
@@ -138,6 +189,7 @@
         <p>&copy; 2024 Provider Pedidos &reg;. Todos los derechos reservados.</p>
       </div>
     </footer>
+
   </div>
 
 
@@ -185,5 +237,3 @@
       </div>
     </div>
   </div> -->
-
-

@@ -28,27 +28,19 @@
 
             <h1 class="text-center">Inicio de sesión</h1>
             <form (ngSubmit)="login()">
-              
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Nombre de Usuario</mat-label>
-                  <input [(ngModel)]="credentials.username" name="username" matInput
-                    placeholder="Digite su nombre de usuario" id="username" autocomplete="username" required>
-                </mat-form-field>
-             
 
-              <!-- <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Contraseña</mat-label>
-                <input [(ngModel)]="credentials.password" type="password" name="password" matInput
-                  placeholder="Digite su contraseña" id="password" name="password" autocomplete="current-password"
-                  required>
-              </mat-form-field> -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre de Usuario</mat-label>
+                <input [(ngModel)]="credentials.username" name="username" matInput
+                  placeholder="Digite su nombre de usuario" id="username" autocomplete="username" required>
+              </mat-form-field>
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Ingrese su contraseña</mat-label>
-                <input [(ngModel)]="credentials.password" matInput [type]="hide() ? 'password' : 'text'" name="password" required>
-                <button mat-icon-button matSuffix type="button" (click)="clickEvent($event)" 
-                        [attr.aria-label]="hide() ? 'Ocultar contraseña' : 'Mostrar contraseña'" 
-                        [attr.aria-pressed]="hide()">
+                <input [(ngModel)]="credentials.password" matInput [type]="hide() ? 'password' : 'text'" name="password"
+                  required>
+                <button mat-icon-button matSuffix type="button" (click)="clickEvent($event)"
+                  [attr.aria-label]="hide() ? 'Ocultar contraseña' : 'Mostrar contraseña'" [attr.aria-pressed]="hide()">
                   <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
               </mat-form-field>
@@ -62,11 +54,6 @@
             </form>
           </div>
         </mat-card>
-
-
-
-
-
 
         <div>
           <p>¿Aún no estás registrado?</p>

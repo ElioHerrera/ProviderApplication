@@ -20,7 +20,7 @@ export interface Perfil {
 
 export interface Rol {
     idRol: number;
-    roleEnum: string;
+    rolUsuario: string;
     listaDePermisos: string[];
 }
 
@@ -116,6 +116,27 @@ export interface Publicacion {
 }
 
 
-
+// pedido.model.ts
+export interface Pedido {
+  
+    idPedido: number;
+    estado: string;
+    clienteId: number; // ID del Comercio (cliente)
+    proveedorId: number; // ID de la Empresa (proveedor)
+    fecha: Date;
+    subtotalPedido: number;
+    descuento: number;
+    total: number;
+    items: Item[];
+  }
+  
+  // item.model.ts
+  export interface Item {
+    idItem: number;
+    producto: Producto;
+    cantidad: number;
+    precioUnitario: number;
+    subtotal: number;
+  }
 
 

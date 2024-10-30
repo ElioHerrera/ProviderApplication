@@ -1,44 +1,105 @@
+<div class="contenedor-configuracion">
+  <div class="contenido-configuracion">
+    <h2 class="titulo-configuracion">Editar Perfil</h2>
 
-<div *ngIf="esDealer">
-    <app-navhome></app-navhome>
-  </div>
-  
-  <div *ngIf="esProvider">
-    <app-navprov></app-navprov>
-  </div>
-  
-  <div class="principal-container body">
-    <div class="izquierda">
-  
-      <div class="box full-width text-center">
-  
+    <div class="seccion-imagen-perfil">
+      <img class="imagen-perfil" [lazyLoad]="obtenerImagenPerfil(usuario.id, usuario.perfil.fotoPerfil)"
+        alt="Imagen de perfil" (error)="handleImgError($event)">
+      <!-- <input type="file" class="input-archivo" (change)="archivoSeleccionado($event)" accept="image/*" /> -->
+        <!-- Icono de lápiz para editar la imagen -->
+  <button mat-icon-button class="boton-editar-imagen" (click)="abrirEditImagen()">
+    <mat-icon>edit</mat-icon>
+  </button>
+
       
-        <p> vista de usuarios </p>
-
-        <br><br>
-
-        <p> chats </p>
-      </div>
-  
     </div>
-  
-  
-    <div class="central full-width">
-      <div class="box text-center">
-  
-  
-        <p>Contenido Mensajes</p>
-  
-    
-  
-       </div>
+
+    <div class="seccion-formulario">
+
+      <!-- Campo Nombre -->
+      <div class="fila-formulario">
+        <span class="etiqueta">Nombre: </span>
+        <input matInput type="text" [(ngModel)]="nombre" [disabled]="!nombreEditable" placeholder="Nombre" />
+        <button mat-icon-button (click)="toggleEditable('nombre')">
+          <mat-icon>edit</mat-icon>
+        </button>
       </div>
-  
-      <div class="derecha">
-        <div class="box full-width text-center">
-  
-          <p>Contenido sin definir</p>
-        </div>
-  
+
+      <!-- Campo Apellido -->
+      <div class="fila-formulario">
+        <span class="etiqueta">Apellido: </span>
+        <input matInput type="text" [(ngModel)]="apellido" [disabled]="!apellidoEditable" placeholder="Apellido" />
+        <button mat-icon-button (click)="toggleEditable('apellido')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+      <!-- Campo Email (No editable, pero alineado) -->
+      <div class="fila-formulario">
+        <span class="etiqueta">Email: </span>
+        <input matInput type="text" [disabled]="true" value="{{ usuario.email }}" />
+        <button mat-icon-button style="visibility: hidden;">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+
+
+      <!-- Campo Descripción -->
+      <div class="fila-formulario">
+        <span class="etiqueta">Descripción: </span>
+        <input matInput type="text" [(ngModel)]="descripcionPerfil" [disabled]="!descripcionEditable"
+          placeholder="Descripción" />
+        <button mat-icon-button (click)="toggleEditable('descripcion')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+      <!-- Empresa -->
+      <div class="fila-formulario">
+        <!-- <span class="etiqueta">Empresa: </span> -->
+
+        <span class="etiqueta">{{ esProvider ? 'Empresa' : 'Comercio' }}</span>
+        <input type="text" [(ngModel)]="empresaComercio" [disabled]="!empresaComercioEditable" placeholder="Empresa" />
+
+
+       
+        <button mat-icon-button (click)="toggleEditable('empresa_comercio')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+      <!--Rubro -->
+      <div class="fila-formulario">
+        <span class="etiqueta">Rubro: </span>
+        <input matInput type="text" [(ngModel)]="rubro" [disabled]="!rubroEditable" placeholder="Rubro" />
+        <button mat-icon-button (click)="toggleEditable('rubro')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+      <!-- Domicilio -->
+      <div class="fila-formulario">
+        <span class="etiqueta">Domicilio: </span>
+        <input matInput type="text" [(ngModel)]="domicilio" [disabled]="!domicilioEditable" placeholder="Direccion Empresa" />
+        <button mat-icon-button (click)="toggleEditable('domicilio')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+
+      <!-- Teléfono -->
+      <div class="fila-formulario">
+        <span class="etiqueta">Teléfono: </span>
+        <input matInput type="text" [(ngModel)]="telefono" [disabled]="!telefonoEditable" placeholder="Teléfono" />
+        <button mat-icon-button (click)="toggleEditable('telefono')">
+          <mat-icon>edit</mat-icon>
+        </button>
       </div>
     </div>
+
+    <div class="botones-accion">
+      <button mat-flat-button color="primary" (click)="cancelar()">Cancelar</button>
+      <button mat-flat-button color="accent" (click)="actualizarDatos()">Guardar Cambios</button>
+    </div>
+  </div>
+</div>

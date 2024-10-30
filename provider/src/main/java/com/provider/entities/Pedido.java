@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,19 +22,24 @@ public class Pedido {
 
     private int numeroPedido;
     private Date fecha;
-    //private String estado;
+
     private double descuento;
     private double subTotal;
     private double total;
 
     @ManyToOne
-    @JoinColumn(name = "comercio_id")
-    private Comercio comercio;
+    @JoinColumn(name = "comercio_id", nullable = false)
+    private Comercio cliente; // Comercio que realiza el pedido
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<Item> items;
+    @ManyToOne
+    @JoinColumn(name = "empresa_id", nullable = false)
+    private Empresa proveedor; // Empresa que recibe el pedido
 
+    @Enumerated(EnumType.STRING)
+    private EstadoPedido estado;
 
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Item> items = new ArrayList<>();
 
 
 }

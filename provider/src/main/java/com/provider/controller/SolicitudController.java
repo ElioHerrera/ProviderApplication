@@ -4,6 +4,7 @@ import com.provider.converter.SolicitudConverter;
 import com.provider.dto.SolicitudDTO;
 import com.provider.entities.Perfil;
 import com.provider.entities.Solicitud;
+import com.provider.other.Consola;
 import com.provider.services.PerfilService;
 import com.provider.services.SolicitudService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class SolicitudController {
     @PostMapping("enviar/{perfilUsuarioId}/{perfilProveedorId}")
     public ResponseEntity<?> enviarSolicitudAmistad(@PathVariable("perfilUsuarioId") Long perfilComercianteId, @PathVariable("perfilProveedorId") Long perfilProveedorId) {
 
-        System.out.println("     METODO : CLASS SolicitudController : enviarSolicitudAmistad()");
+        Consola.azul("     METODO : CLASS SolicitudController : enviarSolicitudAmistad()");
         Perfil solicitante = perfilService.obtenerPerfilPorId(perfilComercianteId).orElse(null);
         Perfil solicitado = perfilService.obtenerPerfilPorId(perfilProveedorId).orElse(null);
 
@@ -38,6 +39,7 @@ public class SolicitudController {
                     .solicitado(solicitado)
                     .fechaSolicitud(new Date())
                     .aceptada(false)
+                    .pendiente(true)
                     .build();
 
             solicitante.getSolicitudesEnviadas().add(solicitud);
@@ -65,22 +67,22 @@ public class SolicitudController {
 
     @GetMapping("/{perfilId}/solicitudes-recibidas")
     public ResponseEntity<List<SolicitudDTO>> obtenerSolicitudesRecibidas(@PathVariable("perfilId") Long perfilId) {
-        System.out.println("     METODO : CLASS SolicitudController : obtenerSolicitudesRecibidas()");
+        Consola.azul("     METODO : CLASS SolicitudController : obtenerSolicitudesRecibidas()");
 
-        List<Solicitud> solicitudesRecibidas = perfilService.obtenerSolicitudesRecibidas(perfilId);
-        List<SolicitudDTO> listaDTO = new ArrayList<>();
+        List<Solicitud> solicitudesRecibidas = solicitudService.obtenerSolicitudesRecibidas(perfilId);
+        List<SolicitudDTO> listaSolicitudesRecibidasDTO = new ArrayList<>();
 
         for (Solicitud solicitud : solicitudesRecibidas) {
             SolicitudDTO dto = SolicitudConverter.entityToDTO(solicitud);
-            listaDTO.add(dto);
+            listaSolicitudesRecibidasDTO.add(dto);
         }
 
-        return ResponseEntity.ok().body(listaDTO);
+        return ResponseEntity.ok().body(listaSolicitudesRecibidasDTO);
     }
 
     @GetMapping("obtener/{solicitudId}")
     public ResponseEntity<SolicitudDTO> obtenerSolicitud(@PathVariable Long solicitudId) {
-        System.out.println("     METODO : CLASS SolicitudController : obtenerSolicitud()");
+        Consola.azul("     METODO : CLASS SolicitudController : obtenerSolicitud()");
         Optional<Solicitud> solicitudOptional = solicitudService.obtenerSolicitudPorId(solicitudId);
 
         if (solicitudOptional.isPresent()) {
@@ -95,7 +97,7 @@ public class SolicitudController {
 
     @PutMapping("aceptar/{solicitudId}") // Método para aceptar una solicitud
     public ResponseEntity<?> aceptarSolicitud(@PathVariable Long solicitudId) {
-        System.out.println("     METODO : CLASS SolicitudController : aceptarSolicitud()");
+        Consola.azul("     METODO : CLASS SolicitudController : aceptarSolicitud()");
 
         boolean solicitudAceptada = solicitudService.aceptarSolicitud(solicitudId);
         if (solicitudAceptada) {
@@ -107,7 +109,8 @@ public class SolicitudController {
 
     @PutMapping("cancelar/{solicitudId}")
     public ResponseEntity<?> cancelarSolicitud(@PathVariable Long solicitudId) {
-        System.out.println("     METODO : CLASS SolicitudController : cancelarSolicitud()");
+
+
         boolean solicitudCancelada = solicitudService.cancelarSolicitud(solicitudId);
         if (solicitudCancelada) {
             return ResponseEntity.ok().build();

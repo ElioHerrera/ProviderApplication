@@ -4,6 +4,7 @@ import com.provider.entities.Comercio;
 import com.provider.entities.Empresa;
 import com.provider.entities.ListaPrecio;
 import com.provider.entities.Usuario;
+import com.provider.other.Consola;
 import com.provider.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,7 +68,7 @@ public class PreciosController {
             comercioService.guardarComercio(comercio);
 
 
-            System.out.println("lista asignada");
+            Consola.rosa("lista asignada");
 
             return ResponseEntity.ok(Collections.singletonMap("message", "Lista de precios asignada correctamente"));
         } catch (Exception e) {

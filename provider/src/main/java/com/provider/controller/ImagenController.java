@@ -1,16 +1,14 @@
 package com.provider.controller;
 
-import com.google.cloud.storage.*;
 import com.provider.entities.Perfil;
 import com.provider.entities.Producto;
 import com.provider.entities.Usuario;
 import com.provider.other.ImageResizer;
+import com.provider.other.Consola;
 import com.provider.services.PerfilService;
 import com.provider.services.ProductoService;
 import com.provider.services.UsuarioService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -38,14 +36,18 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/img")
 public class ImagenController {
-     /*
-        @Value("${gcp.bucket.name}")
-       private String bucketName; */
+
+    /*
+    @Value("${gcp.bucket.name}")
+    private String bucketName;
     private final Storage storage = StorageOptions.getDefaultInstance().getService();
     private static final String DEFAULT_PRODUCT_IMAGE = "uploads/default/defaultProduct.jpg";
     private static final String DEFAULT_PROFILE_IMAGE = "uploads/default/default.png";
     private static final String RUTA_DE_IMAGENES_PRODUCTOS = "provider/src/main/resources/static/uploads/";
-    private static final String RUTA_DE_IMAGENES = "provider/src/main/resources/static/uploads/";//ANTERIOR
+     */
+
+
+    private static final String RUTA_DE_IMAGENES = "provider/src/main/resources/static/uploads/";
 
     @Autowired
     private UsuarioService usuarioService;
@@ -54,6 +56,167 @@ public class ImagenController {
 
     @Autowired
     private ProductoService productoService;
+
+
+
+    // CONFIGURACION para "http://localhost:4200"
+
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, String>> guardarImagenlocal(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) {
+
+        Map<String, String> response = new HashMap<>();
+        try {
+            Optional<Usuario> optionalUsuario = usuarioService.obtenerUsuarioOptionalPorId(userId);
+            if (optionalUsuario.isPresent()) {
+                Usuario usuario = optionalUsuario.get();
+                Perfil perfil = usuario.getPerfil();
+
+                Path rutaDeUsuario = Paths.get(RUTA_DE_IMAGENES, String.valueOf(userId));
+                if (!Files.exists(rutaDeUsuario)) {
+                    Files.createDirectories(rutaDeUsuario);
+                }
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HHmmssSSS"); // Formato de hora (HH), minutos (mm), segundos (ss) y milisegundos (SSS)
+                String formattedTime = dateFormat.format(new Date()); // Obtiene el tiempo actual formateado
+                String fileName = formattedTime.substring(formattedTime.length() - 5) + "_" + file.getOriginalFilename();
+                Path path = rutaDeUsuario.resolve(fileName);
+
+                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes())); // Lee el archivo como un BufferedImage
+                BufferedImage resizedAndCroppedImage = ImageResizer.resizeAndCropImage(originalImage, 320); // Redimensiona y recorta la imagen
+
+                // Guarda la imagen redimensionada y recortada
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(resizedAndCroppedImage, "jpg", baos);
+                Files.write(path, baos.toByteArray(), StandardOpenOption.CREATE);
+
+                perfil.setFotoPerfil(fileName);
+                perfilService.guardarPerfil(perfil);
+
+                response.put("message", "Archivo subido exitosamente");
+                response.put("fileName", fileName);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("message", "Usuario no encontrado");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.put("message", "Error al subir el archivo: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/uploads/{userId}/{fileName:.+}")
+    public ResponseEntity<Resource> obtenerImagenPerfilLocal(@PathVariable Long userId, @PathVariable String fileName) {
+
+        Path userFilePath = Paths.get(RUTA_DE_IMAGENES, String.valueOf(userId)).resolve(fileName).normalize();
+        try {
+            Resource userResource = new UrlResource(userFilePath.toUri());
+            if (userResource.exists() || userResource.isReadable()) {
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(userResource);
+            }
+        } catch (MalformedURLException e) {
+            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
+        }
+
+        // Si el archivo no se encuentra en el directorio del usuario, intentar cargarlo desde el directorio genérico
+        Path defaultFilePath = Paths.get(RUTA_DE_IMAGENES, "default.png").normalize();
+        try {
+            Resource defaultResource = new UrlResource(defaultFilePath.toUri());
+            if (defaultResource.exists() || defaultResource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_PNG)
+                        .body(defaultResource);
+            }
+        } catch (MalformedURLException e) {
+            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
+        }
+        System.out.println("No se ha encontrado el archivo: " + fileName);
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/product/upload")
+    public ResponseEntity<Map<String, String>> guardarImagenProductoLocal(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId, @RequestParam("productoId") Long productoId) {
+
+        Map<String, String> response = new HashMap<>();
+        try {
+            Optional<Usuario> optionalUsuario = usuarioService.obtenerUsuarioOptionalPorId(userId);
+            if (optionalUsuario.isPresent()) {
+                Usuario usuario = optionalUsuario.get();
+                Producto producto = usuario.getPerfil().getEmpresa().getProductos().stream()
+                        .filter(p -> p.getId().equals(productoId))
+                        .findFirst()
+                        .orElse(null);
+
+                if (producto == null) {
+                    response.put("message", "Producto no encontrado");
+                    return ResponseEntity.badRequest().body(response);
+                }
+
+                Path rutaDeProducto = Paths.get(RUTA_DE_IMAGENES, String.valueOf(userId));
+                if (!Files.exists(rutaDeProducto)) {
+                    Files.createDirectories(rutaDeProducto);
+                }
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HHmmssSSS");
+                String formattedTime = dateFormat.format(new Date());
+                String fileName = formattedTime.substring(formattedTime.length() - 5) + "_" + file.getOriginalFilename();
+                Path path = rutaDeProducto.resolve(fileName);
+
+                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
+                BufferedImage resizedAndCroppedImage = ImageResizer.resizeAndCropImage(originalImage, 320);
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(resizedAndCroppedImage, "jpg", baos);
+                Files.write(path, baos.toByteArray(), StandardOpenOption.CREATE);
+
+                producto.setFotoProducto(fileName);
+                // Guardar cambios en la base de datos
+                usuarioService.guardarUsuario(usuario);
+
+                response.put("message", "Archivo subido exitosamente");
+                response.put("fileName", fileName);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("message", "Usuario no encontrado");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.put("message", "Error al subir el archivo: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @GetMapping("/product/uploads/{userId}/{fileName:.+}")
+    public ResponseEntity<Resource> obtenerImagenProductoLocal(@PathVariable Long userId, @PathVariable String fileName) {
+
+        Path userFilePath = Paths.get(RUTA_DE_IMAGENES, String.valueOf(userId)).resolve(fileName).normalize();
+        try {
+            Resource userResource = new UrlResource(userFilePath.toUri());
+            if (userResource.exists() || userResource.isReadable()) {
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(userResource);
+            }
+        } catch (MalformedURLException e) {
+            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
+        }
+
+        // Si el archivo no se encuentra en el directorio del usuario, intentar cargarlo desde el directorio genérico
+        Path defaultFilePath = Paths.get(RUTA_DE_IMAGENES, "defaultProduct.jpg").normalize();
+        try {
+            Resource defaultResource = new UrlResource(defaultFilePath.toUri());
+            if (defaultResource.exists() || defaultResource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(defaultResource);
+            }
+        } catch (MalformedURLException e) {
+            //System.out.println("Error al construir la URL del archivo: " + e.getMessage());
+            Consola.aletaRoja("ALERTA", "Error al construir la URL del archivo: ", e.getMessage());
+        }
+        Consola.aletaRoja("ALERTA", "No se ha encontrado el archivo ",fileName);
+        return ResponseEntity.notFound().build();
+    }
 
     //CONFIGURATIÓN para "https://provider-pedidos-app.web.app"
     /*
@@ -237,164 +400,5 @@ public class ImagenController {
         return ResponseEntity.notFound().build();
     }
 */
-
-    // CONFIGURACION para "http://localhost:4200"
-
-    @PostMapping("/upload")
-    public ResponseEntity<Map<String, String>> guardarImagenlocal(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) {
-
-        Map<String, String> response = new HashMap<>();
-        try {
-            Optional<Usuario> optionalUsuario = usuarioService.obtenerUsuarioOptionalPorId(userId);
-            if (optionalUsuario.isPresent()) {
-                Usuario usuario = optionalUsuario.get();
-                Perfil perfil = usuario.getPerfil();
-
-                Path rutaDeUsuario = Paths.get(RUTA_DE_IMAGENES, String.valueOf(userId));
-                if (!Files.exists(rutaDeUsuario)) {
-                    Files.createDirectories(rutaDeUsuario);
-                }
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HHmmssSSS"); // Formato de hora (HH), minutos (mm), segundos (ss) y milisegundos (SSS)
-                String formattedTime = dateFormat.format(new Date()); // Obtiene el tiempo actual formateado
-                String fileName = formattedTime.substring(formattedTime.length() - 5) + "_" + file.getOriginalFilename();
-                Path path = rutaDeUsuario.resolve(fileName);
-
-                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes())); // Lee el archivo como un BufferedImage
-                BufferedImage resizedAndCroppedImage = ImageResizer.resizeAndCropImage(originalImage, 320); // Redimensiona y recorta la imagen
-
-                // Guarda la imagen redimensionada y recortada
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(resizedAndCroppedImage, "jpg", baos);
-                Files.write(path, baos.toByteArray(), StandardOpenOption.CREATE);
-
-                perfil.setFotoPerfil(fileName);
-                perfilService.guardarPerfil(perfil);
-
-                response.put("message", "Archivo subido exitosamente");
-                response.put("fileName", fileName);
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("message", "Usuario no encontrado");
-                return ResponseEntity.badRequest().body(response);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            response.put("message", "Error al subir el archivo: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    @GetMapping("/uploads/{userId}/{fileName:.+}")
-    public ResponseEntity<Resource> obtenerImagenPerfilLocal(@PathVariable Long userId, @PathVariable String fileName) {
-
-        Path userFilePath = Paths.get(RUTA_DE_IMAGENES, String.valueOf(userId)).resolve(fileName).normalize();
-        try {
-            Resource userResource = new UrlResource(userFilePath.toUri());
-            if (userResource.exists() || userResource.isReadable()) {
-                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(userResource);
-            }
-        } catch (MalformedURLException e) {
-            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
-        }
-
-        // Si el archivo no se encuentra en el directorio del usuario, intentar cargarlo desde el directorio genérico
-        Path defaultFilePath = Paths.get(RUTA_DE_IMAGENES, "default.png").normalize();
-        try {
-            Resource defaultResource = new UrlResource(defaultFilePath.toUri());
-            if (defaultResource.exists() || defaultResource.isReadable()) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_PNG)
-                        .body(defaultResource);
-            }
-        } catch (MalformedURLException e) {
-            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
-        }
-        System.out.println("No se ha encontrado el archivo: " + fileName);
-        return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping("/product/upload")
-    public ResponseEntity<Map<String, String>> guardarImagenProductoLocal(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId, @RequestParam("productoId") Long productoId) {
-
-        Map<String, String> response = new HashMap<>();
-        try {
-            Optional<Usuario> optionalUsuario = usuarioService.obtenerUsuarioOptionalPorId(userId);
-            if (optionalUsuario.isPresent()) {
-                Usuario usuario = optionalUsuario.get();
-                Producto producto = usuario.getPerfil().getEmpresa().getProductos().stream()
-                        .filter(p -> p.getId().equals(productoId))
-                        .findFirst()
-                        .orElse(null);
-
-                if (producto == null) {
-                    response.put("message", "Producto no encontrado");
-                    return ResponseEntity.badRequest().body(response);
-                }
-
-                Path rutaDeProducto = Paths.get(RUTA_DE_IMAGENES_PRODUCTOS, String.valueOf(userId));
-                if (!Files.exists(rutaDeProducto)) {
-                    Files.createDirectories(rutaDeProducto);
-                }
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HHmmssSSS");
-                String formattedTime = dateFormat.format(new Date());
-                String fileName = formattedTime.substring(formattedTime.length() - 5) + "_" + file.getOriginalFilename();
-                Path path = rutaDeProducto.resolve(fileName);
-
-                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
-                BufferedImage resizedAndCroppedImage = ImageResizer.resizeAndCropImage(originalImage, 320);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(resizedAndCroppedImage, "jpg", baos);
-                Files.write(path, baos.toByteArray(), StandardOpenOption.CREATE);
-
-                producto.setFotoProducto(fileName);
-                // Guardar cambios en la base de datos
-                usuarioService.guardarUsuario(usuario);
-
-                response.put("message", "Archivo subido exitosamente");
-                response.put("fileName", fileName);
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("message", "Usuario no encontrado");
-                return ResponseEntity.badRequest().body(response);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            response.put("message", "Error al subir el archivo: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    @GetMapping("/product/uploads/{userId}/{fileName:.+}")
-    public ResponseEntity<Resource> obtenerImagenProductoLocal(@PathVariable Long userId, @PathVariable String fileName) {
-
-        Path userFilePath = Paths.get(RUTA_DE_IMAGENES_PRODUCTOS, String.valueOf(userId)).resolve(fileName).normalize();
-        try {
-            Resource userResource = new UrlResource(userFilePath.toUri());
-            if (userResource.exists() || userResource.isReadable()) {
-                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(userResource);
-            }
-        } catch (MalformedURLException e) {
-            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
-        }
-
-        // Si el archivo no se encuentra en el directorio del usuario, intentar cargarlo desde el directorio genérico
-        Path defaultFilePath = Paths.get(RUTA_DE_IMAGENES_PRODUCTOS, "defaultProduct.jpg").normalize();
-        try {
-            Resource defaultResource = new UrlResource(defaultFilePath.toUri());
-            if (defaultResource.exists() || defaultResource.isReadable()) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_JPEG)
-                        .body(defaultResource);
-            }
-        } catch (MalformedURLException e) {
-            System.out.println("Error al construir la URL del archivo: " + e.getMessage());
-        }
-        System.out.println("No se ha encontrado el archivo: " + fileName);
-        return ResponseEntity.notFound().build();
-    }
-
 
 }

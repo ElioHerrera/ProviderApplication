@@ -12,6 +12,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class RolDTO {
     private Long idRol;
-    private String roleEnum;
+    private String rol;
     private Set<String> listaDePermisos;
 }

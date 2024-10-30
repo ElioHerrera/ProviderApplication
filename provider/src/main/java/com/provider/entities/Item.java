@@ -26,6 +26,6 @@ public class Item {
     private Producto producto;
 
     private int cantidad;
-    private BigDecimal precioUnitario;
-    private BigDecimal total;
+    private double precioUnitario;
+    private double subtotal;
 }

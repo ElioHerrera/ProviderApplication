@@ -21,9 +21,12 @@ public class Rol {
 
     @Column(name = "rol")
     @Enumerated(EnumType.STRING)
-    private RoleEnum roleEnum;
+    private RolUsuario rol;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "roles_permisos", joinColumns = @JoinColumn(name = "rol_id"), inverseJoinColumns = @JoinColumn(name = "permiso_id"))
     private Set<Permiso> listaDePermisos = new HashSet<>() ;
+
+  
 }
+

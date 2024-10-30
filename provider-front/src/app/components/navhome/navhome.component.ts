@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon';
 import { RouterLink, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
@@ -12,8 +10,6 @@ import baseUrl from '../../services/helper';
   selector: 'app-navhome',
   standalone: true,
   imports: [
-    MatToolbarModule,
-    MatIconModule,
     RouterLink,
     CommonModule,
     LazyLoadImageModule,

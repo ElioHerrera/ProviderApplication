@@ -13,6 +13,7 @@ public class SolicitudConverter {
                 .solicitado(PerfilRelacionConverter.entityToDTO(solicitud.getSolicitado()))
                 .fechaSolicitud(solicitud.getFechaSolicitud())
                 .aceptada(solicitud.isAceptada())
+                .pendiente(solicitud.isPendiente())
                 .build();
 
         return dto;

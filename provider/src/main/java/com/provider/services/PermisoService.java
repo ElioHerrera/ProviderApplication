@@ -15,10 +15,10 @@ public class PermisoService {
     @Autowired
     private PermisoRepository permisoRepository;
 
-    public Optional<Permiso> obtenerPermisoCliente() {
+    public Permiso obtenerPermisoCliente() {
         return permisoRepository.findByNombrePermiso("Cliente");
     }
-    public Optional<Permiso> obtenerPermisoProveedor() {
+    public Permiso obtenerPermisoProveedor() {
         return permisoRepository.findByNombrePermiso("Proveedor");
     }
 

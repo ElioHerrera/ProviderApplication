@@ -10,7 +10,7 @@ public class RolConverter {
 
         RolDTO dto = RolDTO.builder()
                 .idRol(rol.getId())
-                .roleEnum(rol.getRoleEnum().toString())
+                .rol(rol.getRol().toString())
                 .listaDePermisos(rol.getListaDePermisos().stream()
                         .map(permiso -> permiso.getNombrePermiso())
                         .collect(Collectors.toSet()))

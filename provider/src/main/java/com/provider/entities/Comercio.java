@@ -3,6 +3,8 @@ package com.provider.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -47,6 +49,6 @@ public class Comercio {
     )
     private List<ListaPrecio> listasAsignadas;
 
-    @OneToMany(mappedBy = "comercio", cascade = CascadeType.ALL)
-    private List<Pedido> pedidos;
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Pedido> pedidos = new ArrayList<>(); // Relación con los pedidos realizados
 }

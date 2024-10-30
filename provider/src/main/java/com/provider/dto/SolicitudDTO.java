@@ -16,4 +16,5 @@ public class SolicitudDTO {
     private PerfilRelacionDTO solicitado;
     private Date fechaSolicitud;
     private boolean aceptada;
+    private boolean pendiente;
 }

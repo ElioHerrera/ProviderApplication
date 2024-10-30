@@ -440,25 +440,10 @@ footer {
 }
 
 .principal-container {
-  /* display: grid; */
-  /* grid-template-columns: 1% 20%  auto; */
   margin: auto;
   grid-gap: 20px;
 }
 
-.izquierda {
-  grid-column: 2;
-}
-
-.central {
-  grid-column: 3;
-}
-
-.derecha {
-  grid-column: 4;
-  justify-self: start;
-  margin-left: -38px;
-}
 
 .flex-container-datos-comer {
   display: flex;

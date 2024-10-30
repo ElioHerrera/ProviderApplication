@@ -27,4 +27,6 @@ public class Solicitud {
 
     private Date fechaSolicitud;
     private boolean aceptada;
+    private boolean pendiente;
+
 }

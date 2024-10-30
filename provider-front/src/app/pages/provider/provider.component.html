@@ -1,191 +1,269 @@
 <app-navhome></app-navhome>
-<div class="principal-container body">
 
-  <!-- Seccion mis proveedores -->
-  <div class="izquierda">
-    <div class="box full-width text-center">
-      <h2 class="text-center">Mis Proveedores</h2>
-      <div class="box" style="background-color: rgb(241, 236, 236);">
-        <p style="color: red; padding-top: 10px;"> En esta seccion encontraras los Proveedores que aceptaron tu
-          solicitud.</p>
-      </div>
-      <div class="container box-proveedores">
-        <div *ngIf="relacionesComerciales.length > 0; else noSolicitudes">
-          <div *ngFor="let perfilRelacion of relacionesComerciales" class="proveedor-item"
-            (click)="obtenerProductosProveedor(perfilRelacion.id)" (mouseover)="hoverProveedor(perfilRelacion.id)"
-            (mouseleave)="leaveProveedor(perfilRelacion.id)" [class.hovered]="hoveredProveedorId === perfilRelacion.id"
-            [class.clicked]="clickedProveedorId === perfilRelacion.id">
-            <div class="proveedor-info">
+<div class="provider-body">
 
-              <!-- Relaciones Comerciales -->
-              <img [src]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)" alt="Profile Image"
-                class="circle-img-lateral" (error)="handleImgError($event)">
-              <!-- <img [lazyLoad]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)" alt="Profile Image" class="circle-img-lateral" (error)="handleImgError($event)"> -->
-              <div class="full-width">
-                <div class="datos-usuarios">
-                  <p>
-                    <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{ perfilRelacion.apellido}}</span><br>
-                    <ng-container *ngIf="perfilRelacion.empresa">
-                      <span class="comercio-info">{{ perfilRelacion.empresa.nombre }} - {{
-                        perfilRelacion.empresa.domicilio }}</span>
-                    </ng-container>
-                    <ng-container *ngIf="perfilRelacion.comercio">
-                      <span class="comercio-info">{{ perfilRelacion.comercio.nombre }} - {{
-                        perfilRelacion.comercio.domicilio }}</span>
-                    </ng-container>
-                  </p>
+
+  <!-- Bloque Relaciones comerciales -->
+  <div class="my-providers-container"><br>
+    <div class="my-providers-content">
+      <h3>Relaciones Comerciales</h3>
+      <div class="my-providers">
+
+        <div class="container box-proveedores">
+          <div *ngIf="relacionesComerciales.length > 0; else noSolicitudes">
+            <div *ngFor="let perfilRelacion of relacionesComerciales" class="proveedor-item"
+              (click)="obtenerProductosProveedor(perfilRelacion.id)" (mouseover)="hoverProveedor(perfilRelacion.id)"
+              (mouseleave)="leaveProveedor(perfilRelacion.id)"
+              [class.hovered]="hoveredProveedorId === perfilRelacion.id"
+              [class.clicked]="clickedProveedorId === perfilRelacion.id">
+              <div class="proveedor-info">
+
+                <!-- Relaciones Comerciales -->
+                <img [lazyLoad]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)" alt="Profile Image"
+                  class="circle-img-lateral" (error)="handleImgError($event)">
+                <div class="full-width">
+                  <div class="datos-usuarios">
+                    <p>
+                      <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{ perfilRelacion.apellido}}</span><br>
+                      <ng-container *ngIf="perfilRelacion.empresa">
+                        <span class="comercio-info">{{ perfilRelacion.empresa.nombre }} - {{
+                          perfilRelacion.empresa.domicilio }}</span>
+                      </ng-container>
+                      <ng-container *ngIf="perfilRelacion.comercio">
+                        <span class="comercio-info">{{ perfilRelacion.comercio.nombre }} - {{
+                          perfilRelacion.comercio.domicilio }}</span>
+                      </ng-container>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noSolicitudes>
+            <p>No hay relaciones Comerciales.</p>
+          </ng-template>
+          <hr>
+
+          <!-- Solicitudes Pendientes-->
+          <h3>Solicitudes Pendientes</h3>
+          <div *ngIf="solicitudesPendientes">
+            <div *ngFor="let perfilRelacion of solicitudesPendientes" class="proveedor-item"
+              (click)="obtenerProductosProveedor(perfilRelacion.id)" (mouseover)="hoverProveedor(perfilRelacion.id)"
+              (mouseleave)="leaveProveedor(perfilRelacion.id)"
+              [class.hovered]="hoveredProveedorId === perfilRelacion.id"
+              [class.clicked]="clickedProveedorId === perfilRelacion.id">
+              <div class="proveedor-info">
+                <img [lazyLoad]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)" alt="Profile Image"
+                  class="circle-img-lateral" (error)="handleImgError($event)">
+                <div class="full-width">
+                  <div class="datos-usuarios">
+                    <p>
+                      <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{ perfilRelacion.apellido}}</span><br>
+                      <ng-container *ngIf="perfilRelacion.empresa">
+                        <span class="comercio-info">{{ perfilRelacion.empresa.nombre }} - {{
+                          perfilRelacion.empresa.domicilio }}</span>
+                      </ng-container>
+                      <ng-container *ngIf="perfilRelacion.comercio">
+                        <span class="comercio-info">{{ perfilRelacion.comercio.nombre }} - {{
+                          perfilRelacion.comercio.domicilio }}</span>
+                      </ng-container>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <ng-template #noSolicitudes>
-          <p>No hay relaciones Comerciales.</p>
-        </ng-template>
       </div>
     </div>
   </div>
 
 
-  <div class="central full-width">
-    <div class=" seccionesContainer box">
-      <div class="full-width">
-        <h2 class="text-center">Productos</h2>
-        <table *ngIf="productosProveedor.length > 0; else noProductos" class="product-table">
-          <thead>
-            <tr>
-              <th>Imagen</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Precio</th>
-              <!-- Eliminada la columna de Estado -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let producto of productosProveedor" [class.disabled-row]="!producto.enabled"
-              [class.enabled-row]="producto.enabled">
-              <td class="product-image-container">
-                <img [src]="obtenerImagenProducto(producto.idUsuario, producto.fotoProducto)" alt="Product Image"
-                  class="img-product" (error)="handleImgError($event)">
-              </td>
-              <td>{{ producto.nombre }}</td>
-              <td class="description-cell">{{ producto.descripcion }} </td>
-              <td>{{ producto.precio }}</td>
-              <!-- Columna de Estado eliminada -->
-            </tr>
-          </tbody>
-        </table>
+
+  <div class="toggle-sidebar-container">
+    <!-- Botón de menú para pantallas pequeñas -->
+    <button class="menu-button" (click)="toggleSidebar()">
+      <span class="vertical-line-1"></span>
+      <span class="vertical-line-2"></span>
+    </button>
+    <!-- Sección de datos personales para movil-->
+    <div class="sidebar" [class.active]="isSidebarActive">
+      <h2>Mis Proveedores</h2>
+      <div class="my-providers-content">
+        <div class="my-providers-date">
+          <div class="container box-proveedores">
+            <div *ngIf="relacionesComerciales.length > 0; else noSolicitudes">
+              <div *ngFor="let perfilRelacion of relacionesComerciales" class="proveedor-item"
+                (click)="obtenerProductosProveedor(perfilRelacion.id)" (mouseover)="hoverProveedor(perfilRelacion.id)"
+                (mouseleave)="leaveProveedor(perfilRelacion.id)"
+                [class.hovered]="hoveredProveedorId === perfilRelacion.id"
+                [class.clicked]="clickedProveedorId === perfilRelacion.id">
+                <div class="proveedor-info">
+
+                  <!-- Relaciones Comerciales para movil-->
+                  <img [lazyLoad]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)"
+                    alt="Profile Image" class="circle-img-lateral" (error)="handleImgError($event)">
+                  <div class="full-width">
+                    <div class="datos-usuarios">
+                      <p>
+                        <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{
+                          perfilRelacion.apellido}}</span><br>
+                        <ng-container *ngIf="perfilRelacion.empresa">
+                          <span class="comercio-info">{{ perfilRelacion.empresa.nombre }} - {{
+                            perfilRelacion.empresa.domicilio }}</span>
+                        </ng-container>
+                        <ng-container *ngIf="perfilRelacion.comercio">
+                          <span class="comercio-info">{{ perfilRelacion.comercio.nombre }} - {{
+                            perfilRelacion.comercio.domicilio }}</span>
+                        </ng-container>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #noSolicitudes>
+              <p>No hay relaciones Comerciales.</p>
+            </ng-template>
+            <hr>
+            <!-- Solicitudes Pendientes-->
+            <h3>Solicitudes Pendientes</h3>
+            <div *ngIf="solicitudesPendientes">
+              <div *ngFor="let perfilRelacion of solicitudesPendientes" class="proveedor-item"
+                (click)="obtenerProductosProveedor(perfilRelacion.id)" (mouseover)="hoverProveedor(perfilRelacion.id)"
+                (mouseleave)="leaveProveedor(perfilRelacion.id)"
+                [class.hovered]="hoveredProveedorId === perfilRelacion.id"
+                [class.clicked]="clickedProveedorId === perfilRelacion.id">
+                <div class="proveedor-info">
+                  <img [lazyLoad]="obtenerImagenPerfil(perfilRelacion.id, perfilRelacion.fotoPerfil)"
+                    alt="Profile Image" class="circle-img-lateral" (error)="handleImgError($event)">
+                  <div class="full-width">
+                    <div class="datos-usuarios">
+                      <p>
+                        <span class="nombre-apellido">{{ perfilRelacion.nombre }} {{
+                          perfilRelacion.apellido}}</span><br>
+                        <ng-container *ngIf="perfilRelacion.empresa">
+                          <span class="comercio-info">{{ perfilRelacion.empresa.nombre }} - {{
+                            perfilRelacion.empresa.domicilio }}</span>
+                        </ng-container>
+                        <ng-container *ngIf="perfilRelacion.comercio">
+                          <span class="comercio-info">{{ perfilRelacion.comercio.nombre }} - {{
+                            perfilRelacion.comercio.domicilio }}</span>
+                        </ng-container>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bloque Productos -->
+
+  <div class="products-container">
+
+
+    <!-- Buscar Proveedor -->
+    <h2 class="text-center">Buscar Proveedores</h2>
+    <input type="text" [(ngModel)]="busquedaProveedor" placeholder="Ingrese el nombre del proveedor...">
+    <button mat-flat-button color="primary" (click)="buscarProveedor()">Buscar</button>
+    
+    
+    <div class="container box-proveedores">
+      <br>
+      <div *ngIf="proveedoresEncontrados.length > 0; else noProveedores">
+        <div *ngFor="let proveedor of proveedoresEncontrados">
+          <div class="proveedor-info">
+            <img [src]="obtenerImagenPerfil(proveedor.id, proveedor.fotoPerfil)" alt="Profile Image"
+              class="circle-img-lateral" (error)="handleImgError($event)">
+            <div class="full-width">
+              <div class="datos-usuarios">
+                <p>
+                  <span class="nombre-apellido">{{ proveedor.nombre }} {{ proveedor.apellido }}</span><br>
+                  <ng-container *ngIf="proveedor.empresa">
+                    <span class="comercio-info">{{ proveedor.empresa.nombre }} - {{ proveedor.empresa.domicilio
+                      }}</span>
+                  </ng-container><br>
+
+                  <!-- Botón para enviar solicitud -->
+                  <button mat-flat-button color="primary" (click)="enviarSolicitud(proveedor.id)"
+                    [disabled]="solicitudesEnviadas.get(proveedor.id)" style="height: 15px;">
+                    {{ solicitudesEnviadas.get(proveedor.id) ? 'Solicitud Enviada' : 'Enviar Solicitud' }}
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noProveedores>
+        <p>No se encontraron proveedores.</p>
+      </ng-template>
+    </div>
+
+
+
+
+
+      <!-- AQUI COLOCAR TARJETA DE PROVEEDOR SELECCIONADO-->
+
+
+
+
+
+      <div class="gpt-contenedor-tarjetas">
+        <h2 class="gpt-texto-centro">Productos</h2><hr>
+
+
+
+        <div *ngIf="productosProveedor.length > 0; else noProductos" class="gpt-tarjetas-producto">
+          <div *ngFor="let producto of productosProveedor" [class.gpt-fila-desactivada]="!producto.enabled"
+            [class.gpt-fila-activada]="producto.enabled" class="gpt-tarjeta-producto-horizontal">
+
+            <!-- Imagen del producto -->
+            <div class="gpt-contenedor-imagen-horizontal">
+              <img [src]="obtenerImagenProducto(producto.idUsuario, producto.fotoProducto)" alt="Imagen del Producto"
+                class="gpt-imagen-producto-horizontal" (error)="handleImgError($event)">
+            </div>
+
+            <!-- Detalles del producto -->
+            <div class="gpt-detalles-producto-horizontal">
+              <h3 class="gpt-nombre-producto-horizontal">{{ producto.nombre }}</h3>
+              <p class="gpt-descripcion-producto-horizontal">{{ producto.descripcion }}</p>
+              <p class="gpt-precio-producto-horizontal">Precio: <span>{{ producto.precio | currency }}</span></p>
+            </div>
+
+            <!-- Controles de cantidad -->
+            <div class="gpt-controles-cantidad">
+              <button (click)="reducirCantidad(producto)" [disabled]="!producto.enabled"
+                class="gpt-boton-cantidad">-</button>
+              <input type="number" [(ngModel)]="producto.cantidad" placeholder="0" class="gpt-input-cantidad"
+                [disabled]="!producto.enabled" min="0">
+              <button (click)="aumentarCantidad(producto)" [disabled]="!producto.enabled"
+                class="gpt-boton-cantidad">+</button>
+            </div>
+          </div>
+        </div>
+
         <ng-template #noProductos>
           <p>No hay productos disponibles para este proveedor.</p>
         </ng-template>
-      </div>
-    </div>
-  </div>
 
+        <button *ngIf="hayProductosSeleccionados" (click)="verPedido()" class="realizar-pedido-btn">
 
-  <!-- <div class="derecha">
-    !-- Buscar Proveedor --
-    <div class="box full-width text-center">
-      <h2 class="text-center">Lista de Proveedores</h2>
-      <div class="box" style="background-color: rgb(241, 236, 236);">
-        <input type="text" [(ngModel)]="filtroProveedor" placeholder="Buscar proveedores..."
-          (input)="filtrarProveedores()">
-        <div class="container box-proveedores">
-          <div *ngIf="proveedoresFiltrados.length > 0; else noProveedores">
-            <div *ngFor="let proveedor of proveedoresFiltrados" class="proveedor-item">
-              !-- Imagen del proveedor a la izquierda --
-              <img [src]="obtenerImagenPerfil(proveedor.id, proveedor.fotoPerfil)" alt="Imagen de perfil"
-                class="circle-img-lateral" (error)="handleImgError($event)">
-            !-- Detalles del proveedor --
-              <div class="full-width">
-                <div class="datos-usuarios">
-                  <mat-list>
-                    <mat-list-item>
-                      <span matListItemTitle>{{ proveedor.nombre}} {{ proveedor.apellido }}</span>
-                      <span matListItemLine>| Empresa: {{ proveedor.empresa.nombre }} | Rubro: {{
-                        proveedor.empresa.rubro }}</span>
-                      !-- Aquí puedes agregar más detalles del proveedor si lo deseas --
-                      <button mat-flat-button color="primary" (click)="enviarSolicitud(proveedor.idPerfil)"
-                        [disabled]="solicitudesEnviadas.get(proveedor.idPerfil)">
-                        {{ solicitudesEnviadas.get(proveedor.idPerfil) ? 'Solicitud Enviada' : 'Enviar Solicitud' }}
-                      </button>
-                    </mat-list-item>
-                  </mat-list>
-                </div>
-              </div>
-            </div>
-          </div>
-          <ng-template #noProveedores>
-            <p>No hay proveedores disponibles.</p>
-          </ng-template>
-        </div>
-      </div>
-    </div> -->
+          <span class="pedido-texto">Ver Pedido</span>
+          <span class="pedido-total">{{ totalPedido | currency }}</span>
 
+        </button>
 
-  <!-- AJUSTAR: -->
-
-
-
-
-  <div class="derecha">
-    <div class="box full-width text-center">
-      <h2 class="text-center">Lista Proveedores</h2>
-          <input type="text" [(ngModel)]="filtroProveedor" placeholder="Buscar proveedores..." (input)="filtrarProveedores()">
-      <div class="container box-proveedores"> <br>
-        <div *ngIf="proveedoresFiltrados.length > 0; else noProveedores">
-          <div *ngFor="let proveedor of proveedoresFiltrados">
-            <div class="proveedor-info">
-              <img [src]="obtenerImagenPerfil(proveedor.id, proveedor.fotoPerfil)" alt="Profile Image"
-                   class="circle-img-lateral" (error)="handleImgError($event)">
-              <div class="full-width">
-                <div class="datos-usuarios">
-                  <p>
-                    <span class="nombre-apellido">{{ proveedor.nombre }} {{ proveedor.apellido }}</span><br>
-                    <ng-container *ngIf="proveedor.empresa">
-                      <span class="comercio-info">{{ proveedor.empresa.nombre }} - {{ proveedor.empresa.domicilio }}</span>
-                    </ng-container><br>
-
-                    <button mat-flat-button color="primary" (click)="enviarSolicitud(proveedor.idPerfil)"
-                    [disabled]="solicitudesEnviadas.get(proveedor.idPerfil)" style="height: 15px;">
-                    {{ solicitudesEnviadas.get(proveedor.idPerfil) ? 'Solicitud Enviada' : 'Enviar Solicitud' }}
-                  </button>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <ng-template #noProveedores>
-          <p>No hay proveedores disponibles.</p>
-        </ng-template>
       </div>
     </div>
   </div>
 
 
 
-</div>
-
-<footer
-  style="background-color: #f8f9fa; padding: 20px; text-align: center; font-family: Arial, sans-serif; color: #333;">
-  <div style="max-width: 1200px; margin: auto;">
-    <div
-      style="display: flex; flex-wrap: wrap; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid #ddd;">
-
-      <!-- Redes sociales -->
-      <div style="flex: 1; min-width: 250px; margin-bottom: 20px;">
-        <h4 style="margin-bottom: 10px;">Síguenos</h4>
-        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/facebook-new.png"
-            alt="Facebook"></a>
-        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/twitter.png"
-            alt="Twitter"></a>
-        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/instagram-new.png"
-            alt="Instagram"></a>
-        <a href="#" style="margin: 0 10px;"><img src="https://img.icons8.com/fluent/24/000000/linkedin.png"
-            alt="LinkedIn"></a>
-      </div>
-    </div>
-    <p style="margin: 20px 0;">&copy; 2024 Provider Pedidos &reg;. Todos los derechos reservados.</p>
-  </div>
-</footer>
+    

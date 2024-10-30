@@ -43,5 +43,8 @@ public class Empresa {
     )
     @JsonIgnore // Evita la serialización de la relación
     private List<Comercio> clientes;
+
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Pedido> pedidos = new ArrayList<>(); // Relación con los pedidos que recibe
 }
 

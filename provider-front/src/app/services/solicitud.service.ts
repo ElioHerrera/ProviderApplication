@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { Pedido } from '../usuario.model';
 import  baseUrl from './helper';
 
 
@@ -29,6 +30,7 @@ export class SolicitudService {
   obtenerSolicitudesRecibidas(perfilId: number): Observable<any[]> {
     return this.httpClient.get<any[]>(`${baseUrl}/api/solicitudes/${perfilId}/solicitudes-recibidas`);
   }
+ 
   aceptarSolicitud(solicitudId: number): Observable<any> {
     return this.httpClient.put<any>(`${baseUrl}/api/solicitudes/aceptar/${solicitudId}`, null);
   }
@@ -38,4 +40,11 @@ export class SolicitudService {
   cancelarSolicitud(solicitudId: number): Observable<any> {
     return this.httpClient.put<any>(`${baseUrl}/api/solicitudes/cancelar/${solicitudId}`, null);
   } 
+
+
+// solicitud.service.ts
+realizarPedido(pedido: Pedido): Observable<Pedido> {
+  return this.httpClient.post<Pedido>(`${baseUrl}/api/pedidos/realizar`, pedido);
+}
+
 }

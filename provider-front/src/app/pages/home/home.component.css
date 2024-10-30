@@ -1,7 +1,3 @@
-body {
-  background-color: rgb(240, 240, 240);
-}
-
 .home-body {
   display: flex;
   background-color: rgb(240, 240, 240);
@@ -9,60 +5,17 @@ body {
   overflow: hidden;  /* Evitar scroll en el cuerpo */
 }
 
-
-/* Estilos para el botón de mostrar/ocultar */
-.toggle-button {
-  display: none; /* Ocultar el botón por defecto */
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  position: fixed;
-  top: 100px;
-  left: 10px;
-  z-index: 1000; /* Asegúrate de que esté encima de otros elementos */
-}
-
-.toggle-button:hover {
-  background-color: #45a049;
-}
-
-
-
-
-
-
-/* Ocultar la sección de datos personales en pantallas de menos de 800 píxeles */
-@media (max-width: 1040px) {
-
-  .toggle-button {
-    display: block;
-  }
-
-  .personal-data-container {
-    display: none;
-  }
-  .publications-container {
-    margin-left: 0;  /* Eliminar el margen izquierdo cuando la columna está oculta */
-  }
-
-}
-
 /* Estilos para la sección de datos personales */
 .personal-data-container {
-  width: 300px;
+  width: 350px;
   padding: 1%;
-  padding-top: 40px;
-  padding-left: 5%;
+  padding-top: 48px;
+  padding-left: 2%;
   position: fixed;
   height: 100vh;
   overflow: hidden;
-  background-color: #ffffff;
+
   border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   top: 0;
   left: 0;
   transition: transform 0.3s ease;
@@ -72,13 +25,21 @@ body {
   transform: translateX(-100%); /* Ocultar la sección cuando está en modo oculto */
 }
 
-
 .personal-date-content {
   padding: 20px;
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+
+/* Ocultar la sección de datos personales en pantallas de menos de 800 píxeles */
+@media (max-width: 1040px) {
+
+  .personal-data-container {
+    display: none;
+  }
+
 }
 
 .image-profile-content {
@@ -123,16 +84,38 @@ body {
   margin-left: 400px;  /* Dejar espacio para la columna de datos personales */
   overflow-y: scroll;  /* Mantener el scroll funcional */
   scrollbar-width: none;  /* Oculta la scrollbar en Firefox */
-  padding: 5%;  height: 100vh;  /* Asegurarse que ocupe toda la altura */
+  padding: 5%;
+  height: auto;  /* Asegurarse que ocupe toda la altura */
   padding-top: 40px;
 }
 
-/* Ajuste adicional para el contenedor de publicaciones */
-@media (max-width: 1040px) {
-  .publications-container {
-    margin-left: 0;  /* Eliminar margen izquierdo en pantallas pequeñas */
+/* Ajuste del margin-left para pantallas medianas */
+@media (max-width: 1440px) {
+
+  .personal-data-container{
+    width: 300px;
+   }
+  .publications-container {    
+    margin-left: 300px; /* Reducir el margen en pantallas más pequeñas */
   }
 }
+
+/* Ajuste del margin-left para pantallas aún más pequeñas */
+@media (max-width: 1240px) {
+
+  .personal-data-container{
+    width: 250px;
+   }
+  
+  .publications-container {
+    margin-left: 250px;
+  }
+}
+
+
+
+
+
 
 /* Ocultar el scroll en navegadores WebKit */
 .publications-container::-webkit-scrollbar {
@@ -311,3 +294,136 @@ body {
 .share-button:hover {
   background-color: #1565c0;
 }
+
+
+.toggle-sidebar-container {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+
+
+
+.menu-button {
+  position: fixed;
+  height: 70px;
+  width: 23px;
+  left: 0;
+  top: 50%;
+   background-color: #140a9c;
+  color: rgb(255, 255, 255);
+  border: none;
+  cursor: pointer;
+  z-index: 999; 
+  display: none;
+  transition: transform 0.3s ease-in-out; /* Transición suave para el desplazamiento */
+  border-top-right-radius: 10px; /* Redondear esquina superior derecha */
+  border-bottom-right-radius: 10px; /* Redondear esquina inferior derecha */
+}
+
+.vertical-line-1,
+.vertical-line-2 {
+ 
+  display: block; /* Asegura que se comporten como bloques */
+  width: 3px; /* Ancho de la línea */
+  height: 15px; /* Alto de la línea */
+  background-color: rgb(255, 255, 255); /* Color de la línea */
+  position: absolute; /* Cambiado a absolute para mejor posicionamiento */
+  left: 50%; /* Centrar horizontalmente */
+  transform: translateX(-50%); /* Alinear al centro */
+  transition: transform 0.8s ease;
+}
+
+.vertical-line-1 {
+  transform: rotate(45deg); /* Inclinación para formar parte del símbolo ">" */
+  margin-bottom: 10px; /* Espacio entre líneas */
+}
+
+.vertical-line-2 {
+  transform: rotate(-45deg); /* Inclinación para formar parte del símbolo ">" */
+  margin-top: -10px; /* Espacio entre líneas */
+}
+
+
+
+
+
+
+.menu-button.active {
+  transform: translateX(340px); /* Mueve el botón 250px hacia la derecha cuando está activo */
+}
+.menu-button.active .vertical-line-1 {
+  transform: rotate(-45deg); /* Gira las líneas 90 grados */
+}
+
+.menu-button.active .vertical-line-2 {
+  transform: rotate(45deg); /* Gira las líneas 90 grados */
+}
+
+.sidebar {
+  width: 300px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -500px; /* Inicialmente fuera de la pantalla */
+  transition: left 0.4s ease-in-out 0.1;
+  
+
+}
+
+.sidebar.active  {
+   left: 0; /* Desplegar la sección cuando el botón está activo */
+}
+
+
+/* Ajuste para pantallas pequeñas */
+@media (max-width: 1040px) {
+  
+  .menu-button {    
+    display: block;
+    position: fixed;    
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1000; /* Asegura que el botón esté siempre por encima de otros elementos */
+  }
+
+
+
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%; /* Ocultar la barra lateral por defecto */
+    width: 300px;
+    height: 100%;
+    background-color: white;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: left 0.3s ease; /* Transición suave al mostrar la barra lateral */
+    z-index: 999;
+  }
+
+  
+
+  .sidebar.active {
+    
+    left: 0; /* Desplegar la barra lateral al activar */
+  }
+
+  .publications-container {
+    margin-left: 0; /* Eliminar margen en pantallas pequeñas */
+  }
+
+  .publications-container.shifted {
+    margin-left: 300px; /* Ajustar margen al abrir la barra lateral */
+  }
+} 
+
+footer{
+  display: none;
+}
+
+

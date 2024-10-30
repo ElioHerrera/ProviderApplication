@@ -54,8 +54,7 @@ export class ClientComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {

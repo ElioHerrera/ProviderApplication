@@ -17,26 +17,33 @@ import { CommonModule } from '@angular/common';
   styleUrl: './pedidos.component.css'
 })
 export class PedidosComponent {
-  user: any;
+  usuario: any;
   esDealer: boolean = false;
   esProvider: boolean = false;
 
 
   constructor(
     private usuarioService: UserService,
-    private router: Router) { } // Inyectamos el servicio UserService y Router en el constructor
+    private router: Router) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {  
 
-// Recuperar los datos del usuario del almacenamiento local
-const storedUser = localStorage.getItem('currentUser');
-if (storedUser) {
-  this.user = JSON.parse(storedUser);
-  console.log('Datos del usuario:', this.user); // Imprimimos los datos del usuario por consola
-  const roles = this.user.roles.map((role: any) => role.roleEnum);
-  this.esDealer = roles.includes('CLIENT');
-  this.esProvider = roles.includes('PROVIDER');
-}
-  }
+      // Recuperar los datos del usuario del almacenamiento local
+      const storedUser: string | null = localStorage.getItem('currentUser');
+      if (storedUser) {
+        this.usuario = JSON.parse(storedUser);
+        console.log('Datos del usuario:', this.usuario);
   
+      } else {
+        console.error('No se encontraron datos del usuario en localStorage.');
+      }
+  
+      //Verificar si es Comerciante o Proveedor
+      if (this.usuario) {
+        const roles = this.usuario.roles.map((roles: any) => roles.rol);
+        console.log(roles.rol)
+        this.esDealer = roles.includes('CLIENT');
+        this.esProvider = roles.includes('PROVIDER');
+      }
+    } 
 }
